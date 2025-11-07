@@ -1,0 +1,400 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User Management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  role      UserRole @default(USER)
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  properties     Property[]
+  bookings       Booking[]
+  reviews        Review[]
+  notifications  Notification[]
+  messages       Message[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  PROPERTY_OWNER
+  MANAGER
+}
+
+// Properties
+model Property {
+  id          String        @id @default(cuid())
+  titleGr     String
+  titleEn     String
+  descriptionGr String?
+  descriptionEn String?
+  type        PropertyType
+  status      PropertyStatus @default(ACTIVE)
+  
+  // Location
+  address     String
+  city        String
+  country     String
+  latitude    Float?
+  longitude   Float?
+  
+  // Capacity
+  maxGuests   Int
+  bedrooms    Int
+  bathrooms   Int
+  area        Float? // in square meters
+  
+  // Pricing
+  basePrice   Float
+  currency    String        @default("EUR")
+  cleaningFee Float?
+  serviceFee  Float?
+  taxes       Float?
+  
+  // Availability
+  minStay     Int           @default(1)
+  maxStay     Int?
+  advanceBooking Int        @default(30) // days
+  
+  // Rules
+  checkInTime     String?
+  checkOutTime    String?
+  cancellationPolicy String?
+  houseRules      String?
+  petFriendly     Boolean   @default(false)
+  smokingAllowed  Boolean   @default(false)
+  partyAllowed    Boolean   @default(false)
+  
+  // Media
+  images      String[]
+  videos      String[]
+  
+  // Relations
+  ownerId     String
+  owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  bookings    Booking[]
+  reviews     Review[]
+  amenities   PropertyAmenity[]
+  availability PropertyAvailability[]
+  maintenance MaintenanceRequest[]
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("properties")
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  ROOM
+  COMMERCIAL
+  STORAGE
+  VACATION_RENTAL
+  LUXURY
+  INVESTMENT
+}
+
+enum PropertyStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+  SUSPENDED
+}
+
+// Amenities
+model Amenity {
+  id          String   @id @default(cuid())
+  nameGr      String
+  nameEn      String
+  icon        String?
+  category    String
+  createdAt   DateTime @default(now())
+
+  // Relations
+  properties  PropertyAmenity[]
+
+  @@map("amenities")
+}
+
+model PropertyAmenity {
+  propertyId String
+  amenityId  String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  amenity    Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
+
+  @@id([propertyId, amenityId])
+  @@map("property_amenities")
+}
+
+// Bookings
+model Booking {
+  id              String        @id @default(cuid())
+  propertyId      String
+  guestId         String
+  status          BookingStatus @default(PENDING)
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // Dates
+  checkIn         DateTime
+  checkOut        DateTime
+  guests          Int
+  
+  // Pricing
+  totalPrice      Float
+  basePrice       Float
+  cleaningFee     Float?
+  serviceFee      Float?
+  taxes           Float?
+  currency        String        @default("EUR")
+  
+  // Guest Info
+  guestName       String
+  guestEmail      String
+  guestPhone      String?
+  specialRequests String?
+  
+  // Payment
+  paymentMethod   String?
+  transactionId   String?
+  refundAmount    Float?
+  refundReason    String?
+  
+  // Relations
+  property        Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  guest           User          @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  reviews         Review[]
+  messages        Message[]
+  maintenance     MaintenanceRequest[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CHECKED_IN
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+// Property Availability
+model PropertyAvailability {
+  id          String   @id @default(cuid())
+  propertyId  String
+  date        DateTime @db.Date
+  available   Boolean  @default(true)
+  price       Float?
+  minStay     Int?
+  
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([propertyId, date])
+  @@map("property_availability")
+}
+
+// Reviews
+model Review {
+  id          String   @id @default(cuid())
+  propertyId  String
+  bookingId   String
+  guestId     String
+  rating      Int      // 1-5
+  title       String?
+  comment     String?
+  response    String?  // Host response
+  isPublic    Boolean  @default(true)
+  
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  guest       User     @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([bookingId])
+  @@map("reviews")
+}
+
+// Maintenance Requests
+model MaintenanceRequest {
+  id          String              @id @default(cuid())
+  propertyId  String
+  bookingId   String?
+  title       String
+  description String
+  priority    MaintenancePriority @default(MEDIUM)
+  status      MaintenanceStatus   @default(OPEN)
+  assignedTo  String?
+  completedAt DateTime?
+  
+  property    Property            @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  booking     Booking?            @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+  
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@map("maintenance_requests")
+}
+
+enum MaintenancePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum MaintenanceStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// Messages
+model Message {
+  id        String      @id @default(cuid())
+  bookingId String
+  senderId  String
+  content   String
+  type      MessageType @default(TEXT)
+  isRead    Boolean     @default(false)
+  
+  booking   Booking     @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  sender    User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime    @default(now())
+
+  @@map("messages")
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  FILE
+  SYSTEM
+}
+
+// Notifications
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  data      Json?            // Additional data
+  
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime         @default(now())
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+  PAYMENT_RECEIVED
+  MAINTENANCE_REQUEST
+  REVIEW_RECEIVED
+  MESSAGE_RECEIVED
+  SYSTEM_UPDATE
+}
+
+// Editions/Content Management
+model Edition {
+  id          String        @id @default(cuid())
+  category    String
+  titleGr     String
+  titleEn     String
+  descriptionGr String?
+  descriptionEn String?
+  contentGr   String?
+  contentEn   String?
+  status      ContentStatus @default(DRAFT)
+  featured    Boolean       @default(false)
+  order       Int?
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@map("editions")
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Services
+model Service {
+  id          String   @id @default(cuid())
+  titleGr     String
+  titleEn     String
+  descriptionGr String?
+  descriptionEn String?
+  icon        String?
+  features    String[]
+  pricingGr   String?
+  pricingEn   String?
+  isActive    Boolean  @default(true)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}
+
+// Knowledge Articles
+model KnowledgeArticle {
+  id          String   @id @default(cuid())
+  titleGr     String
+  titleEn     String
+  contentGr   String?
+  contentEn   String?
+  category    String
+  tags        String[]
+  author      String
+  readTime    Int?     // minutes
+  publishedAt DateTime?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("knowledge_articles")
+}
