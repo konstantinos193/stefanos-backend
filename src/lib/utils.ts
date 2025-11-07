@@ -19,8 +19,9 @@ export const generateToken = (payload: { userId: string; email: string; role: st
     throw new Error('JWT_SECRET is not defined');
   }
   
+  const expiresIn = process.env.JWT_EXPIRES_IN || '7d';
   return jwt.sign(payload, secret, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d'
+    expiresIn: expiresIn as any
   });
 };
 
@@ -39,7 +40,7 @@ export const validateSchema = <T>(schema: z.ZodSchema<T>, data: unknown): T => {
   if (!result.success) {
     const error = new Error('Validation failed');
     (error as any).type = 'validation';
-    (error as any).details = result.error.errors;
+    (error as any).details = result.error.issues;
     throw error;
   }
   return result.data;

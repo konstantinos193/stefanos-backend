@@ -1,7 +1,7 @@
 import express from 'express';
 import { prisma } from '../lib/db';
 import { validateSchema, createUserSchema, loginSchema } from '../lib/validations';
-import { hashPassword, verifyPassword, generateToken, createError } from '../lib/utils';
+import { hashPassword, verifyPassword, generateToken, verifyToken, createError } from '../lib/utils';
 
 const router = express.Router();
 
@@ -65,14 +65,15 @@ router.post('/login', async (req, res, next) => {
     // Find user
     const user = await prisma.user.findUnique({
       where: { email: data.email }
-    });
+    }) as any;
     
     if (!user) {
       throw createError('Invalid credentials', 401, 'auth');
     }
     
     // Verify password
-    const isValidPassword = await verifyPassword(data.password, user.password || '');
+    const userPassword = user.password || '';
+    const isValidPassword = await verifyPassword(data.password, userPassword);
     
     if (!isValidPassword) {
       throw createError('Invalid credentials', 401, 'auth');

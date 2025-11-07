@@ -6,16 +6,17 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 // User Management
 model User {
-  id        String   @id @default(cuid())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   name      String?
   phone     String?
+  password  String?
   role      UserRole @default(USER)
   avatar    String?
   isActive  Boolean  @default(true)
@@ -41,7 +42,7 @@ enum UserRole {
 
 // Properties
 model Property {
-  id          String        @id @default(cuid())
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   titleGr     String
   titleEn     String
   descriptionGr String?
@@ -88,7 +89,7 @@ model Property {
   videos      String[]
   
   // Relations
-  ownerId     String
+  ownerId     String   @db.ObjectId
   owner       User        @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   bookings    Booking[]
   reviews     Review[]
@@ -122,7 +123,7 @@ enum PropertyStatus {
 
 // Amenities
 model Amenity {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   nameGr      String
   nameEn      String
   icon        String?
@@ -136,20 +137,21 @@ model Amenity {
 }
 
 model PropertyAmenity {
-  propertyId String
-  amenityId  String
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId String   @db.ObjectId
+  amenityId  String   @db.ObjectId
   property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   amenity    Amenity  @relation(fields: [amenityId], references: [id], onDelete: Cascade)
 
-  @@id([propertyId, amenityId])
+  @@unique([propertyId, amenityId])
   @@map("property_amenities")
 }
 
 // Bookings
 model Booking {
-  id              String        @id @default(cuid())
-  propertyId      String
-  guestId         String
+  id              String        @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId      String   @db.ObjectId
+  guestId         String   @db.ObjectId
   status          BookingStatus @default(PENDING)
   paymentStatus   PaymentStatus @default(PENDING)
   
@@ -210,9 +212,9 @@ enum PaymentStatus {
 
 // Property Availability
 model PropertyAvailability {
-  id          String   @id @default(cuid())
-  propertyId  String
-  date        DateTime @db.Date
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  date        DateTime
   available   Boolean  @default(true)
   price       Float?
   minStay     Int?
@@ -228,10 +230,10 @@ model PropertyAvailability {
 
 // Reviews
 model Review {
-  id          String   @id @default(cuid())
-  propertyId  String
-  bookingId   String
-  guestId     String
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  bookingId   String   @db.ObjectId
+  guestId     String   @db.ObjectId
   rating      Int      // 1-5
   title       String?
   comment     String?
@@ -251,9 +253,9 @@ model Review {
 
 // Maintenance Requests
 model MaintenanceRequest {
-  id          String              @id @default(cuid())
-  propertyId  String
-  bookingId   String?
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  bookingId   String?  @db.ObjectId
   title       String
   description String
   priority    MaintenancePriority @default(MEDIUM)
@@ -286,9 +288,9 @@ enum MaintenanceStatus {
 
 // Messages
 model Message {
-  id        String      @id @default(cuid())
-  bookingId String
-  senderId  String
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId String   @db.ObjectId
+  senderId  String   @db.ObjectId
   content   String
   type      MessageType @default(TEXT)
   isRead    Boolean     @default(false)
@@ -310,8 +312,8 @@ enum MessageType {
 
 // Notifications
 model Notification {
-  id        String           @id @default(cuid())
-  userId    String
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
   type      NotificationType
   title     String
   message   String
@@ -337,7 +339,7 @@ enum NotificationType {
 
 // Editions/Content Management
 model Edition {
-  id          String        @id @default(cuid())
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   category    String
   titleGr     String
   titleEn     String
@@ -363,7 +365,7 @@ enum ContentStatus {
 
 // Services
 model Service {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   titleGr     String
   titleEn     String
   descriptionGr String?
@@ -382,7 +384,7 @@ model Service {
 
 // Knowledge Articles
 model KnowledgeArticle {
-  id          String   @id @default(cuid())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   titleGr     String
   titleEn     String
   contentGr   String?

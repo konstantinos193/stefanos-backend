@@ -263,9 +263,26 @@ router.put('/:id', async (req, res, next) => {
     
     // TODO: Add authorization check
     
+    // Extract amenities from data if present
+    const { amenities, ...updateData } = data;
+    
+    // Prepare update data
+    const propertyUpdateData: any = { ...updateData };
+    
+    // Handle amenities separately if provided
+    if (amenities !== undefined) {
+      // Delete existing amenities and create new ones
+      propertyUpdateData.amenities = {
+        deleteMany: {},
+        create: amenities.map((amenityId: string) => ({
+          amenityId,
+        })),
+      };
+    }
+    
     const property = await prisma.property.update({
       where: { id },
-      data,
+      data: propertyUpdateData,
       include: {
         owner: {
           select: {

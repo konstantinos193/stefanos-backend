@@ -1,0 +1,173 @@
+import { IsString, IsNumber, IsBoolean, IsOptional, IsArray, IsEnum, Min, Max } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export enum PropertyType {
+  APARTMENT = 'APARTMENT',
+  HOUSE = 'HOUSE',
+  ROOM = 'ROOM',
+  COMMERCIAL = 'COMMERCIAL',
+  STORAGE = 'STORAGE',
+  VACATION_RENTAL = 'VACATION_RENTAL',
+  LUXURY = 'LUXURY',
+  INVESTMENT = 'INVESTMENT',
+}
+
+export class CreatePropertyDto {
+  @ApiProperty({ example: 'Ξενοδοχείο Αθήνα' })
+  @IsString()
+  titleGr: string;
+
+  @ApiProperty({ example: 'Athens Hotel' })
+  @IsString()
+  titleEn: string;
+
+  @ApiPropertyOptional({ example: 'Καταπληκτικό ξενοδοχείο' })
+  @IsOptional()
+  @IsString()
+  descriptionGr?: string;
+
+  @ApiPropertyOptional({ example: 'Amazing hotel' })
+  @IsOptional()
+  @IsString()
+  descriptionEn?: string;
+
+  @ApiProperty({ enum: PropertyType })
+  @IsEnum(PropertyType)
+  type: PropertyType;
+
+  @ApiProperty({ example: 'Syntagma Square 1' })
+  @IsString()
+  address: string;
+
+  @ApiProperty({ example: 'Athens' })
+  @IsString()
+  city: string;
+
+  @ApiProperty({ example: 'Greece' })
+  @IsString()
+  country: string;
+
+  @ApiPropertyOptional({ example: 37.9755 })
+  @IsOptional()
+  @IsNumber()
+  latitude?: number;
+
+  @ApiPropertyOptional({ example: 23.7348 })
+  @IsOptional()
+  @IsNumber()
+  longitude?: number;
+
+  @ApiProperty({ example: 4, minimum: 1 })
+  @IsNumber()
+  @Min(1)
+  maxGuests: number;
+
+  @ApiProperty({ example: 2, minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  bedrooms: number;
+
+  @ApiProperty({ example: 1, minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  bathrooms: number;
+
+  @ApiPropertyOptional({ example: 75.5 })
+  @IsOptional()
+  @IsNumber()
+  area?: number;
+
+  @ApiProperty({ example: 120.0, minimum: 0 })
+  @IsNumber()
+  @Min(0)
+  basePrice: number;
+
+  @ApiPropertyOptional({ example: 'EUR', default: 'EUR' })
+  @IsOptional()
+  @IsString()
+  currency?: string;
+
+  @ApiPropertyOptional({ example: 25.0 })
+  @IsOptional()
+  @IsNumber()
+  cleaningFee?: number;
+
+  @ApiPropertyOptional({ example: 15.0 })
+  @IsOptional()
+  @IsNumber()
+  serviceFee?: number;
+
+  @ApiPropertyOptional({ example: 8.0 })
+  @IsOptional()
+  @IsNumber()
+  taxes?: number;
+
+  @ApiPropertyOptional({ example: 1, default: 1 })
+  @IsOptional()
+  @IsNumber()
+  minStay?: number;
+
+  @ApiPropertyOptional({ example: 30 })
+  @IsOptional()
+  @IsNumber()
+  maxStay?: number;
+
+  @ApiPropertyOptional({ example: 30, default: 30 })
+  @IsOptional()
+  @IsNumber()
+  advanceBooking?: number;
+
+  @ApiPropertyOptional({ example: '15:00' })
+  @IsOptional()
+  @IsString()
+  checkInTime?: string;
+
+  @ApiPropertyOptional({ example: '11:00' })
+  @IsOptional()
+  @IsString()
+  checkOutTime?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  cancellationPolicy?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  houseRules?: string;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
+  petFriendly?: boolean;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
+  smokingAllowed?: boolean;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
+  partyAllowed?: boolean;
+
+  @ApiPropertyOptional({ type: [String], example: ['https://example.com/image.jpg'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  images?: string[];
+
+  @ApiPropertyOptional({ type: [String] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  videos?: string[];
+
+  @ApiPropertyOptional({ type: [String], example: ['wifi', 'parking'] })
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  amenities?: string[];
+}
+
