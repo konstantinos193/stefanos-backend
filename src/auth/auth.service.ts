@@ -57,9 +57,25 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto, mfaCode?: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { email: loginDto.email },
+    // Support both email and username login
+    // If input doesn't contain @, treat as username and convert to email format
+    let email = loginDto.email;
+    if (!email.includes('@')) {
+      // Username format: convert to email
+      email = `${email}@stefanos.com`;
+    }
+
+    // Try to find user by email
+    let user = await this.prisma.user.findUnique({
+      where: { email },
     });
+
+    // If not found and it was a username, also try to find by name
+    if (!user && !loginDto.email.includes('@')) {
+      user = await this.prisma.user.findFirst({
+        where: { name: loginDto.email },
+      });
+    }
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
