@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './prisma/prisma.module';
+import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PropertiesModule } from './properties/properties.module';
@@ -23,7 +23,7 @@ import { AppController } from './app.controller';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    PrismaModule,
+    DatabaseModule,
     AuthModule,
     UsersModule,
     PropertiesModule,

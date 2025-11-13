@@ -2,7 +2,7 @@ import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
-import { AnalyticsPeriod } from '@prisma/client';
+import { AnalyticsPeriod } from '../database/types';
 
 @Controller('analytics')
 @UseGuards(JwtAuthGuard)

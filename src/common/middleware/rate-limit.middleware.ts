@@ -25,6 +25,19 @@ export class RateLimitMiddleware implements NestMiddleware {
   }
 
   use(req: Request, res: Response, next: NextFunction) {
+    // Skip rate limiting for admin users
+    const user = (req as any).user;
+    if (user?.role === 'ADMIN') {
+      return next();
+    }
+    
+    // Skip rate limiting for admin panel requests (check origin)
+    const origin = req.headers.origin || '';
+    const adminUrl = process.env.ADMIN_URL || 'http://localhost:3002';
+    if (origin === adminUrl || origin.includes('admin') || origin.includes('3002')) {
+      return next();
+    }
+    
     const key = this.getKey(req);
     const now = Date.now();
     const record = this.store[key];

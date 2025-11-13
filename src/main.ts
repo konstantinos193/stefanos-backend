@@ -27,9 +27,41 @@ async function bootstrap() {
   // Security
   app.use(helmet());
 
-  // CORS
+  // CORS - Support multiple origins (frontend + admin panel)
+  // Admin panel is always allowed and never restricted
+  const getAllowedOrigins = (): string[] | ((origin: string | undefined) => boolean) => {
+    const allowedOrigins: string[] = [];
+    
+    // Add frontend URL
+    if (process.env.FRONTEND_URL) {
+      allowedOrigins.push(process.env.FRONTEND_URL);
+    } else {
+      allowedOrigins.push('http://localhost:3000');
+    }
+    
+    // Add admin panel URL (always allowed)
+    const adminUrl = process.env.ADMIN_URL || 'http://localhost:3002';
+    allowedOrigins.push(adminUrl);
+    
+    // Return function that allows admin panel from any origin, or specific origins
+    return (origin: string | undefined): boolean => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) {
+        return true;
+      }
+      
+      // Always allow admin panel - check if it's from admin URL or contains admin indicators
+      if (origin === adminUrl || origin.includes('admin') || origin.includes('3002')) {
+        return true;
+      }
+      
+      // Check against allowed origins
+      return allowedOrigins.includes(origin);
+    };
+  };
+
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: getAllowedOrigins(),
     credentials: true,
   });
 

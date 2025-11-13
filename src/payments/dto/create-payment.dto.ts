@@ -1,5 +1,5 @@
 import { IsEnum, IsNumber, IsString, IsOptional, Min } from 'class-validator';
-import { PaymentMethod } from '@prisma/client';
+import { PaymentMethod } from '../../../database/types';
 
 export class CreatePaymentDto {
   @IsString()

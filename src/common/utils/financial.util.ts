@@ -1,4 +1,4 @@
-import { CancellationPolicy } from '@prisma/client';
+import { CancellationPolicy } from '../../database/types';
 
 export interface PriceBreakdown {
   basePrice: number;

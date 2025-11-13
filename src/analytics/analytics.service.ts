@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FinancialUtil } from '../common/utils/financial.util';
-import { AnalyticsPeriod } from '@prisma/client';
+import { AnalyticsPeriod } from '../database/types';
 
 @Injectable()
 export class AnalyticsService {

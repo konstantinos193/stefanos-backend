@@ -1,5 +1,5 @@
 import { IsEnum, IsString, IsOptional, IsDateString } from 'class-validator';
-import { CleaningFrequency } from '@prisma/client';
+import { CleaningFrequency } from '../../../database/types';
 
 export class CreateCleaningScheduleDto {
   @IsString()

@@ -16,8 +16,9 @@ JWT_EXPIRES_IN="7d"
 PORT=3001
 NODE_ENV="development"
 
-# CORS - Frontend URL
+# CORS - Allowed Origins
 FRONTEND_URL="http://localhost:3000"
+ADMIN_URL="http://localhost:3002"
 
 # Email Configuration (Nodemailer)
 SMTP_HOST="smtp.gmail.com"

@@ -4,7 +4,7 @@ import { CreatePaymentDto } from './dto/create-payment.dto';
 import { RefundPaymentDto } from './dto/refund-payment.dto';
 import { PaymentResponseDto } from './dto/payment-response.dto';
 import Stripe from 'stripe';
-import { PaymentStatus, PaymentMethod } from '@prisma/client';
+import { PaymentStatus, PaymentMethod } from '../database/types';
 
 @Injectable()
 export class PaymentsService {
