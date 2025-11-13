@@ -149,32 +149,67 @@ async function main() {
 
   // Create users
   console.log('👥 Creating users...');
-  const adminPassword = await hashPassword('admin123');
-  const admin = await prisma.user.create({
-    data: {
-      email: 'admin@realestate.com',
-      name: 'Admin User',
-      phone: '+30 210 123 4567',
-      password: adminPassword,
-      role: 'ADMIN',
-      isActive: true,
-      avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=d4af37&color=000'
-    }
+  
+  // Check if admin users already exist to preserve their credentials
+  const existingAdmin = await prisma.user.findUnique({
+    where: { email: 'admin@realestate.com' }
+  });
+  
+  const existingStefadmin = await prisma.user.findUnique({
+    where: { email: 'Stefadmin@stefanos.com' }
   });
 
-  // Create Stefadmin user for admin panel
+  // Create or update admin user (preserve password if exists)
+  const adminPassword = await hashPassword('admin123');
+  const admin = existingAdmin 
+    ? await prisma.user.update({
+        where: { email: 'admin@realestate.com' },
+        data: {
+          name: 'Admin User',
+          phone: '+30 210 123 4567',
+          role: 'ADMIN',
+          isActive: true,
+          avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=d4af37&color=000'
+          // Don't update password to preserve existing login
+        }
+      })
+    : await prisma.user.create({
+        data: {
+          email: 'admin@realestate.com',
+          name: 'Admin User',
+          phone: '+30 210 123 4567',
+          password: adminPassword,
+          role: 'ADMIN',
+          isActive: true,
+          avatar: 'https://ui-avatars.com/api/?name=Admin+User&background=d4af37&color=000'
+        }
+      });
+
+  // Create or update Stefadmin user for admin panel (CRITICAL: preserve credentials)
   const stefadminPassword = await hashPassword('stef159');
-  const stefadmin = await prisma.user.create({
-    data: {
-      email: 'Stefadmin@stefanos.com',
-      name: 'Stefadmin',
-      phone: '+30 210 123 4568',
-      password: stefadminPassword,
-      role: 'ADMIN',
-      isActive: true,
-      avatar: 'https://ui-avatars.com/api/?name=Stefadmin&background=3b82f6&color=fff'
-    }
-  });
+  const stefadmin = existingStefadmin
+    ? await prisma.user.update({
+        where: { email: 'Stefadmin@stefanos.com' },
+        data: {
+          name: 'Stefadmin',
+          phone: '+30 210 123 4568',
+          role: 'ADMIN',
+          isActive: true,
+          avatar: 'https://ui-avatars.com/api/?name=Stefadmin&background=3b82f6&color=fff'
+          // Don't update password to preserve admin panel login credentials
+        }
+      })
+    : await prisma.user.create({
+        data: {
+          email: 'Stefadmin@stefanos.com',
+          name: 'Stefadmin',
+          phone: '+30 210 123 4568',
+          password: stefadminPassword, // Username: Stefadmin, Password: stef159
+          role: 'ADMIN',
+          isActive: true,
+          avatar: 'https://ui-avatars.com/api/?name=Stefadmin&background=3b82f6&color=fff'
+        }
+      });
 
   const ownerData = [
     { email: 'owner1@realestate.com', name: 'Stefanos Spyros', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Stefanos+Spyros&background=d4af37&color=000' },
@@ -814,8 +849,23 @@ async function main() {
   // Create editions
   console.log('📚 Creating editions...');
   const editionData = [
+    // Properties category
     {
-      category: 'real-estate',
+      category: 'properties',
+      titleGr: 'Ακίνητα',
+      titleEn: 'Properties',
+      descriptionGr: 'Εκδόσεις ακινήτων για κάθε ανάγκη',
+      descriptionEn: 'Property editions for every need',
+      contentGr: 'Ανακαλύψτε τα καλύτερα ακίνητα',
+      contentEn: 'Discover the best properties',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 1,
+      icon: 'https://placehold.co/80x80/3b82f6/FFFFFF?text=Properties',
+      color: 'blue'
+    },
+    {
+      category: 'properties',
       titleGr: 'Κατοικίες',
       titleEn: 'Residential Properties',
       descriptionGr: 'Σύγχρονα διαμερίσματα και σπίτια',
@@ -824,10 +874,10 @@ async function main() {
       contentEn: 'Discover the best properties for living',
       status: 'PUBLISHED' as const,
       featured: true,
-      order: 1
+      order: 2
     },
     {
-      category: 'real-estate',
+      category: 'properties',
       titleGr: 'Επαγγελματικά',
       titleEn: 'Commercial Properties',
       descriptionGr: 'Γραφεία και εμπορικούς χώρους',
@@ -836,7 +886,46 @@ async function main() {
       contentEn: 'Perfect properties for your business',
       status: 'PUBLISHED' as const,
       featured: true,
-      order: 2
+      order: 3
+    },
+    {
+      category: 'properties',
+      titleGr: 'Επαγγελματικά Ακίνητα',
+      titleEn: 'Business Properties',
+      descriptionGr: 'Ακίνητα για επαγγελματική χρήση',
+      descriptionEn: 'Properties for business use',
+      contentGr: 'Βρείτε το ιδανικό επαγγελματικό χώρο',
+      contentEn: 'Find the perfect business space',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 4
+    },
+    {
+      category: 'properties',
+      titleGr: 'Ενοικίαση',
+      titleEn: 'Rental Properties',
+      descriptionGr: 'Ακίνητα προς ενοικίαση',
+      descriptionEn: 'Properties for rent',
+      contentGr: 'Βρείτε το ιδανικό ακίνητο για ενοικίαση',
+      contentEn: 'Find the perfect property for rent',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 5
+    },
+    // Booking category
+    {
+      category: 'booking',
+      titleGr: 'Κρατήσεις',
+      titleEn: 'Booking Services',
+      descriptionGr: 'Εκδόσεις υπηρεσιών κρατήσεων',
+      descriptionEn: 'Booking service editions',
+      contentGr: 'Σύγχρονη πλατφόρμα κρατήσεων',
+      contentEn: 'Modern booking platform',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 1,
+      icon: 'https://placehold.co/80x80/10b981/FFFFFF?text=Booking',
+      color: 'green'
     },
     {
       category: 'booking',
@@ -848,6 +937,171 @@ async function main() {
       contentEn: 'Find the perfect place for your vacation',
       status: 'PUBLISHED' as const,
       featured: true,
+      order: 2
+    },
+    {
+      category: 'booking',
+      titleGr: 'Μακροχρόνιες Κρατήσεις',
+      titleEn: 'Long-term Rentals',
+      descriptionGr: 'Κρατήσεις για μακροχρόνια διαμονή',
+      descriptionEn: 'Bookings for long-term stays',
+      contentGr: 'Βρείτε μακροχρόνια διαμονή',
+      contentEn: 'Find long-term accommodation',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 3
+    },
+    {
+      category: 'booking',
+      titleGr: 'Διαχείριση Κρατήσεων',
+      titleEn: 'Booking Management',
+      descriptionGr: 'Εργαλεία διαχείρισης κρατήσεων',
+      descriptionEn: 'Booking management tools',
+      contentGr: 'Διαχειριστείτε τις κρατήσεις σας',
+      contentEn: 'Manage your bookings',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 4
+    },
+    {
+      category: 'booking',
+      titleGr: 'Πληρωμές',
+      titleEn: 'Payments',
+      descriptionGr: 'Σύστημα πληρωμών για κρατήσεις',
+      descriptionEn: 'Payment system for bookings',
+      contentGr: 'Ασφαλείς πληρωμές',
+      contentEn: 'Secure payments',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 5
+    },
+    // Airbnb category
+    {
+      category: 'airbnb',
+      titleGr: 'Airbnb',
+      titleEn: 'Airbnb Integration',
+      descriptionGr: 'Εκδόσεις Airbnb integration',
+      descriptionEn: 'Airbnb integration editions',
+      contentGr: 'Ολοκληρωμένη ενσωμάτωση με Airbnb',
+      contentEn: 'Complete integration with Airbnb',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 1,
+      icon: 'https://placehold.co/80x80/8b5cf6/FFFFFF?text=Airbnb',
+      color: 'purple'
+    },
+    {
+      category: 'airbnb',
+      titleGr: 'Συγχρονισμός Airbnb',
+      titleEn: 'Airbnb Sync',
+      descriptionGr: 'Αυτόματος συγχρονισμός με Airbnb',
+      descriptionEn: 'Automatic sync with Airbnb',
+      contentGr: 'Συγχρονίστε τις κρατήσεις σας',
+      contentEn: 'Sync your bookings',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 2
+    },
+    {
+      category: 'airbnb',
+      titleGr: 'Διαχείριση Airbnb',
+      titleEn: 'Airbnb Management',
+      descriptionGr: 'Διαχείριση Airbnb listings',
+      descriptionEn: 'Manage Airbnb listings',
+      contentGr: 'Διαχειριστείτε τα listings σας',
+      contentEn: 'Manage your listings',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 3
+    },
+    // Knowledge category
+    {
+      category: 'knowledge',
+      titleGr: 'Γνώση',
+      titleEn: 'Knowledge & Services',
+      descriptionGr: 'Εκδόσεις γνώσης και υπηρεσιών',
+      descriptionEn: 'Knowledge and service editions',
+      contentGr: 'Βάση γνώσης και οδηγοί',
+      contentEn: 'Knowledge base and guides',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 1,
+      icon: 'https://placehold.co/80x80/f59e0b/FFFFFF?text=Knowledge',
+      color: 'orange'
+    },
+    {
+      category: 'knowledge',
+      titleGr: 'Οδηγοί',
+      titleEn: 'Guides',
+      descriptionGr: 'Οδηγοί και tutorials',
+      descriptionEn: 'Guides and tutorials',
+      contentGr: 'Μάθετε πώς να χρησιμοποιήσετε την πλατφόρμα',
+      contentEn: 'Learn how to use the platform',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 2
+    },
+    {
+      category: 'knowledge',
+      titleGr: 'FAQ',
+      titleEn: 'FAQ',
+      descriptionGr: 'Συχνές ερωτήσεις',
+      descriptionEn: 'Frequently asked questions',
+      contentGr: 'Βρείτε απαντήσεις στις ερωτήσεις σας',
+      contentEn: 'Find answers to your questions',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 3
+    },
+    {
+      category: 'knowledge',
+      titleGr: 'Υποστήριξη',
+      titleEn: 'Support',
+      descriptionGr: 'Υποστήριξη χρηστών',
+      descriptionEn: 'User support',
+      contentGr: 'Λάβετε βοήθεια',
+      contentEn: 'Get help',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 4
+    },
+    // Admin category
+    {
+      category: 'admin',
+      titleGr: 'Διαχείριση',
+      titleEn: 'Admin & Management',
+      descriptionGr: 'Εκδόσεις διαχείρισης',
+      descriptionEn: 'Management editions',
+      contentGr: 'Εργαλεία διαχείρισης',
+      contentEn: 'Management tools',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 1,
+      icon: 'https://placehold.co/80x80/6b7280/FFFFFF?text=Admin',
+      color: 'gray'
+    },
+    {
+      category: 'admin',
+      titleGr: 'Διαχείριση Χρηστών',
+      titleEn: 'User Management',
+      descriptionGr: 'Διαχείριση χρηστών',
+      descriptionEn: 'User management',
+      contentGr: 'Διαχειριστείτε τους χρήστες',
+      contentEn: 'Manage users',
+      status: 'PUBLISHED' as const,
+      featured: false,
+      order: 2
+    },
+    {
+      category: 'admin',
+      titleGr: 'Αναφορές',
+      titleEn: 'Reports',
+      descriptionGr: 'Αναφορές και στατιστικά',
+      descriptionEn: 'Reports and statistics',
+      contentGr: 'Δείτε αναφορές και στατιστικά',
+      contentEn: 'View reports and statistics',
+      status: 'PUBLISHED' as const,
+      featured: false,
       order: 3
     }
   ];

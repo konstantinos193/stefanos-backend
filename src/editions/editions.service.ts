@@ -150,5 +150,68 @@ export class EditionsService {
       },
     };
   }
+
+  async getCategoriesWithCounts() {
+    const categories = await this.prisma.edition.groupBy({
+      by: ['category'],
+      where: {
+        status: 'PUBLISHED',
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    const result = await Promise.all(
+      categories.map(async (cat) => {
+        // Get the first edition in each category (ordered by order field) to use as category metadata
+        const firstEdition = await this.prisma.edition.findFirst({
+          where: {
+            category: cat.category,
+            status: 'PUBLISHED',
+          },
+          orderBy: {
+            order: 'asc',
+          },
+          select: {
+            titleGr: true,
+            titleEn: true,
+            descriptionGr: true,
+            descriptionEn: true,
+            icon: true,
+            color: true,
+          },
+        });
+
+        // Use first edition's metadata, or fallback to category name
+        const titleGr = firstEdition?.titleGr || cat.category;
+        const titleEn = firstEdition?.titleEn || cat.category;
+        const descriptionGr = firstEdition?.descriptionGr || `${cat._count.id} εκδόσεις`;
+        const descriptionEn = firstEdition?.descriptionEn || `${cat._count.id} editions`;
+        const icon = firstEdition?.icon || `https://placehold.co/80x80/6b7280/FFFFFF?text=${cat.category}`;
+        const color = (firstEdition?.color || 'gray') as 'blue' | 'green' | 'purple' | 'orange' | 'gray';
+
+        return {
+          id: cat.category,
+          title: {
+            gr: titleGr,
+            en: titleEn,
+          },
+          description: {
+            gr: descriptionGr,
+            en: descriptionEn,
+          },
+          count: cat._count.id,
+          icon: icon,
+          color: color,
+        };
+      })
+    );
+
+    return {
+      success: true,
+      data: result,
+    };
+  }
 }
 

@@ -23,6 +23,22 @@ export class EditionsController {
   }
 
   @Public()
+  @Get('categories/summary')
+  @ApiOperation({ summary: 'Get all categories with counts' })
+  @ApiResponse({ status: 200 })
+  getCategoriesWithCounts() {
+    return this.editionsService.getCategoriesWithCounts();
+  }
+
+  @Public()
+  @Get('category/:category')
+  @ApiOperation({ summary: 'Get editions by category' })
+  @ApiResponse({ status: 200 })
+  findByCategory(@Param('category') category: string, @Query() query: PaginationDto) {
+    return this.editionsService.findByCategory(category, query);
+  }
+
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get single edition' })
   @ApiResponse({ status: 200 })
@@ -57,12 +73,5 @@ export class EditionsController {
     return this.editionsService.remove(id);
   }
 
-  @Public()
-  @Get('category/:category')
-  @ApiOperation({ summary: 'Get editions by category' })
-  @ApiResponse({ status: 200 })
-  findByCategory(@Param('category') category: string, @Query() query: PaginationDto) {
-    return this.editionsService.findByCategory(category, query);
-  }
 }
 
