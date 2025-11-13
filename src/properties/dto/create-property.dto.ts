@@ -169,5 +169,39 @@ export class CreatePropertyDto {
   @IsArray()
   @IsString({ each: true })
   amenities?: string[];
+
+  @ApiPropertyOptional({ example: '10431' })
+  @IsOptional()
+  @IsString()
+  postalCode?: string;
+
+  @ApiPropertyOptional({ example: 10, default: 10, minimum: 0, maximum: 100 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  serviceFeePercentage?: number;
+
+  @ApiPropertyOptional({ example: 24, default: 24, minimum: 0, maximum: 100 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  taxRate?: number;
+
+  @ApiPropertyOptional({ enum: ['FLEXIBLE', 'MODERATE', 'STRICT', 'SUPER_STRICT'], default: 'MODERATE' })
+  @IsOptional()
+  @IsEnum(['FLEXIBLE', 'MODERATE', 'STRICT', 'SUPER_STRICT'])
+  cancellationPolicy?: string;
+
+  @ApiPropertyOptional({ default: false })
+  @IsOptional()
+  @IsBoolean()
+  hasDynamicRooms?: boolean;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  propertyGroupId?: string;
 }
 

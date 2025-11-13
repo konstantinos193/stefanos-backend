@@ -11,9 +11,9 @@ export class PaymentsService {
   private stripe: Stripe;
 
   constructor(private prisma: PrismaService) {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-      apiVersion: '2025-10-29.clover',
-    });
+    // Stripe will use the account's default API version
+    // or you can specify: apiVersion: '2024-11-20.acacia' as const
+    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
   }
 
   async processPayment(

@@ -19,7 +19,9 @@ export class RateLimitMiddleware implements NestMiddleware {
     this.maxRequests = maxRequests;
 
     // Clean up expired entries every minute
-    setInterval(() => this.cleanup(), 60000);
+    if (typeof setInterval !== 'undefined') {
+      setInterval(() => this.cleanup(), 60000);
+    }
   }
 
   use(req: Request, res: Response, next: NextFunction) {
@@ -61,7 +63,7 @@ export class RateLimitMiddleware implements NestMiddleware {
     if (user?.id || user?.userId) {
       return `user:${user.id || user.userId}`;
     }
-    return `ip:${req.ip || req.connection?.remoteAddress || 'unknown'}`;
+    return `ip:${req.ip || (req as any).connection?.remoteAddress || 'unknown'}`;
   }
 
   private setHeaders(
@@ -88,4 +90,3 @@ export class RateLimitMiddleware implements NestMiddleware {
     });
   }
 }
-
