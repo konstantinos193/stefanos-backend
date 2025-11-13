@@ -130,11 +130,6 @@ export class CreatePropertyDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  cancellationPolicy?: string;
-
-  @ApiPropertyOptional()
-  @IsOptional()
-  @IsString()
   houseRules?: string;
 
   @ApiPropertyOptional({ default: false })
