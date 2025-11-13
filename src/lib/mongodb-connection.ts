@@ -17,6 +17,21 @@ export function normalizeMongoConnectionString(connectionString: string): string
     throw new Error(`Invalid MongoDB connection string format: ${error}`);
   }
 
+  // Check for database name - MongoDB requires a database name
+  // If missing, add a default database name
+  const pathname = url.pathname;
+  let dbName = pathname.split('/')[1]?.split('?')[0];
+  
+  if (!dbName || dbName.trim() === '') {
+    // No database name specified - use default
+    dbName = 'real_estate_db';
+    // Reconstruct pathname with database name, preserving query string
+    const queryString = url.search;
+    url.pathname = `/${dbName}`;
+    // Keep the search params separate (they're already in url.search)
+    console.log(`⚠️  No database name in connection string, using default: ${dbName}`);
+  }
+
   // For mongodb+srv:// connections (MongoDB Atlas)
   if (url.protocol === 'mongodb+srv:') {
     // Get existing search params
@@ -84,6 +99,21 @@ export function validateConnectionString(connectionString: string): {
     issues.push('DATABASE_URL does not appear to be a MongoDB connection string');
     suggestions.push('Use format: mongodb+srv://username:password@cluster.mongodb.net/database');
     return { isValid: false, issues, suggestions };
+  }
+
+  // Check for database name in connection string
+  try {
+    const url = new URL(connectionString);
+    const pathname = url.pathname;
+    // Pathname should be like "/database_name" or "/database_name?params"
+    const dbName = pathname.split('/')[1]?.split('?')[0];
+    if (!dbName || dbName.trim() === '') {
+      issues.push('Database name is missing from connection string');
+      suggestions.push('Add database name after the host: mongodb+srv://user:pass@cluster.mongodb.net/your_database_name');
+      suggestions.push('Example: mongodb+srv://user:pass@cluster.mongodb.net/real_estate_db');
+    }
+  } catch (error) {
+    // URL parsing failed, but we'll let other validations catch it
   }
 
   // Check for required MongoDB Atlas parameters
