@@ -397,6 +397,8 @@ model Edition {
   status      ContentStatus @default(DRAFT)
   featured    Boolean       @default(false)
   order       Int?
+  icon        String?       // Icon URL for category display
+  color       String?       // Color for category display (blue, green, purple, orange, gray)
   
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
