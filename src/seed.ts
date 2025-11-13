@@ -162,6 +162,20 @@ async function main() {
     }
   });
 
+  // Create Stefadmin user for admin panel
+  const stefadminPassword = await hashPassword('stef159');
+  const stefadmin = await prisma.user.create({
+    data: {
+      email: 'Stefadmin@stefanos.com',
+      name: 'Stefadmin',
+      phone: '+30 210 123 4568',
+      password: stefadminPassword,
+      role: 'ADMIN',
+      isActive: true,
+      avatar: 'https://ui-avatars.com/api/?name=Stefadmin&background=3b82f6&color=fff'
+    }
+  });
+
   const ownerData = [
     { email: 'owner1@realestate.com', name: 'Stefanos Spyros', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Stefanos+Spyros&background=d4af37&color=000' },
     { email: 'owner2@realestate.com', name: 'Maria Papadopoulou', phone: '+30 231 123 4567', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Maria+Papadopoulou&background=d4af37&color=000' },
@@ -904,6 +918,7 @@ async function main() {
   console.log(`   - ${knowledgeArticles.length} knowledge articles`);
   console.log('\n🔑 Test Credentials:');
   console.log('   Admin: admin@realestate.com / admin123');
+  console.log('   Stefadmin (Admin Panel): Stefadmin / stef159');
   console.log('   Owner: owner1@realestate.com / owner123');
   console.log('   Guest: guest1@example.com / guest123');
 }
