@@ -26,6 +26,7 @@ import { AppController } from './app.controller';
     KnowledgeModule,
   ],
   controllers: [AppController],
+  providers: [],
 })
 export class AppModule {}
 

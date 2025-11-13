@@ -125,6 +125,63 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+// Get unique cities/locations for autocomplete (must be before /:id route)
+router.get('/locations/cities', async (req, res, next) => {
+  try {
+    const { query } = req.query;
+    
+    const where: any = {
+      status: 'ACTIVE'
+    };
+    
+    if (query && typeof query === 'string' && query.length > 0) {
+      where.OR = [
+        { city: { contains: query, mode: 'insensitive' } },
+        { address: { contains: query, mode: 'insensitive' } }
+      ];
+    }
+    
+    const properties = await prisma.property.findMany({
+      where,
+      select: {
+        city: true,
+        country: true
+      },
+      take: 100,
+      orderBy: {
+        city: 'asc'
+      }
+    });
+    
+    const cityMap = new Map<string, { city: string; country: string }>();
+    
+    properties.forEach(p => {
+      const key = `${p.city.toLowerCase()}-${p.country.toLowerCase()}`;
+      if (!cityMap.has(key)) {
+        cityMap.set(key, {
+          city: p.city,
+          country: p.country
+        });
+      }
+    });
+    
+    const cities = Array.from(cityMap.values())
+      .map(p => ({
+        city: p.city,
+        country: p.country,
+        display: `${p.city}, ${p.country}`
+      }))
+      .slice(0, 20);
+    
+    res.json({
+      success: true,
+      data: cities
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Get single property
 router.get('/:id', async (req, res, next) => {
   try {

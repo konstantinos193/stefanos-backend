@@ -160,5 +160,6 @@ export const propertySearchSchema = z.object({
   minPrice: z.string().transform(Number).pipe(z.number().min(0)).optional(),
   maxPrice: z.string().transform(Number).pipe(z.number().min(0)).optional(),
   amenities: z.string().optional(),
+  intention: z.enum(['buy', 'rent', 'sell']).optional(),
   ...paginationSchema.shape
 });
