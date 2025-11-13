@@ -5,7 +5,7 @@ import { UpdateBookingDto } from './dto/update-booking.dto';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { getPagination } from '../common/utils/pagination.util';
-import { calculateTotalPrice } from '../common/utils/price.util';
+import { FinancialUtil } from '../common/utils/financial.util';
 
 @Injectable()
 export class BookingsService {
@@ -100,6 +100,16 @@ export class BookingsService {
   async create(createBookingDto: CreateBookingDto, guestId: string) {
     const property = await this.prisma.property.findUnique({
       where: { id: createBookingDto.propertyId },
+      select: {
+        id: true,
+        status: true,
+        basePrice: true,
+        cleaningFee: true,
+        serviceFeePercentage: true,
+        taxRate: true,
+        currency: true,
+        cancellationPolicy: true,
+      },
     });
 
     if (!property) {
@@ -137,12 +147,23 @@ export class BookingsService {
     }
 
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-    const totalPrice = calculateTotalPrice(
+    
+    // Calculate price breakdown using FinancialUtil (stay-only payment model)
+    const priceBreakdown = FinancialUtil.calculateTotalPrice(
       property.basePrice,
-      property.cleaningFee || 0,
-      property.serviceFee || 0,
-      property.taxes || 0,
       nights,
+      createBookingDto.guests,
+      property.cleaningFee || 0,
+      property.serviceFeePercentage || 10,
+      property.taxRate || 24,
+      0, // discounts
+      property.currency || 'EUR',
+    );
+
+    // Calculate owner revenue (after platform fees)
+    const { ownerRevenue, platformFee } = FinancialUtil.calculateOwnerRevenue(
+      priceBreakdown.totalPrice,
+      property.serviceFeePercentage || 10,
     );
 
     const booking = await this.prisma.booking.create({
@@ -152,16 +173,18 @@ export class BookingsService {
         checkIn,
         checkOut,
         guests: createBookingDto.guests,
-        totalPrice,
-        basePrice: property.basePrice * nights,
-        cleaningFee: property.cleaningFee || 0,
-        serviceFee: property.serviceFee || 0,
-        taxes: property.taxes || 0,
+        totalPrice: priceBreakdown.totalPrice,
+        basePrice: priceBreakdown.subtotal,
+        cleaningFee: priceBreakdown.cleaningFee,
+        serviceFee: priceBreakdown.serviceFee,
+        taxes: priceBreakdown.taxes,
+        currency: priceBreakdown.currency,
+        ownerRevenue,
+        platformFee,
         guestName: createBookingDto.guestName,
         guestEmail: createBookingDto.guestEmail,
         guestPhone: createBookingDto.guestPhone,
         specialRequests: createBookingDto.specialRequests,
-        paymentMethod: createBookingDto.paymentMethod,
       },
       include: {
         property: {
@@ -231,13 +254,24 @@ export class BookingsService {
     };
   }
 
-  async cancel(id: string, cancelBookingDto: CancelBookingDto) {
+  async cancel(id: string, cancelBookingDto: CancelBookingDto, userId: string) {
     const booking = await this.prisma.booking.findUnique({
       where: { id },
+      include: { property: true },
     });
 
     if (!booking) {
       throw new NotFoundException('Booking not found');
+    }
+
+    // Verify user has permission
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isGuest = booking.guestId === userId;
+    const isOwner = booking.property.ownerId === userId;
+    const isAdmin = user?.role === 'ADMIN';
+
+    if (!isGuest && !isOwner && !isAdmin) {
+      throw new BadRequestException('Unauthorized to cancel this booking');
     }
 
     if (booking.status === 'CANCELLED') {
@@ -248,18 +282,28 @@ export class BookingsService {
       throw new BadRequestException('Cannot cancel completed booking');
     }
 
+    // Calculate refund based on cancellation policy
+    const refundCalculation = FinancialUtil.calculateRefund(
+      booking.totalPrice,
+      new Date(),
+      booking.checkIn,
+      booking.property.cancellationPolicy,
+    );
+
     const updatedBooking = await this.prisma.booking.update({
       where: { id },
       data: {
         status: 'CANCELLED',
-        refundReason: cancelBookingDto.reason,
       },
     });
 
     return {
       success: true,
       message: 'Booking cancelled successfully',
-      data: updatedBooking,
+      data: {
+        ...updatedBooking,
+        refundCalculation,
+      },
     };
   }
 }

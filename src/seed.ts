@@ -1,7 +1,36 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import * as dotenv from 'dotenv';
+import { 
+  normalizeMongoConnectionString, 
+  validateConnectionString,
+  getNormalizedConnectionString 
+} from './lib/mongodb-connection';
+import { 
+  connectWithRetry, 
+  retryOperation, 
+  delay 
+} from './lib/connection-retry';
 
-const prisma = new PrismaClient();
+// Load environment variables
+dotenv.config();
+
+// Normalize connection string before Prisma initialization
+// This ensures proper SSL/TLS configuration for MongoDB Atlas
+try {
+  const normalizedUrl = getNormalizedConnectionString();
+  process.env.DATABASE_URL = normalizedUrl;
+  console.log('🔧 Normalized MongoDB connection string with SSL/TLS parameters');
+} catch (error: any) {
+  console.error('❌ Failed to normalize connection string:', error.message);
+  throw error;
+}
+
+// Configure Prisma client for MongoDB without transactions
+// MongoDB Atlas M0 (free tier) doesn't support transactions
+const prisma = new PrismaClient({
+  log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
+});
 
 async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
@@ -10,138 +39,111 @@ async function hashPassword(password: string): Promise<string> {
 async function main() {
   console.log('🌱 Starting database seed...');
 
-  // Test database connection first
-  try {
-    await prisma.$connect();
-    console.log('✅ Database connection successful');
-  } catch (error) {
-    console.error('❌ Database connection failed:', error);
-    console.error('\n💡 Please check:');
-    console.error('   1. Your DATABASE_URL in .env file');
-    console.error('   2. MongoDB Atlas IP whitelist (add your IP address)');
-    console.error('   3. Network connectivity');
-    throw error;
+  // Diagnose connection string first
+  console.log('🔍 Diagnosing connection configuration...');
+  const dbUrl = process.env.DATABASE_URL || '';
+  const diagnosis = validateConnectionString(dbUrl);
+  if (!diagnosis.isValid || diagnosis.issues.length > 0) {
+    console.warn('⚠️  Connection string issues detected:');
+    diagnosis.issues.forEach(issue => console.warn(`   - ${issue}`));
+  }
+  if (diagnosis.suggestions.length > 0) {
+    console.log('💡 Suggestions:');
+    diagnosis.suggestions.forEach(suggestion => console.log(`   - ${suggestion}`));
   }
 
+  // Test database connection with retry
+  await connectWithRetry(prisma);
+
   // Clear existing data (optional - skip if it fails)
+  // Execute sequentially to avoid transaction issues
   console.log('🧹 Cleaning existing data...');
   try {
-    await prisma.propertyAmenity.deleteMany();
-    await prisma.propertyAvailability.deleteMany();
-    await prisma.review.deleteMany();
-    await prisma.booking.deleteMany();
-    await prisma.property.deleteMany();
-    await prisma.amenity.deleteMany();
-    await prisma.user.deleteMany();
-    await prisma.service.deleteMany();
-    await prisma.edition.deleteMany();
-    await prisma.knowledgeArticle.deleteMany();
+    // Delete in reverse order of dependencies to avoid foreign key issues
+    // Use retry wrapper for each operation
+    await retryOperation(() => prisma.propertyAmenity.deleteMany({}), 'Delete propertyAmenity', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.propertyAvailability.deleteMany({}), 'Delete propertyAvailability', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.review.deleteMany({}), 'Delete reviews', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.booking.deleteMany({}), 'Delete bookings', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.property.deleteMany({}), 'Delete properties', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.amenity.deleteMany({}), 'Delete amenities', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.user.deleteMany({}), 'Delete users', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.service.deleteMany({}), 'Delete services', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.edition.deleteMany({}), 'Delete editions', prisma);
+    await delay(200);
+    await retryOperation(() => prisma.knowledgeArticle.deleteMany({}), 'Delete knowledge articles', prisma);
     console.log('✅ Existing data cleaned');
-  } catch (error) {
-    console.warn('⚠️  Warning: Could not clean existing data (continuing anyway):', error);
-    console.warn('   This is okay if the database is empty or if you want to keep existing data');
+  } catch (error: any) {
+    // Connection errors are expected if database is unreachable
+    if (error.code === 'P2010' || error.message?.includes('timeout') || error.message?.includes('InternalError')) {
+      console.warn('⚠️  Warning: Could not clean existing data due to connection issue (continuing anyway)');
+      console.warn('   This might indicate a network/connection problem, but we will try to continue...');
+    } else {
+      console.warn('⚠️  Warning: Could not clean existing data (continuing anyway):', error.message || error);
+      console.warn('   This is okay if the database is empty or if you want to keep existing data');
+    }
   }
 
   // Create amenities
   console.log('📦 Creating amenities...');
-  const amenities = await Promise.all([
-    prisma.amenity.create({
-      data: {
-        nameGr: 'WiFi',
-        nameEn: 'WiFi',
-        icon: 'wifi',
-        category: 'internet'
+  const amenityData = [
+    { nameGr: 'WiFi', nameEn: 'WiFi', icon: 'wifi', category: 'internet' },
+    { nameGr: 'Πάρκινγκ', nameEn: 'Parking', icon: 'car', category: 'transportation' },
+    { nameGr: 'Πισίνα', nameEn: 'Pool', icon: 'swimming-pool', category: 'recreation' },
+    { nameGr: 'Γυμναστήριο', nameEn: 'Gym', icon: 'dumbbell', category: 'recreation' },
+    { nameGr: 'Κλιματισμός', nameEn: 'Air Conditioning', icon: 'snowflake', category: 'comfort' },
+    { nameGr: 'Κουζίνα', nameEn: 'Kitchen', icon: 'utensils', category: 'comfort' },
+    { nameGr: 'Μπαλκόνι', nameEn: 'Balcony', icon: 'home', category: 'outdoor' },
+    { nameGr: 'Ασανσέρ', nameEn: 'Elevator', icon: 'arrow-up', category: 'accessibility' },
+    { nameGr: 'Θέα στη θάλασσα', nameEn: 'Sea View', icon: 'water', category: 'view' },
+    { nameGr: 'Πλυντήριο', nameEn: 'Washing Machine', icon: 'washing-machine', category: 'comfort' },
+    { nameGr: 'Τηλεόραση', nameEn: 'TV', icon: 'tv', category: 'entertainment' },
+    { nameGr: 'Προσβάσιμο για ΑΜΕΑ', nameEn: 'Wheelchair Accessible', icon: 'wheelchair', category: 'accessibility' }
+  ];
+
+  // Create amenities sequentially to avoid transaction issues
+  // MongoDB Atlas M0 doesn't support transactions
+  const amenities = [];
+  for (let i = 0; i < amenityData.length; i++) {
+    try {
+      // Check if amenity already exists
+      const existing = await retryOperation(
+        () => prisma.amenity.findFirst({
+          where: { 
+            nameEn: amenityData[i].nameEn,
+            nameGr: amenityData[i].nameGr
+          }
+        }),
+        `Find amenity ${i + 1}`,
+        prisma
+      );
+      
+      if (existing) {
+        amenities.push(existing);
+        console.log(`   Using existing amenity ${i + 1}/${amenityData.length}: ${amenityData[i].nameEn}`);
+      } else {
+        const amenity = await retryOperation(
+          () => prisma.amenity.create({ data: amenityData[i] }),
+          `Create amenity ${i + 1}: ${amenityData[i].nameEn}`,
+          prisma
+        );
+        amenities.push(amenity);
+        console.log(`   Created amenity ${i + 1}/${amenityData.length}: ${amenity.nameEn}`);
       }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Πάρκινγκ',
-        nameEn: 'Parking',
-        icon: 'car',
-        category: 'transportation'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Πισίνα',
-        nameEn: 'Pool',
-        icon: 'swimming-pool',
-        category: 'recreation'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Γυμναστήριο',
-        nameEn: 'Gym',
-        icon: 'dumbbell',
-        category: 'recreation'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Κλιματισμός',
-        nameEn: 'Air Conditioning',
-        icon: 'snowflake',
-        category: 'comfort'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Κουζίνα',
-        nameEn: 'Kitchen',
-        icon: 'utensils',
-        category: 'comfort'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Μπαλκόνι',
-        nameEn: 'Balcony',
-        icon: 'home',
-        category: 'outdoor'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Ασανσέρ',
-        nameEn: 'Elevator',
-        icon: 'arrow-up',
-        category: 'accessibility'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Θέα στη θάλασσα',
-        nameEn: 'Sea View',
-        icon: 'water',
-        category: 'view'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Πλυντήριο',
-        nameEn: 'Washing Machine',
-        icon: 'washing-machine',
-        category: 'comfort'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Τηλεόραση',
-        nameEn: 'TV',
-        icon: 'tv',
-        category: 'entertainment'
-      }
-    }),
-    prisma.amenity.create({
-      data: {
-        nameGr: 'Προσβάσιμο για ΑΜΕΑ',
-        nameEn: 'Wheelchair Accessible',
-        icon: 'wheelchair',
-        category: 'accessibility'
-      }
-    })
-  ]);
+      await delay(100); // Small delay between operations
+    } catch (error: any) {
+      console.error(`   Error creating amenity ${i + 1}: ${amenityData[i].nameEn}`, error.message);
+      throw error;
+    }
+  }
 
   console.log(`✅ Created ${amenities.length} amenities`);
 
@@ -160,77 +162,49 @@ async function main() {
     }
   });
 
-  const owners = await Promise.all([
-    prisma.user.create({
-      data: {
-        email: 'owner1@realestate.com',
-        name: 'Stefanos Spyros',
-        phone: '+30 210 987 6543',
-        password: await hashPassword('owner123'),
-        role: 'PROPERTY_OWNER',
-        isActive: true,
-        avatar: 'https://ui-avatars.com/api/?name=Stefanos+Spyros&background=d4af37&color=000'
-      }
-    }),
-    prisma.user.create({
-      data: {
-        email: 'owner2@realestate.com',
-        name: 'Maria Papadopoulou',
-        phone: '+30 231 123 4567',
-        password: await hashPassword('owner123'),
-        role: 'PROPERTY_OWNER',
-        isActive: true,
-        avatar: 'https://ui-avatars.com/api/?name=Maria+Papadopoulou&background=d4af37&color=000'
-      }
-    }),
-    prisma.user.create({
-      data: {
-        email: 'owner3@realestate.com',
-        name: 'Dimitris Georgiou',
-        phone: '+30 228 765 4321',
-        password: await hashPassword('owner123'),
-        role: 'PROPERTY_OWNER',
-        isActive: true,
-        avatar: 'https://ui-avatars.com/api/?name=Dimitris+Georgiou&background=d4af37&color=000'
-      }
-    })
-  ]);
+  const ownerData = [
+    { email: 'owner1@realestate.com', name: 'Stefanos Spyros', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Stefanos+Spyros&background=d4af37&color=000' },
+    { email: 'owner2@realestate.com', name: 'Maria Papadopoulou', phone: '+30 231 123 4567', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Maria+Papadopoulou&background=d4af37&color=000' },
+    { email: 'owner3@realestate.com', name: 'Dimitris Georgiou', phone: '+30 228 765 4321', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Dimitris+Georgiou&background=d4af37&color=000' }
+  ];
 
-  const guests = await Promise.all([
-    prisma.user.create({
+  const owners = [];
+  for (const data of ownerData) {
+    const owner = await prisma.user.create({
       data: {
-        email: 'guest1@example.com',
-        name: 'John Smith',
-        phone: '+1 555 123 4567',
-        password: await hashPassword('guest123'),
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        password: await hashPassword(data.password),
+        role: 'PROPERTY_OWNER',
+        isActive: true,
+        avatar: data.avatar
+      }
+    });
+    owners.push(owner);
+  }
+
+  const guestData = [
+    { email: 'guest1@example.com', name: 'John Smith', phone: '+1 555 123 4567', password: 'guest123', avatar: 'https://ui-avatars.com/api/?name=John+Smith&background=3b82f6&color=fff' },
+    { email: 'guest2@example.com', name: 'Emma Johnson', phone: '+44 20 1234 5678', password: 'guest123', avatar: 'https://ui-avatars.com/api/?name=Emma+Johnson&background=10b981&color=fff' },
+    { email: 'guest3@example.com', name: 'Michael Brown', phone: '+49 30 12345678', password: 'guest123', avatar: 'https://ui-avatars.com/api/?name=Michael+Brown&background=f59e0b&color=fff' }
+  ];
+
+  const guests = [];
+  for (const data of guestData) {
+    const guest = await prisma.user.create({
+      data: {
+        email: data.email,
+        name: data.name,
+        phone: data.phone,
+        password: await hashPassword(data.password),
         role: 'USER',
         isActive: true,
-        avatar: 'https://ui-avatars.com/api/?name=John+Smith&background=3b82f6&color=fff'
+        avatar: data.avatar
       }
-    }),
-    prisma.user.create({
-      data: {
-        email: 'guest2@example.com',
-        name: 'Emma Johnson',
-        phone: '+44 20 1234 5678',
-        password: await hashPassword('guest123'),
-        role: 'USER',
-        isActive: true,
-        avatar: 'https://ui-avatars.com/api/?name=Emma+Johnson&background=10b981&color=fff'
-      }
-    }),
-    prisma.user.create({
-      data: {
-        email: 'guest3@example.com',
-        name: 'Michael Brown',
-        phone: '+49 30 12345678',
-        password: await hashPassword('guest123'),
-        role: 'USER',
-        isActive: true,
-        avatar: 'https://ui-avatars.com/api/?name=Michael+Brown&background=f59e0b&color=fff'
-      }
-    })
-  ]);
+    });
+    guests.push(guest);
+  }
 
   console.log(`✅ Created ${1 + owners.length + guests.length} users`);
 
@@ -261,7 +235,7 @@ async function main() {
       maxStay: 30,
       checkInTime: '15:00',
       checkOutTime: '11:00',
-      cancellationPolicy: 'Free cancellation up to 24 hours before check-in',
+      cancellationPolicy: 'FLEXIBLE' as const,
       houseRules: 'No smoking, no parties, pets allowed',
       petFriendly: true,
       smokingAllowed: false,
@@ -597,20 +571,52 @@ async function main() {
     }
   ];
 
+  // Create properties sequentially, then link amenities separately
+  // This avoids transaction issues with MongoDB Atlas M0
   const properties = [];
-  for (const prop of propertyData) {
-    const { amenityIds, ...propertyInfo } = prop;
-    const property = await prisma.property.create({
-      data: {
-        ...propertyInfo,
-        amenities: {
-          create: amenityIds.map(amenityIndex => ({
-            amenityId: amenities[amenityIndex].id
-          }))
+  for (let i = 0; i < propertyData.length; i++) {
+    const prop = propertyData[i];
+    const { amenityIds, serviceFee, ...propertyInfo } = prop;
+    
+    try {
+      // Create property first (without nested creates to avoid transactions)
+      const property = await retryOperation(
+        () => prisma.property.create({ data: propertyInfo }),
+        `Create property ${i + 1}: ${propertyInfo.titleEn}`,
+        prisma
+      );
+      properties.push(property);
+      
+      // Then create amenity links separately
+      if (amenityIds && amenityIds.length > 0) {
+        for (const amenityIndex of amenityIds) {
+          try {
+            await retryOperation(
+              () => prisma.propertyAmenity.create({
+                data: {
+                  propertyId: property.id,
+                  amenityId: amenities[amenityIndex].id
+                }
+              }),
+              `Link amenity ${amenityIndex} to property ${i + 1}`,
+              prisma
+            );
+            await delay(50); // Small delay between amenity links
+          } catch (error: any) {
+            // Ignore duplicate errors (unique constraint)
+            if (error.code !== 'P2002') {
+              console.warn(`   Warning: Could not link amenity ${amenityIndex} to property ${i + 1}`);
+            }
+          }
         }
       }
-    });
-    properties.push(property);
+      
+      console.log(`   Created property ${i + 1}/${propertyData.length}: ${property.titleEn}`);
+      await delay(200); // Delay between properties
+    } catch (error: any) {
+      console.error(`   Error creating property ${i + 1}: ${propertyInfo.titleEn}`, error.message);
+      throw error;
+    }
   }
 
   console.log(`✅ Created ${properties.length} properties`);
@@ -660,7 +666,7 @@ async function main() {
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
     const basePrice = property.basePrice * nights;
     const cleaningFee = property.cleaningFee || 0;
-    const serviceFee = property.serviceFee || 0;
+    const serviceFee = basePrice * (property.serviceFeePercentage || 10) / 100;
     const taxes = property.taxes || 0;
     const totalPrice = basePrice + cleaningFee + serviceFee + taxes;
     
@@ -736,155 +742,153 @@ async function main() {
 
   // Create services
   console.log('🛠️ Creating services...');
-  const services = await Promise.all([
-    prisma.service.create({
-      data: {
-        titleGr: 'Διαχείριση Ακινήτων',
-        titleEn: 'Property Management',
-        descriptionGr: 'Αξιόπιστη διαχείριση των ακινήτων σας',
-        descriptionEn: 'Reliable management of your properties',
-        icon: 'building',
-        features: ['24/7 Support', 'Maintenance', 'Tenant Screening', 'Financial Reports'],
-        pricingGr: 'Από 200€/μήνα',
-        pricingEn: 'From €200/month',
-        isActive: true
-      }
-    }),
-    prisma.service.create({
-      data: {
-        titleGr: 'Πλατφόρμα Κρατήσεων',
-        titleEn: 'Booking Platform',
-        descriptionGr: 'Σύγχρονη πλατφόρμα για κρατήσεις',
-        descriptionEn: 'Modern platform for bookings',
-        icon: 'calendar',
-        features: ['Online Booking', 'Payment Processing', 'Calendar Sync', 'Guest Communication'],
-        pricingGr: '3% ανά κράτηση',
-        pricingEn: '3% per booking',
-        isActive: true
-      }
-    }),
-    prisma.service.create({
-      data: {
-        titleGr: 'Ανάλυση Αγοράς',
-        titleEn: 'Market Analysis',
-        descriptionGr: 'Συμβουλές για την αγορά ακινήτων',
-        descriptionEn: 'Advice for real estate investment',
-        icon: 'chart-line',
-        features: ['Market Trends', 'Price Analysis', 'Investment Opportunities', 'Risk Assessment'],
-        pricingGr: 'Από 500€',
-        pricingEn: 'From €500',
-        isActive: true
-      }
-    }),
-    prisma.service.create({
-      data: {
-        titleGr: 'Μάρκετινγκ & Προώθηση',
-        titleEn: 'Marketing & Promotion',
-        descriptionGr: 'Επαγγελματική προώθηση των ακινήτων σας',
-        descriptionEn: 'Professional promotion of your properties',
-        icon: 'megaphone',
-        features: ['Social Media', 'SEO Optimization', 'Professional Photography', 'Virtual Tours'],
-        pricingGr: 'Από 300€/μήνα',
-        pricingEn: 'From €300/month',
-        isActive: true
-      }
-    })
-  ]);
+  const serviceData = [
+    {
+      titleGr: 'Διαχείριση Ακινήτων',
+      titleEn: 'Property Management',
+      descriptionGr: 'Αξιόπιστη διαχείριση των ακινήτων σας',
+      descriptionEn: 'Reliable management of your properties',
+      icon: 'building',
+      features: ['24/7 Support', 'Maintenance', 'Tenant Screening', 'Financial Reports'],
+      pricingGr: 'Από 200€/μήνα',
+      pricingEn: 'From €200/month',
+      isActive: true
+    },
+    {
+      titleGr: 'Πλατφόρμα Κρατήσεων',
+      titleEn: 'Booking Platform',
+      descriptionGr: 'Σύγχρονη πλατφόρμα για κρατήσεις',
+      descriptionEn: 'Modern platform for bookings',
+      icon: 'calendar',
+      features: ['Online Booking', 'Payment Processing', 'Calendar Sync', 'Guest Communication'],
+      pricingGr: '3% ανά κράτηση',
+      pricingEn: '3% per booking',
+      isActive: true
+    },
+    {
+      titleGr: 'Ανάλυση Αγοράς',
+      titleEn: 'Market Analysis',
+      descriptionGr: 'Συμβουλές για την αγορά ακινήτων',
+      descriptionEn: 'Advice for real estate investment',
+      icon: 'chart-line',
+      features: ['Market Trends', 'Price Analysis', 'Investment Opportunities', 'Risk Assessment'],
+      pricingGr: 'Από 500€',
+      pricingEn: 'From €500',
+      isActive: true
+    },
+    {
+      titleGr: 'Μάρκετινγκ & Προώθηση',
+      titleEn: 'Marketing & Promotion',
+      descriptionGr: 'Επαγγελματική προώθηση των ακινήτων σας',
+      descriptionEn: 'Professional promotion of your properties',
+      icon: 'megaphone',
+      features: ['Social Media', 'SEO Optimization', 'Professional Photography', 'Virtual Tours'],
+      pricingGr: 'Από 300€/μήνα',
+      pricingEn: 'From €300/month',
+      isActive: true
+    }
+  ];
+
+  const services = [];
+  for (const data of serviceData) {
+    const service = await prisma.service.create({ data });
+    services.push(service);
+  }
 
   console.log(`✅ Created ${services.length} services`);
 
   // Create editions
   console.log('📚 Creating editions...');
-  const editions = await Promise.all([
-    prisma.edition.create({
-      data: {
-        category: 'real-estate',
-        titleGr: 'Κατοικίες',
-        titleEn: 'Residential Properties',
-        descriptionGr: 'Σύγχρονα διαμερίσματα και σπίτια',
-        descriptionEn: 'Modern apartments and houses',
-        contentGr: 'Ανακαλύψτε τα καλύτερα ακίνητα για κατοικία',
-        contentEn: 'Discover the best properties for living',
-        status: 'PUBLISHED',
-        featured: true,
-        order: 1
-      }
-    }),
-    prisma.edition.create({
-      data: {
-        category: 'real-estate',
-        titleGr: 'Επαγγελματικά',
-        titleEn: 'Commercial Properties',
-        descriptionGr: 'Γραφεία και εμπορικούς χώρους',
-        descriptionEn: 'Offices and commercial spaces',
-        contentGr: 'Ιδανικά ακίνητα για την επιχείρησή σας',
-        contentEn: 'Perfect properties for your business',
-        status: 'PUBLISHED',
-        featured: true,
-        order: 2
-      }
-    }),
-    prisma.edition.create({
-      data: {
-        category: 'booking',
-        titleGr: 'Βραχυχρόνιες Κρατήσεις',
-        titleEn: 'Short-term Rentals',
-        descriptionGr: 'Κρατήσεις για διακοπές και ταξίδια',
-        descriptionEn: 'Bookings for vacations and travel',
-        contentGr: 'Βρείτε το ιδανικό μέρος για τις διακοπές σας',
-        contentEn: 'Find the perfect place for your vacation',
-        status: 'PUBLISHED',
-        featured: true,
-        order: 3
-      }
-    })
-  ]);
+  const editionData = [
+    {
+      category: 'real-estate',
+      titleGr: 'Κατοικίες',
+      titleEn: 'Residential Properties',
+      descriptionGr: 'Σύγχρονα διαμερίσματα και σπίτια',
+      descriptionEn: 'Modern apartments and houses',
+      contentGr: 'Ανακαλύψτε τα καλύτερα ακίνητα για κατοικία',
+      contentEn: 'Discover the best properties for living',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 1
+    },
+    {
+      category: 'real-estate',
+      titleGr: 'Επαγγελματικά',
+      titleEn: 'Commercial Properties',
+      descriptionGr: 'Γραφεία και εμπορικούς χώρους',
+      descriptionEn: 'Offices and commercial spaces',
+      contentGr: 'Ιδανικά ακίνητα για την επιχείρησή σας',
+      contentEn: 'Perfect properties for your business',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 2
+    },
+    {
+      category: 'booking',
+      titleGr: 'Βραχυχρόνιες Κρατήσεις',
+      titleEn: 'Short-term Rentals',
+      descriptionGr: 'Κρατήσεις για διακοπές και ταξίδια',
+      descriptionEn: 'Bookings for vacations and travel',
+      contentGr: 'Βρείτε το ιδανικό μέρος για τις διακοπές σας',
+      contentEn: 'Find the perfect place for your vacation',
+      status: 'PUBLISHED' as const,
+      featured: true,
+      order: 3
+    }
+  ];
+
+  const editions = [];
+  for (const data of editionData) {
+    const edition = await prisma.edition.create({ data });
+    editions.push(edition);
+  }
 
   console.log(`✅ Created ${editions.length} editions`);
 
   // Create knowledge articles
   console.log('📖 Creating knowledge articles...');
-  const knowledgeArticles = await Promise.all([
-    prisma.knowledgeArticle.create({
-      data: {
-        titleGr: 'Οδηγός Επένδυσης σε Ακίνητα',
-        titleEn: 'Real Estate Investment Guide',
-        contentGr: 'Όλα όσα χρειάζεται να ξέρετε για την επένδυση σε ακίνητα. Από την ανάλυση της αγοράς έως τη διαχείριση του ακινήτου.',
-        contentEn: 'Everything you need to know about real estate investment. From market analysis to property management.',
-        category: 'investment',
-        tags: ['investment', 'real-estate', 'guide'],
-        author: 'Real Estate Team',
-        readTime: 15,
-        publishedAt: new Date()
-      }
-    }),
-    prisma.knowledgeArticle.create({
-      data: {
-        titleGr: 'Νομικές Υποχρεώσεις',
-        titleEn: 'Legal Requirements',
-        contentGr: 'Οι νομικές υποχρεώσεις για ιδιοκτήτες ακινήτων. Συμβάσεις, φόροι, και άδειες.',
-        contentEn: 'Legal requirements for property owners. Contracts, taxes, and permits.',
-        category: 'legal',
-        tags: ['legal', 'requirements', 'property-owners'],
-        author: 'Legal Team',
-        readTime: 10,
-        publishedAt: new Date()
-      }
-    }),
-    prisma.knowledgeArticle.create({
-      data: {
-        titleGr: 'Συμβουλές για Ενοικιαστές',
-        titleEn: 'Tips for Renters',
-        contentGr: 'Πώς να βρείτε το ιδανικό ακίνητο για ενοικίαση. Συμβουλές και κόλπα.',
-        contentEn: 'How to find the perfect property for rent. Tips and tricks.',
-        category: 'renting',
-        tags: ['renting', 'tips', 'guide'],
-        author: 'Rental Team',
-        readTime: 8,
-        publishedAt: new Date()
-      }
-    })
-  ]);
+  const knowledgeArticleData = [
+    {
+      titleGr: 'Οδηγός Επένδυσης σε Ακίνητα',
+      titleEn: 'Real Estate Investment Guide',
+      contentGr: 'Όλα όσα χρειάζεται να ξέρετε για την επένδυση σε ακίνητα. Από την ανάλυση της αγοράς έως τη διαχείριση του ακινήτου.',
+      contentEn: 'Everything you need to know about real estate investment. From market analysis to property management.',
+      category: 'investment',
+      tags: ['investment', 'real-estate', 'guide'],
+      author: 'Real Estate Team',
+      readTime: 15,
+      publishedAt: new Date()
+    },
+    {
+      titleGr: 'Νομικές Υποχρεώσεις',
+      titleEn: 'Legal Requirements',
+      contentGr: 'Οι νομικές υποχρεώσεις για ιδιοκτήτες ακινήτων. Συμβάσεις, φόροι, και άδειες.',
+      contentEn: 'Legal requirements for property owners. Contracts, taxes, and permits.',
+      category: 'legal',
+      tags: ['legal', 'requirements', 'property-owners'],
+      author: 'Legal Team',
+      readTime: 10,
+      publishedAt: new Date()
+    },
+    {
+      titleGr: 'Συμβουλές για Ενοικιαστές',
+      titleEn: 'Tips for Renters',
+      contentGr: 'Πώς να βρείτε το ιδανικό ακίνητο για ενοικίαση. Συμβουλές και κόλπα.',
+      contentEn: 'How to find the perfect property for rent. Tips and tricks.',
+      category: 'renting',
+      tags: ['renting', 'tips', 'guide'],
+      author: 'Rental Team',
+      readTime: 8,
+      publishedAt: new Date()
+    }
+  ];
+
+  const knowledgeArticles = [];
+  for (const data of knowledgeArticleData) {
+    const article = await prisma.knowledgeArticle.create({ data });
+    knowledgeArticles.push(article);
+  }
 
   console.log(`✅ Created ${knowledgeArticles.length} knowledge articles`);
 
@@ -905,16 +909,56 @@ async function main() {
 }
 
 main()
-  .catch((e) => {
+  .catch((e: any) => {
     console.error('\n❌ Error during seed:', e);
-    if (e.code === 'P2010' || e.message?.includes('Server selection timeout')) {
-      console.error('\n💡 This looks like a database connection issue.');
-      console.error('   Please check:');
-      console.error('   1. Your DATABASE_URL in .env file is correct');
-      console.error('   2. MongoDB Atlas allows connections from your IP address');
-      console.error('   3. Your network connection is stable');
-      console.error('   4. MongoDB Atlas cluster is running');
+    
+    if (e.code === 'P2010') {
+      if (e.message?.includes('Transactions are not supported')) {
+        console.error('\n💡 Transaction Error: MongoDB Atlas M0 (free tier) does not support transactions.');
+        console.error('   The seed script has been updated to avoid transactions, but if you see this error:');
+        console.error('   1. Ensure your DATABASE_URL is a MongoDB connection string (not PostgreSQL)');
+        console.error('   2. Check that you are using MongoDB Atlas M0 or higher');
+        console.error('   3. Try upgrading to a MongoDB Atlas cluster that supports transactions (M10+)');
+        console.error('   4. Or ensure the seed script operations are truly sequential');
+      } else if (e.message?.includes('Server selection timeout') || e.message?.includes('InternalError') || e.message?.includes('fatal alert')) {
+        console.error('\n💡 Connection/SSL Error: This is a network or SSL/TLS handshake issue.');
+        console.error('\n   The error "fatal alert: InternalError" typically means:');
+        console.error('   1. MongoDB Atlas cluster is PAUSED (most common issue)');
+        console.error('      → Go to MongoDB Atlas → Clusters → Resume your cluster');
+        console.error('   2. IP address is not whitelisted');
+        console.error('      → Go to MongoDB Atlas → Network Access → Add IP Address');
+        console.error('      → For testing: Add 0.0.0.0/0 (allows all IPs - not for production)');
+        console.error('   3. Firewall or network blocking SSL/TLS connections');
+        console.error('      → Check your firewall/antivirus settings');
+        console.error('      → Try from a different network (mobile hotspot)');
+        console.error('   4. Connection string format issue');
+        console.error('      → Ensure it starts with mongodb+srv://');
+        console.error('      → Format: mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority');
+        console.error('\n   Quick fixes to try:');
+        console.error('   1. Check MongoDB Atlas dashboard - is your cluster running?');
+        console.error('   2. In MongoDB Atlas → Network Access, add your current IP or 0.0.0.0/0');
+        console.error('   3. Verify your DATABASE_URL in .env file is correct');
+        console.error('   4. Try pinging your cluster: Check cluster status in Atlas dashboard');
+        
+        // Show current connection string (masked)
+        const dbUrl = process.env.DATABASE_URL || '';
+        if (dbUrl) {
+          const masked = dbUrl.replace(/(mongodb\+srv:\/\/)([^:]+):([^@]+)@/, '$1***:***@');
+          console.error(`\n   Current DATABASE_URL format: ${masked.substring(0, 80)}...`);
+        }
+      } else {
+        console.error('\n💡 Database Error (P2010):', e.message);
+        console.error('   This is a Prisma database connection error.');
+        console.error('   Check your DATABASE_URL and MongoDB Atlas configuration.');
+      }
+    } else if (e.message?.includes('timeout') || e.message?.includes('ECONNREFUSED')) {
+      console.error('\n💡 Network Error: Cannot connect to MongoDB.');
+      console.error('   Please verify your DATABASE_URL and network connectivity.');
+    } else {
+      console.error('\n💡 Unexpected error occurred during seeding.');
+      console.error('   Error details:', e.message || e);
     }
+    
     process.exit(1);
   })
   .finally(async () => {

@@ -185,12 +185,14 @@ export class PropertiesService {
   }
 
   async create(createPropertyDto: CreatePropertyDto, ownerId: string) {
+    const { amenities, cancellationPolicy, ...propertyData } = createPropertyDto;
     const property = await this.prisma.property.create({
       data: {
-        ...createPropertyDto,
+        ...propertyData,
         ownerId,
+        cancellationPolicy: cancellationPolicy as any,
         amenities: {
-          create: (createPropertyDto.amenities || []).map((amenityId) => ({
+          create: (amenities || []).map((amenityId) => ({
             amenityId,
           })),
         },

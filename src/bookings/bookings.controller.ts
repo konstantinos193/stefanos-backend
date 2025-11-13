@@ -46,8 +46,12 @@ export class BookingsController {
   @Post(':id/cancel')
   @ApiOperation({ summary: 'Cancel booking' })
   @ApiResponse({ status: 200 })
-  cancel(@Param('id') id: string, @Body() cancelBookingDto: CancelBookingDto) {
-    return this.bookingsService.cancel(id, cancelBookingDto);
+  cancel(
+    @Param('id') id: string,
+    @Body() cancelBookingDto: CancelBookingDto,
+    @CurrentUser() user: any,
+  ) {
+    return this.bookingsService.cancel(id, cancelBookingDto, user.userId || user.id);
   }
 }
 

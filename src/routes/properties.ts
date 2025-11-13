@@ -267,15 +267,17 @@ router.post('/', async (req, res, next) => {
     // TODO: Add authentication middleware to get userId
     const ownerId = 'temp-user-id'; // This should come from auth middleware
     
+    const { amenities, cancellationPolicy, ...propertyData } = data;
     const property = await prisma.property.create({
       data: {
-        ...data,
+        ...propertyData,
         ownerId,
+        cancellationPolicy: cancellationPolicy as any,
         amenities: {
-          create: data.amenities.map(amenityId => ({
-            amenityId
-          }))
-        }
+          create: amenities.map(amenityId => ({
+            amenityId,
+          })),
+        },
       },
       include: {
         owner: {

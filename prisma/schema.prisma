@@ -20,6 +20,22 @@ model User {
   role      UserRole @default(USER)
   avatar    String?
   isActive  Boolean  @default(true)
+  
+  // MFA Support
+  mfaEnabled    Boolean   @default(false)
+  mfaSecret     String?   // TOTP secret
+  mfaBackupCodes String[] // Backup codes for MFA
+  emailVerified Boolean   @default(false)
+  phoneVerified  Boolean   @default(false)
+  
+  // Stripe Connect (for property owners)
+  stripeAccountId     String? // Stripe Connect account ID
+  stripeAccountStatus String? // pending, active, restricted
+  
+  // Preferences
+  preferredCurrency String? @default("EUR")
+  preferredLanguage String? @default("en")
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -29,6 +45,10 @@ model User {
   reviews        Review[]
   notifications  Notification[]
   messages       Message[]
+  auditLogs      AuditLog[]
+  propertyGroups PropertyGroup[]
+  rooms          Room[]
+  cleaningSchedules CleaningSchedule[]
 
   @@map("users")
 }
@@ -50,12 +70,13 @@ model Property {
   type        PropertyType
   status      PropertyStatus @default(ACTIVE)
   
-  // Location
+  // Location (Preveza focus)
   address     String
-  city        String
-  country     String
+  city        String        @default("Preveza")
+  country     String        @default("Greece")
   latitude    Float?
   longitude   Float?
+  postalCode  String?
   
   // Capacity
   maxGuests   Int
@@ -67,8 +88,9 @@ model Property {
   basePrice   Float
   currency    String        @default("EUR")
   cleaningFee Float?
-  serviceFee  Float?
+  serviceFeePercentage Float? @default(10) // Platform fee percentage
   taxes       Float?
+  taxRate     Float?        @default(24) // VAT rate for Greece
   
   // Availability
   minStay     Int           @default(1)
@@ -78,11 +100,21 @@ model Property {
   // Rules
   checkInTime     String?
   checkOutTime    String?
-  cancellationPolicy String?
+  cancellationPolicy CancellationPolicy @default(FLEXIBLE)
   houseRules      String?
   petFriendly     Boolean   @default(false)
   smokingAllowed  Boolean   @default(false)
   partyAllowed    Boolean   @default(false)
+  
+  // Dynamic Rooms Support
+  hasDynamicRooms Boolean   @default(false)
+  
+  // Cleanliness Tracking
+  averageCleanlinessRating Float?
+  lastCleaningDate        DateTime?
+  
+  // Property Group (Subholding)
+  propertyGroupId String?  @db.ObjectId
   
   // Media
   images      String[]
@@ -96,6 +128,12 @@ model Property {
   amenities   PropertyAmenity[]
   availability PropertyAvailability[]
   maintenance MaintenanceRequest[]
+  rooms       Room[]
+  notes       PropertyNote[]
+  analytics   PropertyAnalytics[]
+  cleaningSchedules CleaningSchedule[]
+  propertyGroup PropertyGroup? @relation(fields: [propertyGroupId], references: [id], onDelete: SetNull)
+  payments    Payment[]
   
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -119,6 +157,13 @@ enum PropertyStatus {
   INACTIVE
   MAINTENANCE
   SUSPENDED
+}
+
+enum CancellationPolicy {
+  FLEXIBLE      // Full refund 24h before check-in
+  MODERATE      // Full refund 5 days before check-in
+  STRICT        // 50% refund 7 days before check-in
+  SUPER_STRICT  // No refund
 }
 
 // Amenities
@@ -160,13 +205,15 @@ model Booking {
   checkOut        DateTime
   guests          Int
   
-  // Pricing
+  // Pricing (Stay-only payment model)
   totalPrice      Float
   basePrice       Float
   cleaningFee     Float?
   serviceFee      Float?
   taxes           Float?
   currency        String        @default("EUR")
+  ownerRevenue    Float?        // Revenue after platform fees
+  platformFee    Float?        // Platform fee amount
   
   // Guest Info
   guestName       String
@@ -174,15 +221,10 @@ model Booking {
   guestPhone      String?
   specialRequests String?
   
-  // Payment
-  paymentMethod   String?
-  transactionId   String?
-  refundAmount    Float?
-  refundReason    String?
-  
   // Relations
   property        Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   guest           User          @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  payments        Payment[]
   reviews         Review[]
   messages        Message[]
   maintenance     MaintenanceRequest[]
@@ -234,7 +276,12 @@ model Review {
   propertyId  String   @db.ObjectId
   bookingId   String   @db.ObjectId
   guestId     String   @db.ObjectId
-  rating      Int      // 1-5
+  rating      Int      // 1-5 overall rating
+  cleanlinessRating Int? // 1-5 cleanliness rating (required per requirements)
+  accuracyRating     Int? // 1-5
+  communicationRating Int? // 1-5
+  locationRating     Int? // 1-5
+  valueRating        Int? // 1-5
   title       String?
   comment     String?
   response    String?  // Host response
@@ -399,4 +446,231 @@ model KnowledgeArticle {
   updatedAt   DateTime @updatedAt
 
   @@map("knowledge_articles")
+}
+
+// Payment Model (Separate from Booking for stay-only payment)
+model Payment {
+  id                  String        @id @default(auto()) @map("_id") @db.ObjectId
+  bookingId           String        @db.ObjectId
+  propertyId          String        @db.ObjectId
+  amount              Float
+  currency            String        @default("EUR")
+  status              PaymentStatus  @default(PENDING)
+  method              PaymentMethod
+  transactionId       String?       // Internal transaction ID
+  stripePaymentIntentId String?     // Stripe Payment Intent ID
+  stripeChargeId      String?       // Stripe Charge ID
+  refundAmount        Float?
+  refundReason        String?
+  refundedAt          DateTime?
+  
+  // Payout Information (Stripe Connect)
+  payoutId            String?       // Stripe Payout ID
+  payoutStatus        String?       // pending, paid, failed
+  payoutScheduledFor DateTime?
+  
+  processedAt         DateTime?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  
+  // Relations
+  booking             Booking        @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  property            Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  APPLE_PAY
+  GOOGLE_PAY
+  PAYPAL
+  BANK_TRANSFER
+  STRIPE_LINK
+}
+
+// Room Model (Dynamic Rooms)
+model Room {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  name        String
+  nameGr      String?
+  nameEn      String?
+  type        RoomType
+  capacity    Int
+  basePrice   Float
+  isBookable  Boolean  @default(true)
+  amenities   String[]
+  images      String[]
+  descriptionGr String?
+  descriptionEn String?
+  
+  // Relations
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId     String   @db.ObjectId
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("rooms")
+}
+
+enum RoomType {
+  BEDROOM
+  LIVING_ROOM
+  STUDIO
+  KITCHEN
+  BATHROOM
+  BALCONY
+  TERRACE
+  GARDEN
+  OTHER
+}
+
+// Property Group (Subholding)
+model PropertyGroup {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  nameGr      String?
+  nameEn      String?
+  description String?
+  ownerId     String   @db.ObjectId
+  
+  // Relations
+  owner       User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  properties  Property[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("property_groups")
+}
+
+// Cleaning Schedule
+model CleaningSchedule {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  frequency   CleaningFrequency
+  lastCleaned DateTime?
+  nextCleaning DateTime?
+  assignedCleaner String? // User ID or external cleaner
+  ownerId     String   @db.ObjectId
+  notes       String?
+  
+  // Relations
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("cleaning_schedules")
+}
+
+enum CleaningFrequency {
+  AFTER_EACH_BOOKING
+  DAILY
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+// Property Analytics
+model PropertyAnalytics {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  period      AnalyticsPeriod
+  periodStart DateTime
+  periodEnd   DateTime
+  
+  // Revenue Metrics
+  totalRevenue        Float
+  totalCosts          Float
+  cleaningCosts       Float
+  maintenanceCosts    Float
+  platformFees        Float
+  netProfit           Float
+  profitMargin        Float // percentage
+  
+  // Booking Metrics
+  totalBookings       Int
+  cancelledBookings   Int
+  occupancyRate       Float // percentage
+  averageDailyRate    Float
+  revenuePerAvailableRoom Float?
+  
+  // Guest Metrics
+  averageRating       Float?
+  averageCleanlinessRating Float?
+  totalReviews        Int
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  @@unique([propertyId, period, periodStart])
+  @@map("property_analytics")
+}
+
+enum AnalyticsPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+// Property Notes
+model PropertyNote {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  propertyId  String   @db.ObjectId
+  type        NoteType
+  title       String
+  content     String
+  isPrivate   Boolean  @default(true) // Owner-only vs admin-visible
+  createdBy   String   @db.ObjectId // User ID
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  
+  @@map("property_notes")
+}
+
+enum NoteType {
+  OWNER_NOTE
+  MAINTENANCE_NOTE
+  GUEST_PREFERENCE
+  BUSINESS_NOTE
+  ADMIN_NOTE
+}
+
+// Audit Log
+model AuditLog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  action      String   // CREATE, UPDATE, DELETE, LOGIN, etc.
+  entityType  String   // Property, Booking, User, etc.
+  entityId    String?
+  changes     Json?    // Before/after changes
+  ipAddress   String?
+  userAgent   String?
+  metadata    Json?
+  
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("audit_logs")
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@index([createdAt])
 }

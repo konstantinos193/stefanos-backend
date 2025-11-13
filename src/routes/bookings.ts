@@ -110,7 +110,15 @@ router.post('/', async (req, res, next) => {
     
     // Check if property exists and is available
     const property = await prisma.property.findUnique({
-      where: { id: data.propertyId }
+      where: { id: data.propertyId },
+      select: {
+        id: true,
+        status: true,
+        basePrice: true,
+        cleaningFee: true,
+        serviceFeePercentage: true,
+        taxes: true,
+      },
     });
     
     if (!property) {
@@ -150,10 +158,11 @@ router.post('/', async (req, res, next) => {
     
     // Calculate pricing
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+    const serviceFeeAmount = property.basePrice * nights * (property.serviceFeePercentage || 10) / 100;
     const totalPrice = calculateTotalPrice(
       property.basePrice,
       property.cleaningFee || 0,
-      property.serviceFee || 0,
+      serviceFeeAmount,
       property.taxes || 0,
       nights
     );
@@ -171,13 +180,12 @@ router.post('/', async (req, res, next) => {
         totalPrice,
         basePrice: property.basePrice * nights,
         cleaningFee: property.cleaningFee || 0,
-        serviceFee: property.serviceFee || 0,
+        serviceFee: serviceFeeAmount,
         taxes: property.taxes || 0,
         guestName: data.guestName,
         guestEmail: data.guestEmail,
         guestPhone: data.guestPhone,
-        specialRequests: data.specialRequests,
-        paymentMethod: data.paymentMethod
+        specialRequests: data.specialRequests
       },
       include: {
         property: {
@@ -283,8 +291,7 @@ router.post('/:id/cancel', async (req, res, next) => {
     const updatedBooking = await prisma.booking.update({
       where: { id },
       data: {
-        status: 'CANCELLED',
-        refundReason: reason
+        status: 'CANCELLED'
       }
     });
     

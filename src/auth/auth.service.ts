@@ -1,10 +1,12 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { hashPassword, verifyPassword } from '../common/utils/password.util';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { EnableMFADto, VerifyMFADto, MFAType } from './dto/enable-mfa.dto';
+import { MFAUtil } from './utils/mfa.util';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +33,7 @@ export class AuthService {
         name: registerDto.name,
         phone: registerDto.phone,
         role: registerDto.role || 'USER',
+        password: hashedPassword,
       },
     });
 
@@ -53,7 +56,7 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: LoginDto, mfaCode?: string) {
     const user = await this.prisma.user.findUnique({
       where: { email: loginDto.email },
     });
@@ -62,15 +65,34 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Note: In a real app, you'd have a password field in the User model
-    // For now, we'll skip password verification if password field doesn't exist
-    // const isValidPassword = await verifyPassword(loginDto.password, user.password || '');
-    // if (!isValidPassword) {
-    //   throw new UnauthorizedException('Invalid credentials');
-    // }
+    // Verify password
+    if (user.password) {
+      const isValidPassword = await verifyPassword(loginDto.password, user.password);
+      if (!isValidPassword) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+    }
 
     if (!user.isActive) {
       throw new UnauthorizedException('Account is deactivated');
+    }
+
+    // Check if MFA is enabled
+    if (user.mfaEnabled) {
+      if (!mfaCode) {
+        return {
+          success: false,
+          requiresMFA: true,
+          mfaType: user.mfaSecret ? MFAType.TOTP : MFAType.EMAIL,
+          message: 'MFA code required',
+        };
+      }
+
+      // Verify MFA code
+      const isValidMFA = await this.verifyMFACode(user, mfaCode);
+      if (!isValidMFA) {
+        throw new UnauthorizedException('Invalid MFA code');
+      }
     }
 
     const token = this.generateToken({
@@ -87,8 +109,107 @@ export class AuthService {
         email: user.email,
         name: user.name,
         role: user.role,
+        mfaEnabled: user.mfaEnabled,
       },
       token,
+    };
+  }
+
+  async enableMFA(userId: string, enableMFADto: EnableMFADto) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    if (enableMFADto.type === MFAType.TOTP) {
+      const { secret, qrCodeUrl } = MFAUtil.generateTOTPSecret(user.email);
+      const backupCodes = MFAUtil.generateBackupCodes();
+
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          mfaEnabled: true,
+          mfaSecret: secret,
+          mfaBackupCodes: backupCodes,
+        },
+      });
+
+      return {
+        success: true,
+        message: 'TOTP MFA enabled',
+        qrCodeUrl,
+        backupCodes, // Show only once, user should save them
+        secret, // For manual entry
+      };
+    } else if (enableMFADto.type === MFAType.EMAIL) {
+      // For email OTP, we just enable it
+      // OTP will be sent on each login
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          mfaEnabled: true,
+          emailVerified: true, // Assume email is verified if enabling email MFA
+        },
+      });
+
+      return {
+        success: true,
+        message: 'Email MFA enabled. OTP will be sent to your email on login.',
+      };
+    }
+
+    throw new BadRequestException('Invalid MFA type');
+  }
+
+  async disableMFA(userId: string) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        mfaEnabled: false,
+        mfaSecret: null,
+        mfaBackupCodes: [],
+      },
+    });
+
+    return {
+      success: true,
+      message: 'MFA disabled',
+    };
+  }
+
+  async verifyMFACode(user: any, code: string): Promise<boolean> {
+    if (user.mfaSecret) {
+      // TOTP verification
+      return MFAUtil.verifyTOTP(user.mfaSecret, code);
+    } else {
+      // Email OTP verification (simplified - in production use Redis/DB)
+      // For now, return true as placeholder
+      return await MFAUtil.verifyEmailOTP(this.prisma, user.id, code);
+    }
+  }
+
+  async sendEmailOTP(userId: string): Promise<{ success: boolean; message: string }> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || !user.email) {
+      throw new BadRequestException('User email not found');
+    }
+
+    const otp = MFAUtil.generateEmailOTP();
+    await MFAUtil.storeOTP(this.prisma, userId, otp);
+
+    // TODO: Send email with OTP
+    // In production, use a service like SendGrid, AWS SES, etc.
+    console.log(`Email OTP for ${user.email}: ${otp}`); // Remove in production
+
+    return {
+      success: true,
+      message: 'OTP sent to email',
     };
   }
 
