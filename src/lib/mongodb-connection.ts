@@ -9,10 +9,13 @@ export function normalizeMongoConnectionString(connectionString: string): string
     throw new Error('DATABASE_URL is required');
   }
 
+  // Trim whitespace and newlines that might cause issues
+  const trimmed = connectionString.trim().replace(/\n/g, '').replace(/\r/g, '');
+
   // Parse the connection string
   let url: URL;
   try {
-    url = new URL(connectionString);
+    url = new URL(trimmed);
   } catch (error) {
     throw new Error(`Invalid MongoDB connection string format: ${error}`);
   }
@@ -26,10 +29,15 @@ export function normalizeMongoConnectionString(connectionString: string): string
     // No database name specified - use default
     dbName = 'real_estate_db';
     // Reconstruct pathname with database name, preserving query string
-    const queryString = url.search;
+    // If there's already a query string, preserve it; otherwise start fresh
+    const existingParams = url.search;
     url.pathname = `/${dbName}`;
     // Keep the search params separate (they're already in url.search)
     console.log(`⚠️  No database name in connection string, using default: ${dbName}`);
+    console.log(`   Original pathname: ${pathname || '(empty)'}`);
+    console.log(`   New pathname: /${dbName}`);
+  } else {
+    console.log(`✅ Database name found: ${dbName}`);
   }
 
   // For mongodb+srv:// connections (MongoDB Atlas)

@@ -1,8 +1,9 @@
-import { Injectable, UnauthorizedException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException, BadRequestException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { hashPassword, verifyPassword } from '../common/utils/password.util';
+import { retryOperation } from '../lib/connection-retry';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { EnableMFADto, VerifyMFADto, MFAType } from './dto/enable-mfa.dto';
@@ -10,6 +11,8 @@ import { MFAUtil } from './utils/mfa.util';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
@@ -65,16 +68,24 @@ export class AuthService {
       email = `${email}@stefanos.com`;
     }
 
-    // Try to find user by email
-    let user = await this.prisma.user.findUnique({
-      where: { email },
-    });
+    // Try to find user by email with retry logic
+    let user = await retryOperation(
+      () => this.prisma.user.findUnique({
+        where: { email },
+      }),
+      'Find user by email',
+      this.prisma,
+    );
 
     // If not found and it was a username, also try to find by name
     if (!user && !loginDto.email.includes('@')) {
-      user = await this.prisma.user.findFirst({
-        where: { name: loginDto.email },
-      });
+      user = await retryOperation(
+        () => this.prisma.user.findFirst({
+          where: { name: loginDto.email },
+        }),
+        'Find user by name',
+        this.prisma,
+      );
     }
 
     if (!user) {
