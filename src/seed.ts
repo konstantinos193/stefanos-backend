@@ -212,7 +212,7 @@ async function main() {
       });
 
   const ownerData = [
-    { email: 'owner1@realestate.com', name: 'Stefanos Spyros', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Stefanos+Spyros&background=d4af37&color=000' },
+    { email: 'owner1@realestate.com', name: 'STEFANOS MALESKOS', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=STEFANOS+MALESKOS&background=d4af37&color=000' },
     { email: 'owner2@realestate.com', name: 'Maria Papadopoulou', phone: '+30 231 123 4567', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Maria+Papadopoulou&background=d4af37&color=000' },
     { email: 'owner3@realestate.com', name: 'Dimitris Georgiou', phone: '+30 228 765 4321', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Dimitris+Georgiou&background=d4af37&color=000' }
   ];
