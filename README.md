@@ -64,6 +64,7 @@ JWT_EXPIRES_IN="7d"
 PORT=3001
 NODE_ENV="development"
 FRONTEND_URL="http://localhost:3000"
+ADMIN_URL="http://localhost:3002"
 ```
 
 5. Generate Prisma client (automatically runs on dev/start):

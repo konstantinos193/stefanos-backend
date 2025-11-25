@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { PropertyGroupsService } from './property-groups.service';
 import { PropertyGroupsController } from './property-groups.controller';
-import { PrismaModule } from '../prisma/prisma.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [DatabaseModule],
   controllers: [PropertyGroupsController],
   providers: [PropertyGroupsService],
   exports: [PropertyGroupsService],

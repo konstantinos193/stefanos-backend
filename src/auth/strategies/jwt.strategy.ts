@@ -2,13 +2,13 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from '../../prisma/prisma.service';
+import { MongoDBService } from '../../database/mongodb.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
-    private prisma: PrismaService,
+    private mongo: MongoDBService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -18,17 +18,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: payload.userId },
-    });
+    const usersCollection = this.mongo.getCollection('users');
+    const userObjectId = this.mongo.toObjectId(payload.userId);
+    
+    const user = await usersCollection.findOne({ _id: userObjectId });
 
     if (!user || !user.isActive) {
       throw new UnauthorizedException('User not found or inactive');
     }
 
     return {
-      id: user.id,
-      userId: user.id, // For compatibility
+      id: this.mongo.fromObjectId(user._id),
+      userId: this.mongo.fromObjectId(user._id), // For compatibility
       email: user.email,
       role: user.role,
     };

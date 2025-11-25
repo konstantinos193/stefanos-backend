@@ -7,7 +7,7 @@ import {
   IsArray,
   Min,
 } from 'class-validator';
-import { RoomType } from '@prisma/client';
+import { RoomType } from '../../../database/types';
 
 export class CreateRoomDto {
   @IsString()

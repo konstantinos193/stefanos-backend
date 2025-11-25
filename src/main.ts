@@ -36,14 +36,16 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
-  // CORS - Must be configured BEFORE helmet to avoid conflicts
+  // CORS - Support multiple origins (frontend + admin panel)
+  // Admin panel is always allowed and never restricted
   const envOrigins = process.env.FRONTEND_URL 
     ? process.env.FRONTEND_URL.split(',').map(url => url.trim())
     : [];
   
   // Always include localhost:3000 and localhost:3002 for development
   const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002'];
-  const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins])];
+  const adminUrl = process.env.ADMIN_URL || 'http://localhost:3002';
+  const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins, adminUrl])];
   
   console.log(`🌐 CORS enabled for origins: ${allowedOrigins.join(', ')}`);
   
@@ -51,6 +53,11 @@ async function bootstrap() {
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
+      
+      // Always allow admin panel - check if it's from admin URL or contains admin indicators
+      if (origin === adminUrl || origin.includes('admin') || origin.includes('3002')) {
+        return callback(null, true);
+      }
       
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
