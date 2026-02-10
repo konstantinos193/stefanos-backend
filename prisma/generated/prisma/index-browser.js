@@ -216,6 +216,16 @@ exports.Prisma.BookingScalarFieldEnum = {
   currency: 'currency',
   ownerRevenue: 'ownerRevenue',
   platformFee: 'platformFee',
+  source: 'source',
+  externalId: 'externalId',
+  externalPlatform: 'externalPlatform',
+  externalData: 'externalData',
+  commissionRate: 'commissionRate',
+  commissionAmount: 'commissionAmount',
+  netRevenue: 'netRevenue',
+  externalGuestId: 'externalGuestId',
+  iCalUid: 'iCalUid',
+  lastSyncedAt: 'lastSyncedAt',
   guestName: 'guestName',
   guestEmail: 'guestEmail',
   guestPhone: 'guestPhone',
@@ -611,6 +621,16 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
   FAILED: 'FAILED',
   REFUNDED: 'REFUNDED',
   PARTIALLY_REFUNDED: 'PARTIALLY_REFUNDED'
+};
+
+exports.BookingSource = exports.$Enums.BookingSource = {
+  DIRECT: 'DIRECT',
+  BOOKING_COM: 'BOOKING_COM',
+  AIRBNB: 'AIRBNB',
+  VRBO: 'VRBO',
+  EXPEDIA: 'EXPEDIA',
+  MANUAL: 'MANUAL',
+  OTHER: 'OTHER'
 };
 
 exports.MaintenancePriority = exports.$Enums.MaintenancePriority = {

@@ -20,6 +20,7 @@ import { ContentModule } from './content/content.module';
 import { MediaModule } from './media/media.module';
 import { SettingsModule } from './settings/settings.module';
 import { ExternalBookingsModule } from './external-bookings/external-bookings.module';
+import { LogsModule } from './logs/logs.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -48,6 +49,7 @@ import { AppController } from './app.controller';
     MediaModule,
     SettingsModule,
     ExternalBookingsModule,
+    LogsModule,
   ],
   controllers: [AppController],
   providers: [],

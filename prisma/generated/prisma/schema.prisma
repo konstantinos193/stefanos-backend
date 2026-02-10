@@ -215,6 +215,18 @@ model Booking {
   ownerRevenue Float? // Revenue after platform fees
   platformFee  Float? // Platform fee amount
 
+  // Third-party / External booking info
+  source           BookingSource @default(DIRECT)
+  externalId       String? // Booking ID from external platform (e.g. Booking.com confirmation #)
+  externalPlatform String? // Platform name if source is OTHER
+  externalData     Json? // Raw data from external platform for reference
+  commissionRate   Float? // Commission percentage charged by external platform
+  commissionAmount Float? // Calculated commission amount
+  netRevenue       Float? // Revenue after external platform commission
+  externalGuestId  String? // Guest ID on external platform
+  iCalUid          String? // iCal UID for calendar sync
+  lastSyncedAt     DateTime? // Last time this booking was synced with external platform
+
   // Guest Info
   guestName       String
   guestEmail      String
@@ -232,6 +244,9 @@ model Booking {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([source, externalId]) // Prevent duplicate imports from same platform
+  @@index([source])
+  @@index([externalId])
   @@map("bookings")
 }
 
@@ -242,6 +257,16 @@ enum BookingStatus {
   COMPLETED
   CANCELLED
   NO_SHOW
+}
+
+enum BookingSource {
+  DIRECT // Booked through Stefanos website
+  BOOKING_COM // Booking.com
+  AIRBNB // Airbnb
+  VRBO // VRBO / HomeAway
+  EXPEDIA // Expedia
+  MANUAL // Manually entered by admin/owner
+  OTHER // Other third-party platform
 }
 
 enum PaymentStatus {

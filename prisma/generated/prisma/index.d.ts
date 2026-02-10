@@ -205,6 +205,19 @@ export const BookingStatus: {
 export type BookingStatus = (typeof BookingStatus)[keyof typeof BookingStatus]
 
 
+export const BookingSource: {
+  DIRECT: 'DIRECT',
+  BOOKING_COM: 'BOOKING_COM',
+  AIRBNB: 'AIRBNB',
+  VRBO: 'VRBO',
+  EXPEDIA: 'EXPEDIA',
+  MANUAL: 'MANUAL',
+  OTHER: 'OTHER'
+};
+
+export type BookingSource = (typeof BookingSource)[keyof typeof BookingSource]
+
+
 export const PaymentStatus: {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
@@ -386,6 +399,10 @@ export const CancellationPolicy: typeof $Enums.CancellationPolicy
 export type BookingStatus = $Enums.BookingStatus
 
 export const BookingStatus: typeof $Enums.BookingStatus
+
+export type BookingSource = $Enums.BookingSource
+
+export const BookingSource: typeof $Enums.BookingSource
 
 export type PaymentStatus = $Enums.PaymentStatus
 
@@ -9401,6 +9418,9 @@ export namespace Prisma {
     taxes: number | null
     ownerRevenue: number | null
     platformFee: number | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    netRevenue: number | null
   }
 
   export type BookingSumAggregateOutputType = {
@@ -9412,6 +9432,9 @@ export namespace Prisma {
     taxes: number | null
     ownerRevenue: number | null
     platformFee: number | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    netRevenue: number | null
   }
 
   export type BookingMinAggregateOutputType = {
@@ -9431,6 +9454,15 @@ export namespace Prisma {
     currency: string | null
     ownerRevenue: number | null
     platformFee: number | null
+    source: $Enums.BookingSource | null
+    externalId: string | null
+    externalPlatform: string | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    netRevenue: number | null
+    externalGuestId: string | null
+    iCalUid: string | null
+    lastSyncedAt: Date | null
     guestName: string | null
     guestEmail: string | null
     guestPhone: string | null
@@ -9456,6 +9488,15 @@ export namespace Prisma {
     currency: string | null
     ownerRevenue: number | null
     platformFee: number | null
+    source: $Enums.BookingSource | null
+    externalId: string | null
+    externalPlatform: string | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    netRevenue: number | null
+    externalGuestId: string | null
+    iCalUid: string | null
+    lastSyncedAt: Date | null
     guestName: string | null
     guestEmail: string | null
     guestPhone: string | null
@@ -9481,6 +9522,16 @@ export namespace Prisma {
     currency: number
     ownerRevenue: number
     platformFee: number
+    source: number
+    externalId: number
+    externalPlatform: number
+    externalData: number
+    commissionRate: number
+    commissionAmount: number
+    netRevenue: number
+    externalGuestId: number
+    iCalUid: number
+    lastSyncedAt: number
     guestName: number
     guestEmail: number
     guestPhone: number
@@ -9500,6 +9551,9 @@ export namespace Prisma {
     taxes?: true
     ownerRevenue?: true
     platformFee?: true
+    commissionRate?: true
+    commissionAmount?: true
+    netRevenue?: true
   }
 
   export type BookingSumAggregateInputType = {
@@ -9511,6 +9565,9 @@ export namespace Prisma {
     taxes?: true
     ownerRevenue?: true
     platformFee?: true
+    commissionRate?: true
+    commissionAmount?: true
+    netRevenue?: true
   }
 
   export type BookingMinAggregateInputType = {
@@ -9530,6 +9587,15 @@ export namespace Prisma {
     currency?: true
     ownerRevenue?: true
     platformFee?: true
+    source?: true
+    externalId?: true
+    externalPlatform?: true
+    commissionRate?: true
+    commissionAmount?: true
+    netRevenue?: true
+    externalGuestId?: true
+    iCalUid?: true
+    lastSyncedAt?: true
     guestName?: true
     guestEmail?: true
     guestPhone?: true
@@ -9555,6 +9621,15 @@ export namespace Prisma {
     currency?: true
     ownerRevenue?: true
     platformFee?: true
+    source?: true
+    externalId?: true
+    externalPlatform?: true
+    commissionRate?: true
+    commissionAmount?: true
+    netRevenue?: true
+    externalGuestId?: true
+    iCalUid?: true
+    lastSyncedAt?: true
     guestName?: true
     guestEmail?: true
     guestPhone?: true
@@ -9580,6 +9655,16 @@ export namespace Prisma {
     currency?: true
     ownerRevenue?: true
     platformFee?: true
+    source?: true
+    externalId?: true
+    externalPlatform?: true
+    externalData?: true
+    commissionRate?: true
+    commissionAmount?: true
+    netRevenue?: true
+    externalGuestId?: true
+    iCalUid?: true
+    lastSyncedAt?: true
     guestName?: true
     guestEmail?: true
     guestPhone?: true
@@ -9692,6 +9777,16 @@ export namespace Prisma {
     currency: string
     ownerRevenue: number | null
     platformFee: number | null
+    source: $Enums.BookingSource
+    externalId: string | null
+    externalPlatform: string | null
+    externalData: JsonValue | null
+    commissionRate: number | null
+    commissionAmount: number | null
+    netRevenue: number | null
+    externalGuestId: string | null
+    iCalUid: string | null
+    lastSyncedAt: Date | null
     guestName: string
     guestEmail: string
     guestPhone: string | null
@@ -9736,6 +9831,16 @@ export namespace Prisma {
     currency?: boolean
     ownerRevenue?: boolean
     platformFee?: boolean
+    source?: boolean
+    externalId?: boolean
+    externalPlatform?: boolean
+    externalData?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    netRevenue?: boolean
+    externalGuestId?: boolean
+    iCalUid?: boolean
+    lastSyncedAt?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9768,6 +9873,16 @@ export namespace Prisma {
     currency?: boolean
     ownerRevenue?: boolean
     platformFee?: boolean
+    source?: boolean
+    externalId?: boolean
+    externalPlatform?: boolean
+    externalData?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    netRevenue?: boolean
+    externalGuestId?: boolean
+    iCalUid?: boolean
+    lastSyncedAt?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9795,6 +9910,16 @@ export namespace Prisma {
     currency?: boolean
     ownerRevenue?: boolean
     platformFee?: boolean
+    source?: boolean
+    externalId?: boolean
+    externalPlatform?: boolean
+    externalData?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    netRevenue?: boolean
+    externalGuestId?: boolean
+    iCalUid?: boolean
+    lastSyncedAt?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9822,6 +9947,16 @@ export namespace Prisma {
     currency?: boolean
     ownerRevenue?: boolean
     platformFee?: boolean
+    source?: boolean
+    externalId?: boolean
+    externalPlatform?: boolean
+    externalData?: boolean
+    commissionRate?: boolean
+    commissionAmount?: boolean
+    netRevenue?: boolean
+    externalGuestId?: boolean
+    iCalUid?: boolean
+    lastSyncedAt?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9830,7 +9965,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "guestId" | "status" | "paymentStatus" | "checkIn" | "checkOut" | "guests" | "totalPrice" | "basePrice" | "cleaningFee" | "serviceFee" | "taxes" | "currency" | "ownerRevenue" | "platformFee" | "guestName" | "guestEmail" | "guestPhone" | "specialRequests" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "guestId" | "status" | "paymentStatus" | "checkIn" | "checkOut" | "guests" | "totalPrice" | "basePrice" | "cleaningFee" | "serviceFee" | "taxes" | "currency" | "ownerRevenue" | "platformFee" | "source" | "externalId" | "externalPlatform" | "externalData" | "commissionRate" | "commissionAmount" | "netRevenue" | "externalGuestId" | "iCalUid" | "lastSyncedAt" | "guestName" | "guestEmail" | "guestPhone" | "specialRequests" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     guest?: boolean | UserDefaultArgs<ExtArgs>
@@ -9876,6 +10011,16 @@ export namespace Prisma {
       currency: string
       ownerRevenue: number | null
       platformFee: number | null
+      source: $Enums.BookingSource
+      externalId: string | null
+      externalPlatform: string | null
+      externalData: Prisma.JsonValue | null
+      commissionRate: number | null
+      commissionAmount: number | null
+      netRevenue: number | null
+      externalGuestId: string | null
+      iCalUid: string | null
+      lastSyncedAt: Date | null
       guestName: string
       guestEmail: string
       guestPhone: string | null
@@ -10327,6 +10472,16 @@ export namespace Prisma {
     readonly currency: FieldRef<"Booking", 'String'>
     readonly ownerRevenue: FieldRef<"Booking", 'Float'>
     readonly platformFee: FieldRef<"Booking", 'Float'>
+    readonly source: FieldRef<"Booking", 'BookingSource'>
+    readonly externalId: FieldRef<"Booking", 'String'>
+    readonly externalPlatform: FieldRef<"Booking", 'String'>
+    readonly externalData: FieldRef<"Booking", 'Json'>
+    readonly commissionRate: FieldRef<"Booking", 'Float'>
+    readonly commissionAmount: FieldRef<"Booking", 'Float'>
+    readonly netRevenue: FieldRef<"Booking", 'Float'>
+    readonly externalGuestId: FieldRef<"Booking", 'String'>
+    readonly iCalUid: FieldRef<"Booking", 'String'>
+    readonly lastSyncedAt: FieldRef<"Booking", 'DateTime'>
     readonly guestName: FieldRef<"Booking", 'String'>
     readonly guestEmail: FieldRef<"Booking", 'String'>
     readonly guestPhone: FieldRef<"Booking", 'String'>
@@ -35401,6 +35556,16 @@ export namespace Prisma {
     currency: 'currency',
     ownerRevenue: 'ownerRevenue',
     platformFee: 'platformFee',
+    source: 'source',
+    externalId: 'externalId',
+    externalPlatform: 'externalPlatform',
+    externalData: 'externalData',
+    commissionRate: 'commissionRate',
+    commissionAmount: 'commissionAmount',
+    netRevenue: 'netRevenue',
+    externalGuestId: 'externalGuestId',
+    iCalUid: 'iCalUid',
+    lastSyncedAt: 'lastSyncedAt',
     guestName: 'guestName',
     guestEmail: 'guestEmail',
     guestPhone: 'guestPhone',
@@ -35923,6 +36088,13 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentStatus'
    */
   export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'BookingSource'
+   */
+  export type EnumBookingSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BookingSource'>
     
 
 
@@ -36573,6 +36745,16 @@ export namespace Prisma {
     currency?: StringFilter<"Booking"> | string
     ownerRevenue?: FloatNullableFilter<"Booking"> | number | null
     platformFee?: FloatNullableFilter<"Booking"> | number | null
+    source?: EnumBookingSourceFilter<"Booking"> | $Enums.BookingSource
+    externalId?: StringNullableFilter<"Booking"> | string | null
+    externalPlatform?: StringNullableFilter<"Booking"> | string | null
+    externalData?: JsonNullableFilter<"Booking">
+    commissionRate?: FloatNullableFilter<"Booking"> | number | null
+    commissionAmount?: FloatNullableFilter<"Booking"> | number | null
+    netRevenue?: FloatNullableFilter<"Booking"> | number | null
+    externalGuestId?: StringNullableFilter<"Booking"> | string | null
+    iCalUid?: StringNullableFilter<"Booking"> | string | null
+    lastSyncedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     guestName?: StringFilter<"Booking"> | string
     guestEmail?: StringFilter<"Booking"> | string
     guestPhone?: StringNullableFilter<"Booking"> | string | null
@@ -36604,6 +36786,16 @@ export namespace Prisma {
     currency?: SortOrder
     ownerRevenue?: SortOrderInput | SortOrder
     platformFee?: SortOrderInput | SortOrder
+    source?: SortOrder
+    externalId?: SortOrderInput | SortOrder
+    externalPlatform?: SortOrderInput | SortOrder
+    externalData?: SortOrderInput | SortOrder
+    commissionRate?: SortOrderInput | SortOrder
+    commissionAmount?: SortOrderInput | SortOrder
+    netRevenue?: SortOrderInput | SortOrder
+    externalGuestId?: SortOrderInput | SortOrder
+    iCalUid?: SortOrderInput | SortOrder
+    lastSyncedAt?: SortOrderInput | SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrderInput | SortOrder
@@ -36620,6 +36812,7 @@ export namespace Prisma {
 
   export type BookingWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    source_externalId?: BookingSourceExternalIdCompoundUniqueInput
     AND?: BookingWhereInput | BookingWhereInput[]
     OR?: BookingWhereInput[]
     NOT?: BookingWhereInput | BookingWhereInput[]
@@ -36638,6 +36831,16 @@ export namespace Prisma {
     currency?: StringFilter<"Booking"> | string
     ownerRevenue?: FloatNullableFilter<"Booking"> | number | null
     platformFee?: FloatNullableFilter<"Booking"> | number | null
+    source?: EnumBookingSourceFilter<"Booking"> | $Enums.BookingSource
+    externalId?: StringNullableFilter<"Booking"> | string | null
+    externalPlatform?: StringNullableFilter<"Booking"> | string | null
+    externalData?: JsonNullableFilter<"Booking">
+    commissionRate?: FloatNullableFilter<"Booking"> | number | null
+    commissionAmount?: FloatNullableFilter<"Booking"> | number | null
+    netRevenue?: FloatNullableFilter<"Booking"> | number | null
+    externalGuestId?: StringNullableFilter<"Booking"> | string | null
+    iCalUid?: StringNullableFilter<"Booking"> | string | null
+    lastSyncedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     guestName?: StringFilter<"Booking"> | string
     guestEmail?: StringFilter<"Booking"> | string
     guestPhone?: StringNullableFilter<"Booking"> | string | null
@@ -36650,7 +36853,7 @@ export namespace Prisma {
     reviews?: ReviewListRelationFilter
     messages?: MessageListRelationFilter
     maintenance?: MaintenanceRequestListRelationFilter
-  }, "id">
+  }, "id" | "source_externalId">
 
   export type BookingOrderByWithAggregationInput = {
     id?: SortOrder
@@ -36669,6 +36872,16 @@ export namespace Prisma {
     currency?: SortOrder
     ownerRevenue?: SortOrderInput | SortOrder
     platformFee?: SortOrderInput | SortOrder
+    source?: SortOrder
+    externalId?: SortOrderInput | SortOrder
+    externalPlatform?: SortOrderInput | SortOrder
+    externalData?: SortOrderInput | SortOrder
+    commissionRate?: SortOrderInput | SortOrder
+    commissionAmount?: SortOrderInput | SortOrder
+    netRevenue?: SortOrderInput | SortOrder
+    externalGuestId?: SortOrderInput | SortOrder
+    iCalUid?: SortOrderInput | SortOrder
+    lastSyncedAt?: SortOrderInput | SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrderInput | SortOrder
@@ -36702,6 +36915,16 @@ export namespace Prisma {
     currency?: StringWithAggregatesFilter<"Booking"> | string
     ownerRevenue?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
     platformFee?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
+    source?: EnumBookingSourceWithAggregatesFilter<"Booking"> | $Enums.BookingSource
+    externalId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    externalPlatform?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    externalData?: JsonNullableWithAggregatesFilter<"Booking">
+    commissionRate?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
+    commissionAmount?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
+    netRevenue?: FloatNullableWithAggregatesFilter<"Booking"> | number | null
+    externalGuestId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    iCalUid?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
     guestName?: StringWithAggregatesFilter<"Booking"> | string
     guestEmail?: StringWithAggregatesFilter<"Booking"> | string
     guestPhone?: StringNullableWithAggregatesFilter<"Booking"> | string | null
@@ -39307,6 +39530,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -39338,6 +39571,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -39365,6 +39608,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39396,6 +39649,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39425,6 +39688,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -39448,6 +39721,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39473,6 +39756,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42486,6 +42779,18 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
   }
 
+  export type EnumBookingSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingSource | EnumBookingSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingSource[]
+    notIn?: $Enums.BookingSource[]
+    not?: NestedEnumBookingSourceFilter<$PrismaModel> | $Enums.BookingSource
+  }
+
+  export type BookingSourceExternalIdCompoundUniqueInput = {
+    source: $Enums.BookingSource
+    externalId: string
+  }
+
   export type BookingCountOrderByAggregateInput = {
     id?: SortOrder
     propertyId?: SortOrder
@@ -42503,6 +42808,16 @@ export namespace Prisma {
     currency?: SortOrder
     ownerRevenue?: SortOrder
     platformFee?: SortOrder
+    source?: SortOrder
+    externalId?: SortOrder
+    externalPlatform?: SortOrder
+    externalData?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    netRevenue?: SortOrder
+    externalGuestId?: SortOrder
+    iCalUid?: SortOrder
+    lastSyncedAt?: SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrder
@@ -42520,6 +42835,9 @@ export namespace Prisma {
     taxes?: SortOrder
     ownerRevenue?: SortOrder
     platformFee?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    netRevenue?: SortOrder
   }
 
   export type BookingMaxOrderByAggregateInput = {
@@ -42539,6 +42857,15 @@ export namespace Prisma {
     currency?: SortOrder
     ownerRevenue?: SortOrder
     platformFee?: SortOrder
+    source?: SortOrder
+    externalId?: SortOrder
+    externalPlatform?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    netRevenue?: SortOrder
+    externalGuestId?: SortOrder
+    iCalUid?: SortOrder
+    lastSyncedAt?: SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrder
@@ -42564,6 +42891,15 @@ export namespace Prisma {
     currency?: SortOrder
     ownerRevenue?: SortOrder
     platformFee?: SortOrder
+    source?: SortOrder
+    externalId?: SortOrder
+    externalPlatform?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    netRevenue?: SortOrder
+    externalGuestId?: SortOrder
+    iCalUid?: SortOrder
+    lastSyncedAt?: SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrder
@@ -42581,6 +42917,9 @@ export namespace Prisma {
     taxes?: SortOrder
     ownerRevenue?: SortOrder
     platformFee?: SortOrder
+    commissionRate?: SortOrder
+    commissionAmount?: SortOrder
+    netRevenue?: SortOrder
   }
 
   export type EnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -42601,6 +42940,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type EnumBookingSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingSource | EnumBookingSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingSource[]
+    notIn?: $Enums.BookingSource[]
+    not?: NestedEnumBookingSourceWithAggregatesFilter<$PrismaModel> | $Enums.BookingSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBookingSourceFilter<$PrismaModel>
+    _max?: NestedEnumBookingSourceFilter<$PrismaModel>
   }
 
   export type PropertyAvailabilityPropertyIdDateCompoundUniqueInput = {
@@ -44994,6 +45343,10 @@ export namespace Prisma {
     set?: $Enums.PaymentStatus
   }
 
+  export type EnumBookingSourceFieldUpdateOperationsInput = {
+    set?: $Enums.BookingSource
+  }
+
   export type PropertyUpdateOneRequiredWithoutBookingsNestedInput = {
     create?: XOR<PropertyCreateWithoutBookingsInput, PropertyUncheckedCreateWithoutBookingsInput>
     connectOrCreate?: PropertyCreateOrConnectWithoutBookingsInput
@@ -46031,6 +46384,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
   }
 
+  export type NestedEnumBookingSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingSource | EnumBookingSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingSource[]
+    notIn?: $Enums.BookingSource[]
+    not?: NestedEnumBookingSourceFilter<$PrismaModel> | $Enums.BookingSource
+  }
+
   export type NestedEnumBookingStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.BookingStatus | EnumBookingStatusFieldRefInput<$PrismaModel>
     in?: $Enums.BookingStatus[]
@@ -46049,6 +46409,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
     _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumBookingSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.BookingSource | EnumBookingSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.BookingSource[]
+    notIn?: $Enums.BookingSource[]
+    not?: NestedEnumBookingSourceWithAggregatesFilter<$PrismaModel> | $Enums.BookingSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumBookingSourceFilter<$PrismaModel>
+    _max?: NestedEnumBookingSourceFilter<$PrismaModel>
   }
 
   export type NestedEnumMaintenancePriorityFilter<$PrismaModel = never> = {
@@ -46404,6 +46774,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -46433,6 +46813,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -46801,6 +47191,16 @@ export namespace Prisma {
     currency?: StringFilter<"Booking"> | string
     ownerRevenue?: FloatNullableFilter<"Booking"> | number | null
     platformFee?: FloatNullableFilter<"Booking"> | number | null
+    source?: EnumBookingSourceFilter<"Booking"> | $Enums.BookingSource
+    externalId?: StringNullableFilter<"Booking"> | string | null
+    externalPlatform?: StringNullableFilter<"Booking"> | string | null
+    externalData?: JsonNullableFilter<"Booking">
+    commissionRate?: FloatNullableFilter<"Booking"> | number | null
+    commissionAmount?: FloatNullableFilter<"Booking"> | number | null
+    netRevenue?: FloatNullableFilter<"Booking"> | number | null
+    externalGuestId?: StringNullableFilter<"Booking"> | string | null
+    iCalUid?: StringNullableFilter<"Booking"> | string | null
+    lastSyncedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
     guestName?: StringFilter<"Booking"> | string
     guestEmail?: StringFilter<"Booking"> | string
     guestPhone?: StringNullableFilter<"Booking"> | string | null
@@ -47118,6 +47518,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -47147,6 +47557,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49185,6 +49605,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49215,6 +49645,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49441,6 +49881,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49471,6 +49921,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49681,6 +50141,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49711,6 +50181,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49872,6 +50352,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49902,6 +50392,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49928,6 +50428,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49958,6 +50468,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50065,6 +50585,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50095,6 +50625,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50328,6 +50868,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50358,6 +50908,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50513,6 +51073,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50543,6 +51113,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -52943,6 +53523,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -53207,6 +53797,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53236,6 +53836,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53264,6 +53874,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53561,6 +54181,16 @@ export namespace Prisma {
     currency?: string
     ownerRevenue?: number | null
     platformFee?: number | null
+    source?: $Enums.BookingSource
+    externalId?: string | null
+    externalPlatform?: string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: number | null
+    commissionAmount?: number | null
+    netRevenue?: number | null
+    externalGuestId?: string | null
+    iCalUid?: string | null
+    lastSyncedAt?: Date | string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -53716,6 +54346,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53745,6 +54385,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53773,6 +54423,16 @@ export namespace Prisma {
     currency?: StringFieldUpdateOperationsInput | string
     ownerRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
     platformFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    source?: EnumBookingSourceFieldUpdateOperationsInput | $Enums.BookingSource
+    externalId?: NullableStringFieldUpdateOperationsInput | string | null
+    externalPlatform?: NullableStringFieldUpdateOperationsInput | string | null
+    externalData?: NullableJsonNullValueInput | InputJsonValue
+    commissionRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    commissionAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    netRevenue?: NullableFloatFieldUpdateOperationsInput | number | null
+    externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
+    iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
+    lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null

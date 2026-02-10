@@ -104,7 +104,7 @@ export const importExternalBookingSchema = z.object({
   externalGuestId: z.string().optional(),
   specialRequests: z.string().optional(),
   iCalUid: z.string().optional(),
-  externalData: z.record(z.any()).optional()
+  externalData: z.record(z.string(), z.any()).optional()
 });
 
 export const updateExternalBookingSchema = z.object({
@@ -120,7 +120,7 @@ export const updateExternalBookingSchema = z.object({
   guestEmail: z.string().email().optional(),
   guestPhone: z.string().optional(),
   specialRequests: z.string().optional(),
-  externalData: z.record(z.any()).optional()
+  externalData: z.record(z.string(), z.any()).optional()
 });
 
 // Review validations

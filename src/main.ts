@@ -31,7 +31,7 @@ async function bootstrap() {
     : [];
   
   // Always include localhost:3000 and localhost:3002 for development
-  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:57814'];
+  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:57814', 'https://smholdings.gr', 'https://licanto.smholdings.gr', 'https://licanto.vercel.app'];
   const adminUrl = process.env.ADMIN_URL || 'http://localhost:3002';
   const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins, adminUrl])];
   
@@ -96,20 +96,20 @@ async function bootstrap() {
 
   // Swagger documentation
   const config = new DocumentBuilder()
-    .setTitle('Real Estate Platform API')
-    .setDescription('Backend API for Real Estate Platform')
+    .setTitle('SM Holdings API')
+    .setDescription('Backend API for SM Holdings Real Estate Platform — by adinfinity')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   const port = process.env.PORT || 3001;
   await app.listen(port);
 
   console.log(`🚀 Backend server running on port ${port}`);
   console.log(`📊 Health check: http://localhost:${port}/api/health`);
-  console.log(`📚 Swagger docs: http://localhost:${port}/api/docs`);
+  console.log(`📚 Swagger docs: http://localhost:${port}/docs`);
   console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
 }
 
