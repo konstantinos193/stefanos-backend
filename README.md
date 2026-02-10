@@ -246,3 +246,9 @@ MIT. Do whatever you want with it. We are not responsible for the consequences.
 ---
 
 <p align="center"><sub>Built with mass amounts of mass-produced coffee and mass-produced existential dread by the SM Holdings engineering team.</sub></p>
+
+---
+
+<p align="center">
+  Created by <a href="https://adinfinity.gr/">adinfinity</a>
+</p>
