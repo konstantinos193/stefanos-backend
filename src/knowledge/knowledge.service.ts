@@ -202,11 +202,10 @@ export class KnowledgeService {
       this.prisma.knowledgeArticle.findMany({
         where: {
           OR: [
-            { titleGr: { contains: query, mode: 'insensitive' } },
-            { titleEn: { contains: query, mode: 'insensitive' } },
-            { contentGr: { contains: query, mode: 'insensitive' } },
-            { contentEn: { contains: query, mode: 'insensitive' } },
-            { tags: { hasSome: [query] } },
+            { titleGr: { contains: query } },
+            { titleEn: { contains: query } },
+            { contentGr: { contains: query } },
+            { contentEn: { contains: query } },
           ],
           publishedAt: {
             not: null,
@@ -221,11 +220,10 @@ export class KnowledgeService {
       this.prisma.knowledgeArticle.count({
         where: {
           OR: [
-            { titleGr: { contains: query, mode: 'insensitive' } },
-            { titleEn: { contains: query, mode: 'insensitive' } },
-            { contentGr: { contains: query, mode: 'insensitive' } },
-            { contentEn: { contains: query, mode: 'insensitive' } },
-            { tags: { hasSome: [query] } },
+            { titleGr: { contains: query } },
+            { titleEn: { contains: query } },
+            { contentGr: { contains: query } },
+            { contentEn: { contains: query } },
           ],
           publishedAt: {
             not: null,
@@ -234,12 +232,19 @@ export class KnowledgeService {
       }),
     ]);
 
+    // Filter articles with matching tags in memory since SQLite JSON filtering is limited
+    const filteredArticles = articles.filter(article => {
+      if (!article.tags) return false;
+      const tags = article.tags as string[];
+      return tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()));
+    });
+
     const pagination = getPagination(page, limit, total);
 
     return {
       success: true,
       data: {
-        articles,
+        articles: filteredArticles,
         pagination,
       },
     };

@@ -3,17 +3,123 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { RefundPaymentDto } from './dto/refund-payment.dto';
 import { PaymentResponseDto } from './dto/payment-response.dto';
+import { CreatePublicCheckoutSessionDto } from './dto/create-public-checkout-session.dto';
 import Stripe from 'stripe';
 import { PaymentStatus, PaymentMethod } from '../database/types';
+import { BookingsService } from '../bookings/bookings.service';
 
 @Injectable()
 export class PaymentsService {
   private stripe: Stripe;
 
-  constructor(private prisma: PrismaService) {
+  constructor(
+    private prisma: PrismaService,
+    private bookingsService: BookingsService,
+  ) {
     // Stripe will use the account's default API version
     // or you can specify: apiVersion: '2024-11-20.acacia' as const
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
+  }
+
+  async createPublicCheckoutSession(
+    createPublicCheckoutSessionDto: CreatePublicCheckoutSessionDto,
+  ): Promise<{ checkoutUrl: string; sessionId: string; bookingId: string }> {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new BadRequestException('Stripe is not configured');
+    }
+
+    const bookingResponse = await this.bookingsService.createPublic({
+      propertyId: createPublicCheckoutSessionDto.propertyId,
+      checkIn: createPublicCheckoutSessionDto.checkIn,
+      checkOut: createPublicCheckoutSessionDto.checkOut,
+      guests: createPublicCheckoutSessionDto.guests,
+      guestName: createPublicCheckoutSessionDto.guestName,
+      guestEmail: createPublicCheckoutSessionDto.guestEmail,
+      guestPhone: createPublicCheckoutSessionDto.guestPhone,
+      specialRequests: createPublicCheckoutSessionDto.specialRequests,
+      paymentMethod: 'credit_card',
+    });
+
+    const booking = bookingResponse?.data;
+    let rollbackBookingId: string | null = booking?.id || null;
+
+    if (!booking?.id) {
+      throw new BadRequestException('Unable to create booking');
+    }
+
+    try {
+      const session = await this.stripe.checkout.sessions.create({
+        mode: 'payment',
+        success_url: createPublicCheckoutSessionDto.successUrl,
+        cancel_url: createPublicCheckoutSessionDto.cancelUrl,
+        payment_method_types: ['card'],
+        client_reference_id: booking.id,
+        customer_email: booking.guestEmail,
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: (booking.currency || 'EUR').toLowerCase(),
+              unit_amount: Math.round(booking.totalPrice * 100),
+              product_data: {
+                name:
+                  createPublicCheckoutSessionDto.roomName ||
+                  booking.property?.titleEn ||
+                  "L'Incanto Hotel",
+                description: `${createPublicCheckoutSessionDto.checkIn} to ${createPublicCheckoutSessionDto.checkOut} (${createPublicCheckoutSessionDto.guests} guests)`,
+              },
+            },
+          },
+        ],
+        metadata: {
+          bookingId: booking.id,
+          propertyId: booking.propertyId,
+          roomId: createPublicCheckoutSessionDto.roomId,
+          guestEmail: booking.guestEmail,
+        },
+        payment_intent_data: {
+          metadata: {
+            bookingId: booking.id,
+            propertyId: booking.propertyId,
+            roomId: createPublicCheckoutSessionDto.roomId,
+            guestEmail: booking.guestEmail,
+          },
+        },
+      });
+
+      if (!session.url) {
+        throw new BadRequestException('Stripe checkout URL was not generated');
+      }
+
+      await this.prisma.payment.create({
+        data: {
+          bookingId: booking.id,
+          propertyId: booking.propertyId,
+          amount: booking.totalPrice,
+          currency: booking.currency || 'EUR',
+          status: PaymentStatus.PENDING,
+          method: PaymentMethod.CREDIT_CARD,
+          transactionId: session.id,
+          stripePaymentIntentId:
+            typeof session.payment_intent === 'string' ? session.payment_intent : undefined,
+        },
+      });
+
+      return {
+        checkoutUrl: session.url,
+        sessionId: session.id,
+        bookingId: booking.id,
+      };
+    } catch (error) {
+      if (rollbackBookingId) {
+        await this.prisma.booking
+          .delete({
+            where: { id: rollbackBookingId },
+          })
+          .catch(() => undefined);
+      }
+      throw new BadRequestException(`Checkout session creation failed: ${error.message}`);
+    }
   }
 
   async processPayment(
@@ -244,11 +350,22 @@ export class PaymentsService {
     // Handle different event types
     switch (event.type) {
       case 'payment_intent.succeeded':
-        await this.confirmPayment(event.data.object.id);
+        try {
+          await this.confirmPayment((event.data.object as Stripe.PaymentIntent).id);
+        } catch (error) {
+          // Some Stripe flows may trigger this before we store a matching payment record.
+          if (!(error instanceof NotFoundException)) {
+            throw error;
+          }
+        }
         break;
 
       case 'payment_intent.payment_failed':
         await this.handlePaymentFailure(event.data.object.id);
+        break;
+
+      case 'checkout.session.completed':
+        await this.handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
         break;
 
       case 'charge.refunded':
@@ -276,6 +393,103 @@ export class PaymentsService {
         data: { paymentStatus: PaymentStatus.FAILED },
       });
     }
+  }
+
+  private async handleCheckoutSessionCompleted(session: Stripe.Checkout.Session): Promise<void> {
+    const bookingId = session.metadata?.bookingId || session.client_reference_id;
+
+    if (!bookingId) {
+      return;
+    }
+
+    const booking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
+      include: {
+        property: {
+          select: {
+            serviceFeePercentage: true,
+          },
+        },
+      },
+    });
+
+    if (!booking) {
+      return;
+    }
+
+    const paymentIntentId =
+      typeof session.payment_intent === 'string' ? session.payment_intent : null;
+
+    let payment = await this.prisma.payment.findFirst({
+      where: {
+        OR: [
+          { transactionId: session.id },
+          { bookingId: booking.id },
+        ],
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    if (!payment) {
+      payment = await this.prisma.payment.create({
+        data: {
+          bookingId: booking.id,
+          propertyId: booking.propertyId,
+          amount: booking.totalPrice,
+          currency: booking.currency || 'EUR',
+          status: PaymentStatus.PENDING,
+          method: PaymentMethod.CREDIT_CARD,
+          transactionId: session.id,
+          stripePaymentIntentId: paymentIntentId || undefined,
+        },
+      });
+    } else if (!payment.stripePaymentIntentId && paymentIntentId) {
+      payment = await this.prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          stripePaymentIntentId: paymentIntentId,
+          transactionId: session.id,
+        },
+      });
+    }
+
+    if (paymentIntentId) {
+      try {
+        await this.confirmPayment(paymentIntentId);
+        return;
+      } catch (error) {
+        if (!(error instanceof NotFoundException)) {
+          throw error;
+        }
+      }
+    }
+
+    if (payment.status === PaymentStatus.COMPLETED) {
+      return;
+    }
+
+    const platformFee = payment.amount * (booking.property?.serviceFeePercentage || 10) / 100;
+    const ownerRevenue = payment.amount - platformFee;
+
+    await this.prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        status: PaymentStatus.COMPLETED,
+        processedAt: new Date(),
+        transactionId: session.id,
+        stripePaymentIntentId: paymentIntentId || payment.stripePaymentIntentId,
+      },
+    });
+
+    await this.prisma.booking.update({
+      where: { id: booking.id },
+      data: {
+        paymentStatus: PaymentStatus.COMPLETED,
+        status: 'CONFIRMED',
+        platformFee,
+        ownerRevenue,
+      },
+    });
   }
 
   async getPaymentById(paymentId: string, userId: string): Promise<PaymentResponseDto> {

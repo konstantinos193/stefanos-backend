@@ -1,5 +1,5 @@
 import { IsEnum, IsString, IsOptional, IsDateString } from 'class-validator';
-import { CleaningFrequency } from '../../../database/types';
+import { CleaningFrequency } from '../../database/types';
 
 export class CreateCleaningScheduleDto {
   @IsString()

@@ -97,6 +97,27 @@ export class BookingsService {
     };
   }
 
+  async createPublic(createBookingDto: CreateBookingDto) {
+    // Create or find guest user
+    let guest = await this.prisma.user.findFirst({
+      where: { email: createBookingDto.guestEmail }
+    });
+
+    if (!guest) {
+      guest = await this.prisma.user.create({
+        data: {
+          email: createBookingDto.guestEmail,
+          name: createBookingDto.guestName,
+          phone: createBookingDto.guestPhone,
+          role: 'USER',
+          isActive: true,
+        }
+      });
+    }
+
+    return this.create(createBookingDto, guest.id);
+  }
+
   async create(createBookingDto: CreateBookingDto, guestId: string) {
     const property = await this.prisma.property.findUnique({
       where: { id: createBookingDto.propertyId },

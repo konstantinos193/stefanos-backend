@@ -15,6 +15,10 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { CleaningModule } from './cleaning/cleaning.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AdminModule } from './admin/admin.module';
+import { UploadModule } from './upload/upload.module';
+import { ContentModule } from './content/content.module';
+import { MediaModule } from './media/media.module';
+import { SettingsModule } from './settings/settings.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -38,6 +42,10 @@ import { AppController } from './app.controller';
     CleaningModule,
     ReviewsModule,
     AdminModule,
+    UploadModule,
+    ContentModule,
+    MediaModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [],

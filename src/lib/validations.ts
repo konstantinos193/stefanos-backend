@@ -30,7 +30,7 @@ export const createPropertySchema = z.object({
   titleEn: z.string().min(1).max(255),
   descriptionGr: z.string().optional(),
   descriptionEn: z.string().optional(),
-  type: z.enum(['APARTMENT', 'HOUSE', 'ROOM', 'COMMERCIAL', 'STORAGE', 'VACATION_RENTAL', 'LUXURY', 'INVESTMENT']),
+  type: z.enum(['APARTMENT', 'HOUSE', 'ROOM', 'COMMERCIAL', 'STORAGE', 'PLOT', 'GARAGE', 'LUXURY', 'INVESTMENT']),
   address: z.string().min(1),
   city: z.string().min(1),
   country: z.string().min(1),

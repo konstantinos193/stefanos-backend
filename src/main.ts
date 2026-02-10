@@ -5,34 +5,22 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
-import { getNormalizedConnectionString } from './lib/mongodb-connection';
 
 async function bootstrap() {
-  // Normalize MongoDB connection string before app initialization
-  // This ensures proper SSL/TLS configuration and validates database name
-  try {
-    const originalUrl = process.env.DATABASE_URL;
-    const normalizedUrl = getNormalizedConnectionString();
-    process.env.DATABASE_URL = normalizedUrl;
-    
-    // Log normalized connection string (masked for security)
-    const maskedOriginal = originalUrl?.replace(/:([^:@]+)@/, ':****@') || 'not set';
-    const maskedNormalized = normalizedUrl.replace(/:([^:@]+)@/, ':****@');
-    
-    console.log('🔧 MongoDB connection string validated and normalized');
-    console.log(`   Original: ${maskedOriginal.substring(0, 100)}${maskedOriginal.length > 100 ? '...' : ''}`);
-    console.log(`   Normalized: ${maskedNormalized.substring(0, 100)}${maskedNormalized.length > 100 ? '...' : ''}`);
-    
-    if (originalUrl !== normalizedUrl) {
-      console.log('   ✅ Connection string was modified (database name/parameters added)');
-    }
-  } catch (error: any) {
-    console.error('❌ Failed to validate/normalize DATABASE_URL:', error.message);
-    console.error('\n💡 Please check your .env file and ensure DATABASE_URL has the format:');
-    console.error('   mongodb+srv://username:password@cluster.mongodb.net/database_name');
-    console.error('   Example: mongodb+srv://user:pass@cluster.mongodb.net/real_estate_db');
+  // Validate DATABASE_URL is set
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL environment variable is not set');
+    console.error('Please set DATABASE_URL in your .env file');
+    console.error('Format: libsql://<database-host>?authToken=<token>');
     process.exit(1);
   }
+  
+  // Log database connection info (masked for security)
+  const maskedDbUrl = process.env.DATABASE_URL
+    .replace(/authToken=[^&]+/i, 'authToken=****')
+    .replace(/:([^:@/?]+)@/, ':****@');
+  console.log('🔧 Database connection configured');
+  console.log(`   Connection: ${maskedDbUrl.substring(0, 80)}${maskedDbUrl.length > 80 ? '...' : ''}`);
 
   const app = await NestFactory.create(AppModule);
 
@@ -43,7 +31,7 @@ async function bootstrap() {
     : [];
   
   // Always include localhost:3000 and localhost:3002 for development
-  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002'];
+  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:57814'];
   const adminUrl = process.env.ADMIN_URL || 'http://localhost:3002';
   const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins, adminUrl])];
   
@@ -53,6 +41,11 @@ async function bootstrap() {
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
+
+      const isLocalhostOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+      if (isLocalhostOrigin) {
+        return callback(null, true);
+      }
       
       // Always allow admin panel - check if it's from admin URL or contains admin indicators
       if (origin === adminUrl || origin.includes('admin') || origin.includes('3002')) {
@@ -121,4 +114,5 @@ async function bootstrap() {
 }
 
 bootstrap();
+
 

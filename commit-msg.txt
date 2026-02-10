@@ -1,0 +1,28 @@
+feat(backend): PostgreSQL/Prisma migration, MongoDB coexistence, Render deployment
+
+PostgreSQL & Prisma
+- Add Prisma schema (prisma/schema.prisma), prisma.config.ts, generated client
+  (prisma/generated). Add POSTGRESQL_MIGRATION.md.
+- PrismaService: use Prisma Client; optional MongoDB adapter stub for hybrid use.
+- Seed (seed.ts): adapt for Prisma models.
+
+MongoDB & connection
+- mongodb-connection.ts: connection singleton, retry logic.
+- mongodb.service.ts, database types: updates for dual DB usage.
+- connection-retry (lib/connection-retry.ts): improved retries and backoff.
+- db.ts, validations: ObjectId vs UUID handling, validation updates.
+
+Services & DTOs
+- Cleaning: create-cleaning-schedule.dto, cleaning.service adjustments.
+- Payments: create-payment.dto, payment-response.dto (e.g. UUIDs).
+- Properties: create-property.dto, properties.service; routes/properties updates.
+- Rooms: create-room.dto.
+- financial.util: minor fixes.
+
+Application bootstrap
+- main.ts, index.ts: startup order, Prisma/MongoDB init, env handling.
+- env.example: new vars for PostgreSQL, MongoDB, deployment.
+
+Deployment
+- Add render.yaml, RENDER_DEPLOYMENT.md for Render.
+- package.json: Prisma deps, scripts. yarn.lock updates.

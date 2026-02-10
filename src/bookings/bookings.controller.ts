@@ -7,6 +7,7 @@ import { CancelBookingDto } from './dto/cancel-booking.dto';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { Public } from '../common/decorators/public.decorator';
 
 @ApiTags('Bookings')
 @Controller('bookings')
@@ -27,6 +28,14 @@ export class BookingsController {
   @ApiResponse({ status: 200 })
   findOne(@Param('id') id: string) {
     return this.bookingsService.findOne(id);
+  }
+
+  @Post('public')
+  @Public()
+  @ApiOperation({ summary: 'Create public booking (no auth required)' })
+  @ApiResponse({ status: 201 })
+  createPublic(@Body() createBookingDto: CreateBookingDto) {
+    return this.bookingsService.createPublic(createBookingDto);
   }
 
   @Post()

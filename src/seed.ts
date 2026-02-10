@@ -1,39 +1,240 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../prisma/generated/prisma/client';
+import { PrismaLibSql } from '@prisma/adapter-libsql';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import * as bcrypt from 'bcryptjs';
 import * as dotenv from 'dotenv';
-import { 
-  normalizeMongoConnectionString, 
-  validateConnectionString,
-  getNormalizedConnectionString 
-} from './lib/mongodb-connection';
-import { 
-  connectWithRetry, 
-  retryOperation, 
-  delay 
-} from './lib/connection-retry';
+import { connectWithRetry, retryOperation, delay } from './lib/connection-retry';
+import { validateConnectionString } from './lib/mongodb-connection';
 
 // Load environment variables
 dotenv.config();
 
-// Normalize connection string before Prisma initialization
-// This ensures proper SSL/TLS configuration for MongoDB Atlas
-try {
-  const normalizedUrl = getNormalizedConnectionString();
-  process.env.DATABASE_URL = normalizedUrl;
-  console.log('🔧 Normalized MongoDB connection string with SSL/TLS parameters');
-} catch (error: any) {
-  console.error('❌ Failed to normalize connection string:', error.message);
-  throw error;
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is required to run the seed script');
 }
 
-// Configure Prisma client for MongoDB without transactions
-// MongoDB Atlas M0 (free tier) doesn't support transactions
+// Configure Prisma client for Turso/libsql
 const prisma = new PrismaClient({
+  adapter: new PrismaLibSql({ url: databaseUrl }),
   log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
 });
 
 async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
+}
+
+type RoomTypeSeed = 'BEDROOM' | 'LIVING_ROOM' | 'STUDIO' | 'OTHER';
+
+type IncantoRoomTemplate = {
+  roomNumber: number;
+  nameEn: string;
+  nameGr: string;
+  descriptionEn: string;
+  descriptionGr: string;
+  type: RoomTypeSeed;
+  capacity: number;
+  basePrice: number;
+  amenities: string[];
+};
+
+type IncantoRoomSeed = IncantoRoomTemplate & {
+  folderName: string;
+  images: string[];
+};
+
+const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
+  1: {
+    roomNumber: 1,
+    nameEn: 'Deluxe Room - Ground Floor No1',
+    nameGr: 'Deluxe Room - Ground Floor No1',
+    descriptionEn: 'Elegant comfort with Mediterranean views and modern amenities.',
+    descriptionGr: 'Elegant comfort with Mediterranean views and modern amenities.',
+    type: 'BEDROOM',
+    capacity: 2,
+    basePrice: 150,
+    amenities: ['Sea View', 'King Bed', 'Mini Bar', 'Workspace', 'Free WiFi'],
+  },
+  2: {
+    roomNumber: 2,
+    nameEn: 'Garden Room - Ground Floor No2',
+    nameGr: 'Garden Room - Ground Floor No2',
+    descriptionEn: 'Cozy ground-floor room overlooking the garden.',
+    descriptionGr: 'Cozy ground-floor room overlooking the garden.',
+    type: 'BEDROOM',
+    capacity: 2,
+    basePrice: 120,
+    amenities: ['Garden View', 'Queen Bed', 'Balcony', 'Coffee Station', 'Free WiFi'],
+  },
+  3: {
+    roomNumber: 3,
+    nameEn: 'Premium Room - First Floor No3',
+    nameGr: 'Premium Room - First Floor No3',
+    descriptionEn: 'Bright first-floor room with refined interiors and sea breeze.',
+    descriptionGr: 'Bright first-floor room with refined interiors and sea breeze.',
+    type: 'BEDROOM',
+    capacity: 2,
+    basePrice: 180,
+    amenities: ['Sea View', 'King Bed', 'Smart TV', 'Coffee Machine', 'Free WiFi'],
+  },
+  4: {
+    roomNumber: 4,
+    nameEn: 'Superior Room - First Floor No4',
+    nameGr: 'Superior Room - First Floor No4',
+    descriptionEn: 'Spacious superior room with stylish decor and premium comfort.',
+    descriptionGr: 'Spacious superior room with stylish decor and premium comfort.',
+    type: 'BEDROOM',
+    capacity: 3,
+    basePrice: 210,
+    amenities: ['Sea View', 'King Bed', 'Sofa Bed', 'Mini Bar', 'Free WiFi'],
+  },
+  5: {
+    roomNumber: 5,
+    nameEn: 'Executive Suite - First Floor No5',
+    nameGr: 'Executive Suite - First Floor No5',
+    descriptionEn: 'Spacious suite with separate living area and panoramic views.',
+    descriptionGr: 'Spacious suite with separate living area and panoramic views.',
+    type: 'STUDIO',
+    capacity: 3,
+    basePrice: 250,
+    amenities: ['Panoramic View', 'Living Area', 'Jacuzzi', 'Premium Amenities', 'Free WiFi'],
+  },
+  6: {
+    roomNumber: 6,
+    nameEn: 'Panorama Room - Second Floor No6',
+    nameGr: 'Panorama Room - Second Floor No6',
+    descriptionEn: 'Second-floor room with expansive views and contemporary style.',
+    descriptionGr: 'Second-floor room with expansive views and contemporary style.',
+    type: 'BEDROOM',
+    capacity: 3,
+    basePrice: 240,
+    amenities: ['Panoramic View', 'King Bed', 'Smart TV', 'Mini Bar', 'Free WiFi'],
+  },
+  7: {
+    roomNumber: 7,
+    nameEn: 'Family Suite - Second Floor No7',
+    nameGr: 'Family Suite - Second Floor No7',
+    descriptionEn: 'Ideal family suite with generous space and flexible sleeping setup.',
+    descriptionGr: 'Ideal family suite with generous space and flexible sleeping setup.',
+    type: 'STUDIO',
+    capacity: 5,
+    basePrice: 320,
+    amenities: ['Sea View', '2 Bedrooms', 'Kitchenette', 'Kids Area', 'Free WiFi'],
+  },
+  8: {
+    roomNumber: 8,
+    nameEn: 'Ocean Suite - Second Floor No8',
+    nameGr: 'Ocean Suite - Second Floor No8',
+    descriptionEn: 'Premium suite with ocean-facing views and elevated comfort.',
+    descriptionGr: 'Premium suite with ocean-facing views and elevated comfort.',
+    type: 'STUDIO',
+    capacity: 4,
+    basePrice: 340,
+    amenities: ['Ocean View', 'King Bed', 'Lounge Area', 'Coffee Station', 'Free WiFi'],
+  },
+  9: {
+    roomNumber: 9,
+    nameEn: 'Honeymoon Suite - Third Floor No9',
+    nameGr: 'Honeymoon Suite - Third Floor No9',
+    descriptionEn: 'Romantic suite designed for unforgettable stays.',
+    descriptionGr: 'Romantic suite designed for unforgettable stays.',
+    type: 'STUDIO',
+    capacity: 2,
+    basePrice: 380,
+    amenities: ['Ocean View', 'Private Jacuzzi', 'Champagne Bar', 'Romantic Decor', 'Free WiFi'],
+  },
+  10: {
+    roomNumber: 10,
+    nameEn: 'Presidential Suite - Third Floor No10',
+    nameGr: 'Presidential Suite - Third Floor No10',
+    descriptionEn: 'Signature top-floor suite with the highest level of luxury.',
+    descriptionGr: 'Signature top-floor suite with the highest level of luxury.',
+    type: 'STUDIO',
+    capacity: 4,
+    basePrice: 450,
+    amenities: ['Ocean View', '2 Bedrooms', 'Private Terrace', 'Butler Service', 'Free WiFi'],
+  },
+};
+
+function resolveIncantoPublicDir(): string | null {
+  const candidates = [
+    path.resolve(process.cwd(), '../incanto-hotel/public'),
+    path.resolve(process.cwd(), 'incanto-hotel/public'),
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function createDefaultTemplate(roomNumber: number): IncantoRoomTemplate {
+  return {
+    roomNumber,
+    nameEn: `Incanto Room No${roomNumber}`,
+    nameGr: `Incanto Room No${roomNumber}`,
+    descriptionEn: `Comfortable accommodation in room No${roomNumber}.`,
+    descriptionGr: `Comfortable accommodation in room No${roomNumber}.`,
+    type: 'BEDROOM',
+    capacity: 2,
+    basePrice: 150,
+    amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV'],
+  };
+}
+
+function getRoomImagePaths(publicDir: string, folderName: string): string[] {
+  const roomDirPath = path.join(publicDir, folderName);
+
+  return fs
+    .readdirSync(roomDirPath, { withFileTypes: true })
+    .filter(
+      (entry) =>
+        entry.isFile() &&
+        /\.(jpe?g|png|webp)$/i.test(entry.name),
+    )
+    .sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' }),
+    )
+    .map((entry) => `/${folderName}/${entry.name}`.replace(/\\/g, '/'));
+}
+
+function buildIncantoRoomSeedsFromPublic(): IncantoRoomSeed[] {
+  const publicDir = resolveIncantoPublicDir();
+  if (!publicDir) {
+    console.warn('⚠️ Incanto public assets folder not found. Seeding fallback room metadata only.');
+
+    return Object.values(INCANTO_ROOM_TEMPLATES).map((template) => ({
+      ...template,
+      folderName: `${template.roomNumber}. room No${template.roomNumber}`,
+      images: [],
+    }));
+  }
+
+  const roomFolders = fs
+    .readdirSync(publicDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => {
+      const match = entry.name.match(/No(\d+)$/i);
+      if (!match) {
+        return null;
+      }
+      return { folderName: entry.name, roomNumber: Number(match[1]) };
+    })
+    .filter((entry): entry is { folderName: string; roomNumber: number } => entry !== null)
+    .sort((a, b) => a.roomNumber - b.roomNumber);
+
+  return roomFolders.map(({ folderName, roomNumber }) => {
+    const template = INCANTO_ROOM_TEMPLATES[roomNumber] ?? createDefaultTemplate(roomNumber);
+    return {
+      ...template,
+      folderName,
+      images: getRoomImagePaths(publicDir, folderName),
+    };
+  });
 }
 
 async function main() {
@@ -106,7 +307,9 @@ async function main() {
     { nameGr: 'Θέα στη θάλασσα', nameEn: 'Sea View', icon: 'water', category: 'view' },
     { nameGr: 'Πλυντήριο', nameEn: 'Washing Machine', icon: 'washing-machine', category: 'comfort' },
     { nameGr: 'Τηλεόραση', nameEn: 'TV', icon: 'tv', category: 'entertainment' },
-    { nameGr: 'Προσβάσιμο για ΑΜΕΑ', nameEn: 'Wheelchair Accessible', icon: 'wheelchair', category: 'accessibility' }
+    { nameGr: 'Προσβάσιμο για ΑΜΕΑ', nameEn: 'Wheelchair Accessible', icon: 'wheelchair', category: 'accessibility' },
+    { nameGr: 'Θέρμανση', nameEn: 'Heating', icon: 'thermometer', category: 'comfort' },
+    { nameGr: 'Spa', nameEn: 'Spa', icon: 'heart', category: 'wellness' }
   ];
 
   // Create amenities sequentially to avoid transaction issues
@@ -212,7 +415,7 @@ async function main() {
       });
 
   const ownerData = [
-    { email: 'owner1@realestate.com', name: 'STEFANOS MALESKOS', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=STEFANOS+MALESKOS&background=d4af37&color=000' },
+    { email: 'owner1@realestate.com', name: 'SMH', phone: '+30 210 987 6543', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=SMH&background=d4af37&color=000' },
     { email: 'owner2@realestate.com', name: 'Maria Papadopoulou', phone: '+30 231 123 4567', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Maria+Papadopoulou&background=d4af37&color=000' },
     { email: 'owner3@realestate.com', name: 'Dimitris Georgiou', phone: '+30 228 765 4321', password: 'owner123', avatar: 'https://ui-avatars.com/api/?name=Dimitris+Georgiou&background=d4af37&color=000' }
   ];
@@ -260,6 +463,43 @@ async function main() {
   // Create properties
   console.log('🏠 Creating properties...');
   const propertyData = [
+    // Incanto Hotel - Preveza
+    {
+      titleGr: 'L\'Incanto Hotel',
+      titleEn: 'L\'Incanto Hotel',
+      descriptionGr: 'Αποκλειστικό ξενοδοχείο στην Πρέβεζα με πανοραμική θέα στο Ιόνιο Πέλαγος. Πολυτελής διαμονή με εξαιρετικές παροχές.',
+      descriptionEn: 'Exclusive hotel in Preveza with panoramic views of the Ionian Sea. Luxury accommodation with excellent amenities.',
+      type: 'LUXURY' as const,
+      address: 'Ionian Coast',
+      city: 'Preveza',
+      country: 'Greece',
+      latitude: 38.9565,
+      longitude: 20.7519,
+      maxGuests: 4,
+      bedrooms: 1,
+      bathrooms: 1,
+      area: 45.0,
+      basePrice: 150,
+      cleaningFee: 50,
+      serviceFeePercentage: 10,
+      taxes: 24,
+      minStay: 1,
+      maxStay: 30,
+      checkInTime: '15:00',
+      checkOutTime: '11:00',
+      cancellationPolicy: 'MODERATE' as const,
+      houseRules: 'No smoking, no parties, quiet hours after 11 PM',
+      petFriendly: false,
+      smokingAllowed: false,
+      partyAllowed: false,
+      images: [
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
+        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'
+      ],
+      ownerId: owners[0].id,
+      amenityIds: [0, 1, 2, 3, 4, 8, 9, 10, 11] // wifi, parking, ac, heating, kitchen, sea view, pool, tv, spa
+    },
     // Athens Properties
     {
       titleGr: 'Μοντέρνο Διαμέρισμα στο Κέντρο της Αθήνας',
@@ -361,7 +601,7 @@ async function main() {
       titleEn: 'Villa with Pool in Mykonos',
       descriptionGr: 'Απίστευτη βίλα 4 υπνοδωματίων με ιδιωτική πισίνα και θέα στη θάλασσα.',
       descriptionEn: 'Incredible 4-bedroom villa with private pool and sea view.',
-      type: 'VACATION_RENTAL' as const,
+      type: 'LUXURY' as const,
       address: 'Paradise Beach Road',
       city: 'Mykonos',
       country: 'Greece',
@@ -537,7 +777,7 @@ async function main() {
       titleEn: 'Villa with Sea View',
       descriptionGr: 'Εντυπωσιακή βίλα 5 υπνοδωματίων με ιδιωτική πισίνα και θέα στη θάλασσα.',
       descriptionEn: 'Impressive 5-bedroom villa with private pool and sea view.',
-      type: 'VACATION_RENTAL' as const,
+      type: 'LUXURY' as const,
       address: 'Elounda Beach',
       city: 'Crete',
       country: 'Greece',
@@ -625,12 +865,18 @@ async function main() {
   const properties = [];
   for (let i = 0; i < propertyData.length; i++) {
     const prop = propertyData[i];
-    const { amenityIds, serviceFee, ...propertyInfo } = prop;
+    const { amenityIds, serviceFee, ownerId, ...propertyInfo } = prop;
     
     try {
       // Create property first (without nested creates to avoid transactions)
+      // Use owner relation (connect) to satisfy Prisma's PropertyCreateInput XOR
       const property = await retryOperation(
-        () => prisma.property.create({ data: propertyInfo }),
+        () => prisma.property.create({ 
+          data: {
+            ...propertyInfo,
+            owner: { connect: { id: String(ownerId) } }
+          } 
+        }),
         `Create property ${i + 1}: ${propertyInfo.titleEn}`,
         prisma
       );
@@ -669,6 +915,61 @@ async function main() {
   }
 
   console.log(`✅ Created ${properties.length} properties`);
+
+  // Create Incanto rooms from real media folders in incanto-hotel/public
+  console.log('Creating Incanto rooms from public assets...');
+  const seededRooms = [];
+  const incantoProperty = properties.find((property) => property.titleEn === "L'Incanto Hotel");
+
+  if (incantoProperty) {
+    const roomSeeds = buildIncantoRoomSeedsFromPublic();
+    roomSeeds.sort((a, b) => a.roomNumber - b.roomNumber);
+
+    for (const roomSeed of roomSeeds) {
+      try {
+        const room = await retryOperation(
+          () =>
+            prisma.room.create({
+              data: {
+                propertyId: incantoProperty.id,
+                ownerId: incantoProperty.ownerId,
+                name: roomSeed.nameEn,
+                nameEn: roomSeed.nameEn,
+                nameGr: roomSeed.nameGr,
+                type: roomSeed.type,
+                capacity: roomSeed.capacity,
+                basePrice: roomSeed.basePrice,
+                isBookable: true,
+                amenities: roomSeed.amenities,
+                images: roomSeed.images,
+                descriptionEn: roomSeed.descriptionEn,
+                descriptionGr: roomSeed.descriptionGr,
+              },
+            }),
+          'Create Incanto room No' + roomSeed.roomNumber,
+          prisma,
+        );
+
+        seededRooms.push(room);
+        console.log(
+          '   Created room No' + roomSeed.roomNumber + ': ' + (room.nameEn || room.name) + ' (' + roomSeed.images.length + ' images)',
+        );
+        await delay(75);
+      } catch (error: any) {
+        console.error('   Error creating Incanto room No' + roomSeed.roomNumber + ': ' + error.message);
+        throw error;
+      }
+    }
+
+    await prisma.property.update({
+      where: { id: incantoProperty.id },
+      data: { hasDynamicRooms: seededRooms.length > 0 },
+    });
+
+    console.log('Created ' + seededRooms.length + ' Incanto rooms');
+  } else {
+    console.warn('Incanto property not found, skipping room seeding');
+  }
 
   // Create property availability (next 90 days)
   console.log('📅 Creating property availability...');
@@ -1165,6 +1466,7 @@ async function main() {
   console.log(`   - ${amenities.length} amenities`);
   console.log(`   - ${1 + owners.length + guests.length} users (1 admin, ${owners.length} owners, ${guests.length} guests)`);
   console.log(`   - ${properties.length} properties`);
+  console.log(`   - ${seededRooms.length} Incanto rooms`);
   console.log(`   - ${bookings.length} bookings`);
   console.log(`   - ${completedBookings.length} reviews`);
   console.log(`   - ${services.length} services`);

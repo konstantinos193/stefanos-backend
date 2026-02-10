@@ -7,7 +7,7 @@ import {
   IsArray,
   Min,
 } from 'class-validator';
-import { RoomType } from '../../../database/types';
+import { RoomType } from '../../database/types';
 
 export class CreateRoomDto {
   @IsString()

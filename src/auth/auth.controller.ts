@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
-import { EnableMFADto, VerifyMFADto } from './dto/enable-mfa.dto';
+import { EnableMFADto } from './dto/enable-mfa.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
@@ -37,9 +37,9 @@ export class AuthController {
   @ApiResponse({ status: 200 })
   async enableMFA(
     @Body() enableMFADto: EnableMFADto,
-    @CurrentUser() user: any,
+    @CurrentUser() userId: string,
   ) {
-    return this.authService.enableMFA(user.userId || user.id, enableMFADto);
+    return this.authService.enableMFA(userId, enableMFADto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -47,8 +47,8 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Disable MFA' })
   @ApiResponse({ status: 200 })
-  async disableMFA(@CurrentUser() user: any) {
-    return this.authService.disableMFA(user.userId || user.id);
+  async disableMFA(@CurrentUser() userId: string) {
+    return this.authService.disableMFA(userId);
   }
 
   @Public()
@@ -64,8 +64,8 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user' })
   @ApiResponse({ status: 200 })
-  async getCurrentUser(@CurrentUser() user: any) {
-    return this.authService.getCurrentUser(user.userId);
+  async getCurrentUser(@CurrentUser() userId: string) {
+    return this.authService.getCurrentUser(userId);
   }
 }
 

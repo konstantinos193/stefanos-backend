@@ -1,45 +1,103 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import { connectWithRetry } from '../lib/connection-retry';
+import { PrismaClient } from '../../prisma/generated/prisma';
+import { PrismaLibSql } from '@prisma/adapter-libsql';
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+export class PrismaService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
-
-  constructor() {
-    super({
-      log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
-    });
-  }
+  private client!: PrismaClient;
 
   async onModuleInit() {
-    // Verify DATABASE_URL is set and normalized
     const dbUrl = process.env.DATABASE_URL;
+
     if (!dbUrl) {
-      this.logger.error('❌ DATABASE_URL is not set in environment variables');
-      this.logger.error('Please set DATABASE_URL in your .env file');
-      return;
+      throw new Error('DATABASE_URL is not set');
     }
 
-    // Check if database name is in the connection string
-    const hasDbName = /mongodb\+srv:\/\/[^/]+\/([^?]+)/.test(dbUrl);
-    if (!hasDbName) {
-      this.logger.warn('⚠️  Database name not found in connection string');
-      this.logger.warn('The connection string will be normalized to include a database name');
-    }
+    this.logger.log('Creating PrismaClient with Turso adapter...');
+    this.logger.debug(`DATABASE_URL starts with: ${dbUrl.substring(0, 20)}...`);
 
     try {
-      await connectWithRetry(this, 5, 2000);
-      this.logger.log('✅ Database connection established');
+      const adapter = new PrismaLibSql({ url: dbUrl });
+      this.client = new PrismaClient({ adapter });
+
+      this.logger.debug('Testing connection...');
+      await this.client.$connect();
+      await this.assertSchemaInitialized();
+
+      this.logger.log('Connected to Turso database successfully');
     } catch (error: any) {
-      this.logger.error('❌ Failed to connect to database after retries');
-      this.logger.error('Please check your DATABASE_URL and MongoDB Atlas configuration');
-      // Don't throw - allow the app to start but operations will fail gracefully
+      this.logger.error('Failed to create PrismaClient');
+      this.logger.error(error.message);
+      if (error.stack) {
+        this.logger.debug(`Stack: ${error.stack}`);
+      }
+      throw error;
     }
   }
 
   async onModuleDestroy() {
-    await this.$disconnect();
+    if (this.client) {
+      await this.client.$disconnect();
+    }
   }
-}
 
+  private async assertSchemaInitialized() {
+    const result = await this.client.$queryRawUnsafe<Array<{ name: string }>>(
+      "SELECT name FROM sqlite_master WHERE type = 'table' AND name = 'rooms'",
+    );
+
+    if (result.length > 0) {
+      return;
+    }
+
+    throw new Error(
+      'Database schema is not initialized: missing "rooms" table. Run `npm run db:init` in stefanos-backend and restart the API.',
+    );
+  }
+
+  private getClient(): PrismaClient {
+    if (!this.client) {
+      throw new Error('PrismaClient not initialized');
+    }
+    return this.client;
+  }
+
+  // Expose PrismaClient models
+  get user() { return this.getClient().user; }
+  get property() { return this.getClient().property; }
+  get amenity() { return this.getClient().amenity; }
+  get propertyAmenity() { return this.getClient().propertyAmenity; }
+  get booking() { return this.getClient().booking; }
+  get propertyAvailability() { return this.getClient().propertyAvailability; }
+  get review() { return this.getClient().review; }
+  get maintenanceRequest() { return this.getClient().maintenanceRequest; }
+  get message() { return this.getClient().message; }
+  get notification() { return this.getClient().notification; }
+  get edition() { return this.getClient().edition; }
+  get service() { return this.getClient().service; }
+  get knowledgeArticle() { return this.getClient().knowledgeArticle; }
+  get payment() { return this.getClient().payment; }
+  get room() { return this.getClient().room; }
+  get propertyGroup() { return this.getClient().propertyGroup; }
+  get cleaningSchedule() { return this.getClient().cleaningSchedule; }
+  get propertyAnalytics() { return this.getClient().propertyAnalytics; }
+  get propertyNote() { return this.getClient().propertyNote; }
+  get auditLog() { return this.getClient().auditLog; }
+  get content() { return this.getClient().content; }
+  get contentMedia() { return this.getClient().contentMedia; }
+  get media() { return this.getClient().media; }
+  get setting() { return this.getClient().setting; }
+  get roomContent() { return this.getClient().roomContent; }
+  get roomAvailabilityRule() { return this.getClient().roomAvailabilityRule; }
+
+  // Delegate PrismaClient methods
+  $connect() { return this.getClient().$connect(); }
+  $disconnect() { return this.getClient().$disconnect(); }
+  $transaction(...args: any[]) { return (this.getClient().$transaction as any)(...args); }
+  $queryRaw(...args: any[]) { return (this.getClient().$queryRaw as any)(...args); }
+  $queryRawUnsafe(...args: any[]) { return (this.getClient().$queryRawUnsafe as any)(...args); }
+  $executeRaw(...args: any[]) { return (this.getClient().$executeRaw as any)(...args); }
+  $executeRawUnsafe(...args: any[]) { return (this.getClient().$executeRawUnsafe as any)(...args); }
+  $extends(...args: any[]) { return (this.getClient().$extends as any)(...args); }
+}

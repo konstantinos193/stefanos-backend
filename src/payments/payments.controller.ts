@@ -14,6 +14,7 @@ import { PaymentsService } from './payments.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { RefundPaymentDto } from './dto/refund-payment.dto';
 import { PaymentResponseDto } from './dto/payment-response.dto';
+import { CreatePublicCheckoutSessionDto } from './dto/create-public-checkout-session.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
@@ -22,6 +23,15 @@ import { Public } from '../common/decorators/public.decorator';
 @UseGuards(JwtAuthGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
+
+  @Post('public/checkout-session')
+  @Public()
+  @HttpCode(HttpStatus.CREATED)
+  async createPublicCheckoutSession(
+    @Body() createPublicCheckoutSessionDto: CreatePublicCheckoutSessionDto,
+  ): Promise<{ checkoutUrl: string; sessionId: string; bookingId: string }> {
+    return this.paymentsService.createPublicCheckoutSession(createPublicCheckoutSessionDto);
+  }
 
   @Post('process')
   @HttpCode(HttpStatus.CREATED)

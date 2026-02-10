@@ -2,6 +2,7 @@ import express from 'express';
 import { prisma } from '../lib/db';
 import { validateSchema, createPropertySchema, updatePropertySchema, propertySearchSchema, paginationSchema } from '../lib/validations';
 import { createError, getPagination } from '../lib/utils';
+import { PropertyType as PrismaPropertyType } from '../../prisma/generated/prisma';
 
 const router = express.Router();
 
@@ -267,12 +268,21 @@ router.post('/', async (req, res, next) => {
     // TODO: Add authentication middleware to get userId
     const ownerId = 'temp-user-id'; // This should come from auth middleware
     
-    const { amenities, cancellationPolicy, ...propertyData } = data;
+    const { amenities, cancellationPolicy, type, ...propertyData } = data;
+    const propertyGroupId = (req.body as any).propertyGroupId;
     const property = await prisma.property.create({
       data: {
         ...propertyData,
-        ownerId,
+        type: type as PrismaPropertyType,
+        owner: {
+          connect: { id: ownerId },
+        },
         cancellationPolicy: cancellationPolicy as any,
+        ...(propertyGroupId && {
+          propertyGroup: {
+            connect: { id: propertyGroupId },
+          },
+        }),
         amenities: {
           create: amenities.map(amenityId => ({
             amenityId,

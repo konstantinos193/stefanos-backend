@@ -12,6 +12,44 @@ export function normalizeMongoConnectionString(connectionString: string): string
   // Trim whitespace and newlines that might cause issues
   const trimmed = connectionString.trim().replace(/\n/g, '').replace(/\r/g, '');
 
+  // Check for placeholder values that indicate the connection string hasn't been configured
+  // Real MongoDB Atlas clusters have names like "cluster0.xxxxx.mongodb.net"
+  // Placeholder patterns include: "cluster.mongodb.net" (without subdomain), "username", "password", etc.
+  try {
+    const testUrl = new URL(trimmed);
+    const hostname = testUrl.hostname;
+    
+    // Check if hostname is exactly "cluster.mongodb.net" (placeholder)
+    if (hostname === 'cluster.mongodb.net' || hostname === 'cluster.mongodb.net.') {
+      throw new Error(
+        'DATABASE_URL contains placeholder hostname "cluster.mongodb.net".\n' +
+        'Please replace with your actual MongoDB Atlas cluster hostname.\n' +
+        'Get your connection string from MongoDB Atlas Dashboard:\n' +
+        '1. Go to MongoDB Atlas → Clusters → Connect\n' +
+        '2. Choose "Connect your application"\n' +
+        '3. Copy the connection string (should look like: mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/db)\n' +
+        '4. Replace <password> with your actual password\n' +
+        '5. Update DATABASE_URL in your .env file'
+      );
+    }
+    
+    // Check for placeholder username/password patterns
+    if (trimmed.includes('<username>') || trimmed.includes('<password>') || 
+        trimmed.includes('username:password') || trimmed.includes('user:pass@')) {
+      throw new Error(
+        'DATABASE_URL contains placeholder credentials.\n' +
+        'Please replace <username> and <password> with your actual MongoDB Atlas credentials.\n' +
+        'Format: mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/database'
+      );
+    }
+  } catch (error: any) {
+    // If it's our custom error, re-throw it
+    if (error.message?.includes('placeholder') || error.message?.includes('credentials')) {
+      throw error;
+    }
+    // Otherwise, continue with URL parsing below
+  }
+
   // Parse the connection string
   let url: URL;
   try {

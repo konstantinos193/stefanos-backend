@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCleaningScheduleDto } from './dto/create-cleaning-schedule.dto';
-import { CleaningFrequency } from '../database/types';
+import { CleaningFrequency } from '../../prisma/generated/prisma';
 
 @Injectable()
 export class CleaningService {

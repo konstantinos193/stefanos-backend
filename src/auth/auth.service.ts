@@ -1,12 +1,11 @@
 import { Injectable, UnauthorizedException, ConflictException, BadRequestException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { MongoDBService } from '../database/mongodb.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { hashPassword, verifyPassword } from '../common/utils/password.util';
-import { retryOperation } from '../lib/connection-retry';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { EnableMFADto, VerifyMFADto, MFAType } from './dto/enable-mfa.dto';
+import { EnableMFADto, MFAType } from './dto/enable-mfa.dto';
 import { MFAUtil } from './utils/mfa.util';
 
 @Injectable()
@@ -14,16 +13,14 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   constructor(
-    private mongo: MongoDBService,
+    private prisma: PrismaService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
 
   async register(registerDto: RegisterDto) {
-    const usersCollection = this.mongo.getCollection('users');
-    
-    const existingUser = await usersCollection.findOne({
-      email: registerDto.email,
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email: registerDto.email },
     });
 
     if (existingUser) {
@@ -32,67 +29,66 @@ export class AuthService {
 
     const hashedPassword = await hashPassword(registerDto.password);
 
-    const userData = {
-      email: registerDto.email,
-      name: registerDto.name,
-      phone: registerDto.phone,
-      role: registerDto.role || 'USER',
-      password: hashedPassword,
-      isActive: true,
-      mfaEnabled: false,
-      emailVerified: false,
-      phoneVerified: false,
-      mfaBackupCodes: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    const result = await usersCollection.insertOne(userData);
-    const user = await usersCollection.findOne({ _id: result.insertedId });
+    const user = await this.prisma.user.create({
+      data: {
+        email: registerDto.email,
+        name: registerDto.name,
+        phone: registerDto.phone,
+        role: (registerDto.role || 'USER') as any,
+        password: hashedPassword,
+        isActive: true,
+        mfaEnabled: false,
+        emailVerified: false,
+        phoneVerified: false,
+        mfaBackupCodes: [] as any,
+      },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+      },
+    });
 
     const token = this.generateToken({
-      userId: this.mongo.fromObjectId(user!._id),
-      email: user!.email,
-      role: user!.role,
+      userId: user.id,
+      email: user.email,
+      role: String(user.role),
     });
 
     return {
       success: true,
       message: 'User created successfully',
       user: {
-        id: this.mongo.fromObjectId(user!._id),
-        email: user!.email,
-        name: user!.name,
-        role: user!.role,
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role,
       },
       token,
     };
   }
 
   async login(loginDto: LoginDto, mfaCode?: string) {
-    const usersCollection = this.mongo.getCollection('users');
-    
-    // Support both email and username login
-    // If input doesn't contain @, treat as username and convert to email format
     let email = loginDto.email;
     if (!email.includes('@')) {
-      // Username format: convert to email
       email = `${email}@stefanos.com`;
     }
 
-    // Try to find user by email
-    let user = await usersCollection.findOne({ email });
+    let user = await this.prisma.user.findUnique({
+      where: { email },
+    });
 
-    // If not found and it was a username, also try to find by name
     if (!user && !loginDto.email.includes('@')) {
-      user = await usersCollection.findOne({ name: loginDto.email });
+      user = await this.prisma.user.findFirst({
+        where: { name: loginDto.email },
+      });
     }
 
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Verify password
     if (user.password) {
       const isValidPassword = await verifyPassword(loginDto.password, user.password);
       if (!isValidPassword) {
@@ -104,7 +100,6 @@ export class AuthService {
       throw new UnauthorizedException('Account is deactivated');
     }
 
-    // Check if MFA is enabled
     if (user.mfaEnabled) {
       if (!mfaCode) {
         return {
@@ -115,7 +110,6 @@ export class AuthService {
         };
       }
 
-      // Verify MFA code
       const isValidMFA = await this.verifyMFACode(user, mfaCode);
       if (!isValidMFA) {
         throw new UnauthorizedException('Invalid MFA code');
@@ -123,16 +117,16 @@ export class AuthService {
     }
 
     const token = this.generateToken({
-      userId: this.mongo.fromObjectId(user._id),
+      userId: user.id,
       email: user.email,
-      role: user.role,
+      role: String(user.role),
     });
 
     return {
       success: true,
       message: 'Login successful',
       user: {
-        id: this.mongo.fromObjectId(user._id),
+        id: user.id,
         email: user.email,
         name: user.name,
         role: user.role,
@@ -143,10 +137,13 @@ export class AuthService {
   }
 
   async enableMFA(userId: string, enableMFADto: EnableMFADto) {
-    const usersCollection = this.mongo.getCollection('users');
-    const userObjectId = this.mongo.toObjectId(userId);
-    
-    const user = await usersCollection.findOne({ _id: userObjectId });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
 
     if (!user) {
       throw new UnauthorizedException('User not found');
@@ -156,38 +153,32 @@ export class AuthService {
       const { secret, qrCodeUrl } = MFAUtil.generateTOTPSecret(user.email);
       const backupCodes = MFAUtil.generateBackupCodes();
 
-      await usersCollection.updateOne(
-        { _id: userObjectId },
-        {
-          $set: {
-            mfaEnabled: true,
-            mfaSecret: secret,
-            mfaBackupCodes: backupCodes,
-            updatedAt: new Date(),
-          },
-        }
-      );
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          mfaEnabled: true,
+          mfaSecret: secret,
+          mfaBackupCodes: backupCodes as any,
+        },
+      });
 
       return {
         success: true,
         message: 'TOTP MFA enabled',
         qrCodeUrl,
-        backupCodes, // Show only once, user should save them
-        secret, // For manual entry
+        backupCodes,
+        secret,
       };
-    } else if (enableMFADto.type === MFAType.EMAIL) {
-      // For email OTP, we just enable it
-      // OTP will be sent on each login
-      await usersCollection.updateOne(
-        { _id: userObjectId },
-        {
-          $set: {
-            mfaEnabled: true,
-            emailVerified: true, // Assume email is verified if enabling email MFA
-            updatedAt: new Date(),
-          },
-        }
-      );
+    }
+
+    if (enableMFADto.type === MFAType.EMAIL) {
+      await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          mfaEnabled: true,
+          emailVerified: true,
+        },
+      });
 
       return {
         success: true,
@@ -199,20 +190,23 @@ export class AuthService {
   }
 
   async disableMFA(userId: string) {
-    const usersCollection = this.mongo.getCollection('users');
-    const userObjectId = this.mongo.toObjectId(userId);
-    
-    await usersCollection.updateOne(
-      { _id: userObjectId },
-      {
-        $set: {
-          mfaEnabled: false,
-          mfaSecret: null,
-          mfaBackupCodes: [],
-          updatedAt: new Date(),
-        },
-      }
-    );
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        mfaEnabled: false,
+        mfaSecret: null,
+        mfaBackupCodes: [] as any,
+      },
+    });
 
     return {
       success: true,
@@ -222,31 +216,30 @@ export class AuthService {
 
   async verifyMFACode(user: any, code: string): Promise<boolean> {
     if (user.mfaSecret) {
-      // TOTP verification
       return MFAUtil.verifyTOTP(user.mfaSecret, code);
-    } else {
-      // Email OTP verification (simplified - in production use Redis/DB)
-      // For now, return true as placeholder
-      return await MFAUtil.verifyEmailOTP(this.mongo, this.mongo.fromObjectId(user._id), code);
     }
+
+    return MFAUtil.verifyEmailOTP(user.id, code);
   }
 
   async sendEmailOTP(userId: string): Promise<{ success: boolean; message: string }> {
-    const usersCollection = this.mongo.getCollection('users');
-    const userObjectId = this.mongo.toObjectId(userId);
-    
-    const user = await usersCollection.findOne({ _id: userObjectId });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
 
     if (!user || !user.email) {
       throw new BadRequestException('User email not found');
     }
 
     const otp = MFAUtil.generateEmailOTP();
-    await MFAUtil.storeOTP(this.mongo, userId, otp);
+    await MFAUtil.storeOTP(user.id, otp);
 
-    // TODO: Send email with OTP
-    // In production, use a service like SendGrid, AWS SES, etc.
-    console.log(`Email OTP for ${user.email}: ${otp}`); // Remove in production
+    // TODO: Replace with real email provider integration.
+    this.logger.debug(`Email OTP for ${user.email}: ${otp}`);
 
     return {
       success: true,
@@ -255,24 +248,19 @@ export class AuthService {
   }
 
   async getCurrentUser(userId: string) {
-    const usersCollection = this.mongo.getCollection('users');
-    const userObjectId = this.mongo.toObjectId(userId);
-    
-    const user = await usersCollection.findOne(
-      { _id: userObjectId },
-      {
-        projection: {
-          _id: 1,
-          email: 1,
-          name: 1,
-          phone: 1,
-          role: 1,
-          avatar: 1,
-          isActive: 1,
-          createdAt: 1,
-        },
-      }
-    );
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        phone: true,
+        role: true,
+        avatar: true,
+        isActive: true,
+        createdAt: true,
+      },
+    });
 
     if (!user) {
       throw new UnauthorizedException('User not found');
@@ -280,16 +268,7 @@ export class AuthService {
 
     return {
       success: true,
-      user: {
-        id: this.mongo.fromObjectId(user._id),
-        email: user.email,
-        name: user.name,
-        phone: user.phone,
-        role: user.role,
-        avatar: user.avatar,
-        isActive: user.isActive,
-        createdAt: user.createdAt,
-      },
+      user,
     };
   }
 

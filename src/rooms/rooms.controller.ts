@@ -6,8 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
@@ -16,11 +16,35 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { Public } from '../common/decorators/public.decorator';
 
 @Controller('rooms')
 @UseGuards(JwtAuthGuard)
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
+
+  @Public()
+  @Get('public/all')
+  findAllPublic() {
+    return this.roomsService.findAllPublic();
+  }
+
+  @Public()
+  @Get('public/search')
+  findAvailablePublic(
+    @Query('checkIn') checkIn: string,
+    @Query('checkOut') checkOut: string,
+    @Query('guests') guests?: string,
+  ) {
+    const parsedGuests = guests ? Number(guests) : undefined;
+    return this.roomsService.findAvailablePublic(checkIn, checkOut, parsedGuests);
+  }
+
+  @Public()
+  @Get('public/:id')
+  findOnePublic(@Param('id') id: string) {
+    return this.roomsService.findOnePublic(id);
+  }
 
   @Post()
   @Roles('PROPERTY_OWNER', 'ADMIN')
@@ -42,6 +66,7 @@ export class RoomsController {
     return this.roomsService.findOne(id, userId);
   }
 
+  @Public()
   @Get(':id/availability')
   getAvailability(
     @Param('id') id: string,

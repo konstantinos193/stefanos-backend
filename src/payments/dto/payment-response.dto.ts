@@ -1,4 +1,4 @@
-import { PaymentStatus, PaymentMethod } from '../../../database/types';
+import { PaymentStatus, PaymentMethod } from '../../database/types';
 
 export class PaymentResponseDto {
   id: string;

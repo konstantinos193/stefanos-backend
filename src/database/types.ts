@@ -11,7 +11,8 @@ export enum PropertyType {
   ROOM = 'ROOM',
   COMMERCIAL = 'COMMERCIAL',
   STORAGE = 'STORAGE',
-  VACATION_RENTAL = 'VACATION_RENTAL',
+  PLOT = 'PLOT',
+  GARAGE = 'GARAGE',
   LUXURY = 'LUXURY',
   INVESTMENT = 'INVESTMENT',
 }
@@ -129,5 +130,33 @@ export enum NoteType {
   GUEST_PREFERENCE = 'GUEST_PREFERENCE',
   BUSINESS_NOTE = 'BUSINESS_NOTE',
   ADMIN_NOTE = 'ADMIN_NOTE',
+}
+
+// Content Management Enums
+export enum ContentType {
+  TEXT = 'TEXT',
+  HTML = 'HTML',
+  MARKDOWN = 'MARKDOWN',
+  JSON = 'JSON',
+  IMAGE = 'IMAGE',
+  GALLERY = 'GALLERY',
+  HERO = 'HERO',
+}
+
+export enum MediaCategory {
+  ROOMS = 'ROOMS',
+  COMMON_AREAS = 'COMMON_AREAS',
+  AMENITIES = 'AMENITIES',
+  GALLERY = 'GALLERY',
+  HERO = 'HERO',
+  LOGO = 'LOGO',
+  GENERAL = 'GENERAL',
+}
+
+export enum SettingType {
+  STRING = 'STRING',
+  NUMBER = 'NUMBER',
+  BOOLEAN = 'BOOLEAN',
+  JSON = 'JSON',
 }
 

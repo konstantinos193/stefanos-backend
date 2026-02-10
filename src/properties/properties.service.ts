@@ -4,6 +4,7 @@ import { CreatePropertyDto } from './dto/create-property.dto';
 import { UpdatePropertyDto } from './dto/update-property.dto';
 import { PropertyQueryDto } from './dto/property-query.dto';
 import { getPagination } from '../common/utils/pagination.util';
+import { PropertyType as PrismaPropertyType } from '../../prisma/generated/prisma';
 
 @Injectable()
 export class PropertiesService {
@@ -185,12 +186,20 @@ export class PropertiesService {
   }
 
   async create(createPropertyDto: CreatePropertyDto, ownerId: string) {
-    const { amenities, cancellationPolicy, ...propertyData } = createPropertyDto;
+    const { amenities, cancellationPolicy, propertyGroupId, type, ...propertyData } = createPropertyDto;
     const property = await this.prisma.property.create({
       data: {
         ...propertyData,
-        ownerId,
+        type: type as PrismaPropertyType,
+        owner: {
+          connect: { id: ownerId },
+        },
         cancellationPolicy: cancellationPolicy as any,
+        ...(propertyGroupId && {
+          propertyGroup: {
+            connect: { id: propertyGroupId },
+          },
+        }),
         amenities: {
           create: (amenities || []).map((amenityId) => ({
             amenityId,

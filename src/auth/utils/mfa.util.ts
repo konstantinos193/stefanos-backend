@@ -1,12 +1,13 @@
 // Note: Install required packages: npm install speakeasy qrcode
 // import * as speakeasy from 'speakeasy';
 // import * as QRCode from 'qrcode';
-import { MongoDBService } from '../../database/mongodb.service';
 
 // Temporary implementation without external dependencies
 // In production, uncomment the imports above and use the real implementations
 
 export class MFAUtil {
+  private static readonly emailOtpStore = new Map<string, { code: string; expiresAt: Date }>();
+
   /**
    * Generate TOTP secret for a user
    */
@@ -78,65 +79,34 @@ export class MFAUtil {
    * Store OTP in database (with expiration)
    */
   static async storeOTP(
-    mongo: MongoDBService,
     userId: string,
     otp: string,
     expiresInMinutes: number = 10,
   ): Promise<void> {
-    // Store OTP in user metadata or separate table
-    // For simplicity, we'll use a JSON field in User model
     const expiresAt = new Date();
     expiresAt.setMinutes(expiresAt.getMinutes() + expiresInMinutes);
-
-    const usersCollection = mongo.getCollection('users');
-    const userObjectId = mongo.toObjectId(userId);
-    
-    // Store OTP temporarily (this is a simplified approach)
-    // In production, use Redis or a separate OTP table
-    await usersCollection.updateOne(
-      { _id: userObjectId },
-      {
-        $set: {
-          otpData: {
-            code: otp,
-            expiresAt: expiresAt,
-          },
-          updatedAt: new Date(),
-        },
-      }
-    );
+    MFAUtil.emailOtpStore.set(userId, { code: otp, expiresAt });
   }
 
   /**
    * Verify Email OTP
    */
   static async verifyEmailOTP(
-    mongo: MongoDBService,
     userId: string,
     otp: string,
   ): Promise<boolean> {
-    // Retrieve and verify OTP
-    // This is a simplified implementation
-    // In production, use Redis or a separate OTP table with expiration
-    const usersCollection = mongo.getCollection('users');
-    const userObjectId = mongo.toObjectId(userId);
-    
-    const user = await usersCollection.findOne({ _id: userObjectId });
-
-    if (!user || !user.otpData) {
+    const otpRecord = MFAUtil.emailOtpStore.get(userId);
+    if (!otpRecord) {
       return false;
     }
 
-    // Check if OTP matches and hasn't expired
-    if (user.otpData.code === otp && new Date(user.otpData.expiresAt) > new Date()) {
-      // Clear OTP after successful verification
-      await usersCollection.updateOne(
-        { _id: userObjectId },
-        {
-          $unset: { otpData: '' },
-          $set: { updatedAt: new Date() },
-        }
-      );
+    if (otpRecord.expiresAt <= new Date()) {
+      MFAUtil.emailOtpStore.delete(userId);
+      return false;
+    }
+
+    if (otpRecord.code === otp) {
+      MFAUtil.emailOtpStore.delete(userId);
       return true;
     }
 

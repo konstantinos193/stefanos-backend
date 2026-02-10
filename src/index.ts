@@ -3,7 +3,8 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../prisma/generated/prisma/client';
+import { PrismaLibSql } from '@prisma/adapter-libsql';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -19,9 +20,16 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL is required');
+}
 
-// Initialize Prisma client
-export const prisma = new PrismaClient();
+// Initialize Prisma client for Turso/libsql
+export const prisma = new PrismaClient({
+  adapter: new PrismaLibSql({ url: databaseUrl }),
+  log: ['error', 'warn'],
+});
 
 // Middleware
 app.use(helmet());

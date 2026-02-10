@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit, OnModuleDestroy, Logger } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
 import { getNormalizedConnectionString } from '../lib/mongodb-connection';
@@ -23,6 +23,14 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
   private async connect() {
     try {
       const connectionString = getNormalizedConnectionString();
+      
+      // Skip if not a MongoDB connection string
+      if (!connectionString.startsWith('mongodb://') && !connectionString.startsWith('mongodb+srv://')) {
+        this.logger.warn('DATABASE_URL is not a MongoDB connection string. Skipping MongoDB connection.');
+        this.isConnected = false;
+        return;
+      }
+      
       this.client = new MongoClient(connectionString, {
         serverSelectionTimeoutMS: 30000,
         connectTimeoutMS: 30000,
@@ -40,11 +48,35 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
       this.logger.log('Database ping successful');
     } catch (error: any) {
       this.logger.error('Failed to connect to MongoDB:', error.message);
-      this.logger.error('Please check:');
-      this.logger.error('1. DATABASE_URL in .env file');
-      this.logger.error('2. MongoDB Atlas IP whitelist (add 0.0.0.0/0 for testing or your IP)');
-      this.logger.error('3. Network connectivity and firewall settings');
-      this.logger.error('4. MongoDB Atlas cluster is running and accessible (not paused)');
+      
+      // Skip if not a MongoDB URL - don't crash the app
+      if (error.message?.includes('Invalid scheme') || error.message?.includes('Invalid MongoDB connection string')) {
+        this.logger.warn('DATABASE_URL is not a MongoDB connection string. MongoDB features will be unavailable.');
+        this.isConnected = false;
+        return;
+      }
+      
+      // Check for specific error types and provide helpful messages
+      if (error.message?.includes('placeholder') || error.message?.includes('DATABASE_URL')) {
+        // Error already has helpful message from validation
+        this.logger.error(error.message);
+      } else if (error.code === 'ENOTFOUND' || error.message?.includes('ENOTFOUND')) {
+        this.logger.error('DNS lookup failed - this usually means:');
+        this.logger.error('1. DATABASE_URL contains placeholder values (e.g., "cluster.mongodb.net")');
+        this.logger.error('2. The cluster hostname is incorrect or the cluster doesn\'t exist');
+        this.logger.error('3. Network connectivity issues');
+        this.logger.error('');
+        this.logger.error('To fix:');
+        this.logger.error('1. Get your connection string from MongoDB Atlas Dashboard');
+        this.logger.error('2. Replace any placeholder values with your actual cluster name');
+        this.logger.error('3. Format: mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/database');
+      } else {
+        this.logger.error('Please check:');
+        this.logger.error('1. DATABASE_URL in .env file');
+        this.logger.error('2. MongoDB Atlas IP whitelist (add 0.0.0.0/0 for testing or your IP)');
+        this.logger.error('3. Network connectivity and firewall settings');
+        this.logger.error('4. MongoDB Atlas cluster is running and accessible (not paused)');
+      }
       throw error;
     }
   }
@@ -70,7 +102,7 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
 
   getDatabase(): Db {
     if (!this.isConnected || !this.db) {
-      throw new Error('Database not connected. Call connect() first.');
+      throw new Error('MongoDB not connected. DATABASE_URL is not configured for MongoDB (currently using Turso).');
     }
     return this.db;
   }
