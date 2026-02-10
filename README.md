@@ -1,328 +1,248 @@
-# Real Estate Platform Backend
+<p align="center">
+  <img src="https://smholdings.gr/logoetc.png" alt="SM Holdings" width="300" />
+</p>
 
-A comprehensive backend API for the Real Estate Platform built with NestJS, TypeScript, Prisma, and MongoDB Atlas.
+<h1 align="center">real-estate-backend</h1>
 
-## Features
+<p align="center">
+  <strong>The backend that refuses to die, much like the technical debt it carries.</strong>
+</p>
 
-- **Property Management**: Full CRUD operations for properties with amenities, pricing, and availability
-- **Booking System**: Complete booking flow with conflict resolution and payment processing
-- **User Management**: Multi-role user system (Admin, Property Owner, Manager, User) with JWT authentication
-- **Content Management**: Dynamic editions and knowledge articles with multilingual support
-- **Service Management**: Service catalog with pricing and features
-- **Review System**: Property reviews and ratings
-- **Maintenance System**: Maintenance request tracking and management
-- **Messaging**: Real-time communication between guests and hosts
-- **Notifications**: User notification system
-- **Analytics**: Property and booking analytics
+<p align="center">
+  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg" />
+  <img alt="Node" src="https://img.shields.io/badge/node-18%2B-green.svg" />
+  <img alt="NestJS" src="https://img.shields.io/badge/NestJS-11-red.svg" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.9-blue.svg" />
+  <img alt="Prisma" src="https://img.shields.io/badge/Prisma-7.3-purple.svg" />
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-black.svg" />
+</p>
+
+---
+
+## Overview
+
+A backend API for a real estate platform. It manages properties, bookings, users, payments, and all the other things that keep you awake at 3 AM wondering why the production database just decided to take a vacation.
+
+Built with NestJS because we wanted the verbosity of Java with the runtime errors of JavaScript. The best of both worlds, really.
+
+---
 
 ## Tech Stack
 
-- **Runtime**: Node.js 18+
-- **Framework**: NestJS 11
-- **Language**: TypeScript
-- **Database**: MongoDB Atlas with Prisma ORM
-- **Authentication**: JWT (Passport.js)
-- **Validation**: Zod & class-validator
-- **API Documentation**: Swagger/OpenAPI
-- **Email**: Nodemailer
-- **Payments**: Stripe
-- **File Storage**: Cloudinary
-- **Caching**: Redis (optional)
+Because listing dependencies is the closest thing we have to a personality.
+
+| Layer | Technology | Version | Purpose |
+|---|---|---|---|
+| **Runtime** | Node.js | 18+ | Executing our regrets |
+| **Framework** | NestJS | 11.1.13 | Enterprise-grade decorators |
+| **Language** | TypeScript | 5.9.3 | Pretending JavaScript has types |
+| **ORM** | Prisma | 7.3.0 | Making SQL feel like a distant memory |
+| **Database** | LibSQL | via adapter | Where the data goes to live, and occasionally die |
+| **Auth** | Passport + JWT | 0.7.0 / 11.0.2 | Keeping the barbarians at the gate |
+| **Validation** | Zod + class-validator | 4.3.6 / 0.14.3 | Trust issues, formalized |
+| **Payments** | Stripe | 20.3.1 | Taking money from people, legally |
+| **Email** | Nodemailer | 8.0.1 | Sending emails into the void |
+| **File Storage** | Cloudinary | 2.9.0 | Where property photos go to be optimized beyond recognition |
+| **API Docs** | Swagger | 11.2.6 | Documentation nobody reads |
+| **Security** | Helmet | 8.1.0 | A false sense of security |
+| **HTTP Client** | Axios | 1.13.5 | For when you need someone else's problems too |
+| **Logging** | Morgan | 1.10.1 | Recording the exact moment things went wrong |
+| **Rate Limiting** | Throttler | 6.5.0 | Protecting the server from its own users |
+
+---
+
+## Features
+
+- **Property Management** -- Full CRUD. Create properties, read them, update them, and delete them when the client changes their mind for the fourth time.
+- **Booking System** -- Conflict resolution included. The only conflict it cannot resolve is between you and the project deadline.
+- **User Management** -- Multi-role system (Admin, Property Owner, Manager, User). A hierarchy of suffering.
+- **Content Management** -- Dynamic editions and knowledge articles. Multilingual, because bugs should be accessible to everyone.
+- **Payments** -- Stripe integration. The money flows in. The bugs flow out. Circle of life.
+- **Analytics** -- Numbers on a dashboard. Whether they mean anything is a philosophical question.
+- **Notifications** -- So users know exactly when something has gone wrong.
+- **Messaging** -- Real-time communication between guests and hosts. Therapy not included.
+- **Maintenance Requests** -- Track what is broken. The list is longer than this README.
+
+---
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
-- MongoDB Atlas account (or local MongoDB)
-- npm or yarn
+- **Node.js 18+** -- If you are still on Node 14, this README cannot help you. Nobody can.
+- **yarn** or **npm** -- Pick one. Commit. Do not switch mid-project like a psychopath.
+- A functioning database and the will to live (only one is strictly required).
 
 ### Installation
 
-1. Clone the repository and navigate to the backend directory:
 ```bash
-cd backend
-```
+# Clone the repository. You know the drill.
+git clone <repository-url>
+cd stefanos-backend
 
-2. Install dependencies:
-```bash
-npm install
-# or
+# Install dependencies. This will take a while.
+# Enough time to question your career choices.
 yarn install
-```
 
-3. Set up environment variables:
-```bash
+# Copy the environment template.
 cp env.example .env
+
+# Fill in the .env file with real values.
+# If you commit your secrets to git, that is on you.
 ```
 
-4. Update the `.env` file with your MongoDB Atlas connection string and other configurations:
-```env
-DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/?appName=Cluster0"
-JWT_SECRET="your-super-secret-jwt-key-here"
-JWT_EXPIRES_IN="7d"
-PORT=3001
-NODE_ENV="development"
-FRONTEND_URL="http://localhost:3000"
-ADMIN_URL="http://localhost:3002"
-```
+### Database Setup
 
-5. Generate Prisma client (automatically runs on dev/start):
 ```bash
-npm run db:generate
+# Initialize the database
+yarn db:init
+
+# Seed with sample data (optional, but recommended
+# unless you enjoy staring at empty tables)
+yarn db:seed
 ```
 
-6. Push schema to MongoDB:
-```bash
-npm run db:push
-```
+### Running the Server
 
-7. Seed the database with sample data (optional):
 ```bash
-npm run db:seed
-```
-
-8. Start the development server:
-```bash
-npm run dev
-# or
+# Development (with hot reload, because life is short)
 yarn dev
+
+# Production (for the brave)
+yarn start:prod
+
+# Debug mode (for when printf debugging has failed you)
+yarn start:debug
 ```
 
-The API will be available at `http://localhost:3001`
-- API Base: `http://localhost:3001/api`
-- Swagger Docs: `http://localhost:3001/api/docs`
-- Health Check: `http://localhost:3001/api/health`
+The API will be available at `http://localhost:3001`. If it is not, check if something else is already squatting on that port. It usually is.
 
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `GET /api/auth/me` - Get current user (protected)
-
-### Properties
-- `GET /api/properties` - Get all properties with search/filters
-- `GET /api/properties/:id` - Get single property
-- `POST /api/properties` - Create property (protected)
-- `PUT /api/properties/:id` - Update property (protected)
-- `DELETE /api/properties/:id` - Delete property (protected)
-- `GET /api/properties/:id/availability` - Get property availability
-
-### Bookings
-- `GET /api/bookings` - Get all bookings (protected)
-- `GET /api/bookings/:id` - Get single booking (protected)
-- `POST /api/bookings` - Create booking (protected)
-- `PUT /api/bookings/:id` - Update booking (protected)
-- `POST /api/bookings/:id/cancel` - Cancel booking (protected)
-
-### Users
-- `GET /api/users` - Get all users (protected, admin only)
-- `GET /api/users/:id` - Get single user (protected)
-- `PUT /api/users/:id` - Update user (protected)
-- `POST /api/users/:id/activate` - Activate user (protected, admin only)
-- `POST /api/users/:id/deactivate` - Deactivate user (protected, admin only)
-
-### Editions
-- `GET /api/editions` - Get all editions
-- `GET /api/editions/:id` - Get single edition
-- `POST /api/editions` - Create edition (protected)
-- `PUT /api/editions/:id` - Update edition (protected)
-- `DELETE /api/editions/:id` - Delete edition (protected)
-- `GET /api/editions/category/:category` - Get editions by category
-
-### Services
-- `GET /api/services` - Get all services
-- `GET /api/services/:id` - Get single service
-- `POST /api/services` - Create service (protected)
-- `PUT /api/services/:id` - Update service (protected)
-- `DELETE /api/services/:id` - Delete service (protected)
-- `POST /api/services/:id/toggle` - Toggle service status (protected)
-
-### Knowledge Articles
-- `GET /api/knowledge` - Get all articles
-- `GET /api/knowledge/:id` - Get single article
-- `POST /api/knowledge` - Create article (protected)
-- `PUT /api/knowledge/:id` - Update article (protected)
-- `DELETE /api/knowledge/:id` - Delete article (protected)
-- `POST /api/knowledge/:id/publish` - Publish article (protected)
-- `GET /api/knowledge/category/:category` - Get articles by category
-- `GET /api/knowledge/search/:query` - Search articles
-
-## Database Schema
-
-The MongoDB database includes the following main entities:
-
-- **Users**: User accounts with roles and authentication
-- **Properties**: Real estate listings with amenities and pricing
-- **Bookings**: Reservation system with status tracking
-- **Amenities**: Property features and facilities
-- **PropertyAmenity**: Many-to-many relationship between properties and amenities
-- **Reviews**: Property ratings and comments
-- **Services**: Service catalog and management
-- **Editions**: Content management system
-- **Knowledge Articles**: Knowledge base and documentation
-- **Messages**: Communication system
-- **Notifications**: User notification system
-- **Maintenance Requests**: Property maintenance tracking
-- **Property Availability**: Property availability calendar
-
-## Environment Variables
-
-```env
-# Database (MongoDB Atlas)
-DATABASE_URL="mongodb+srv://username:password@cluster.mongodb.net/?appName=Cluster0"
-
-# JWT Authentication
-JWT_SECRET="your-super-secret-jwt-key-here"
-JWT_EXPIRES_IN="7d"
-
-# Server
-PORT=3001
-NODE_ENV="development"
-
-# CORS
-FRONTEND_URL="http://localhost:3000"
-
-# Email (Nodemailer)
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT=587
-SMTP_USER="your-email@gmail.com"
-SMTP_PASS="your-app-password"
-
-# Cloudinary (Image Storage)
-CLOUDINARY_CLOUD_NAME="your-cloud-name"
-CLOUDINARY_API_KEY="your-api-key"
-CLOUDINARY_API_SECRET="your-api-secret"
-
-# Stripe (Payments)
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
-
-# Airbnb API (optional)
-AIRBNB_CLIENT_ID="your-client-id"
-AIRBNB_CLIENT_SECRET="your-client-secret"
-AIRBNB_REDIRECT_URI="http://localhost:3001/api/auth/airbnb/callback"
-
-# Redis (optional, for caching)
-REDIS_URL="redis://localhost:6379"
-```
+---
 
 ## Scripts
 
-- `npm run dev` - Start development server with hot reload (auto-generates Prisma client)
-- `npm run build` - Build for production (includes Prisma client generation)
-- `npm run start` - Start production server (auto-generates Prisma client)
-- `npm run start:prod` - Start production server from dist folder
-- `npm run db:generate` - Generate Prisma client manually
-- `npm run db:push` - Push schema changes to MongoDB
-- `npm run db:migrate` - Run database migrations
-- `npm run db:studio` - Open Prisma Studio
-- `npm run db:seed` - Seed database with sample data
-- `npm run lint` - Run ESLint
-- `npm run test` - Run tests
+All the commands you will forget exist and then rediscover six months later.
 
-## Development
+| Command | What It Does |
+|---|---|
+| `yarn build` | Compiles TypeScript. Prays nothing breaks. |
+| `yarn dev` | Development server with hot reload. Your most-used command. |
+| `yarn start` | Starts the server like a normal person. |
+| `yarn start:prod` | Starts from compiled output. Production mode. No safety net. |
+| `yarn start:debug` | Attaches a debugger. For when `console.log` is not enough. |
+| `yarn format` | Prettier. Because tabs vs spaces wars are beneath us. |
+| `yarn lint` | ESLint. It will find problems you did not know you had. |
+| `yarn test` | Runs Jest. Results may vary. |
+| `yarn test:watch` | Runs tests on every save. Masochism, automated. |
+| `yarn test:cov` | Coverage report. A number to make management happy. |
+| `yarn test:e2e` | End-to-end tests. The full horror show. |
+| `yarn db:init` | Initializes the database schema. |
+| `yarn db:seed` | Seeds the database with sample data. |
 
-### Project Structure
+---
+
+## Project Structure
 
 ```
 src/
-├── app.module.ts          # Root application module
-├── app.controller.ts       # Root controller
-├── main.ts                # Application entry point
-├── auth/                  # Authentication module
-│   ├── auth.module.ts
-│   ├── auth.service.ts
-│   ├── auth.controller.ts
-│   ├── dto/               # Data Transfer Objects
-│   └── strategies/        # Passport strategies
-├── users/                 # User management module
-├── properties/            # Property management module
-├── bookings/              # Booking management module
-├── editions/              # Content management module
-├── services/              # Service management module
-├── knowledge/             # Knowledge base module
-├── prisma/                # Prisma configuration
-│   ├── prisma.module.ts
-│   └── prisma.service.ts
-├── common/                # Shared utilities
-│   ├── decorators/        # Custom decorators
-│   ├── guards/            # Auth guards
-│   ├── filters/           # Exception filters
-│   └── utils/             # Utility functions
-├── lib/                   # Legacy utilities (routes, validations)
-└── routes/                 # Legacy Express routes
+  app.module.ts            # The root of all evil
+  app.controller.ts        # Health checks and existential dread
+  main.ts                  # Where it all begins (and sometimes ends)
+  index.ts                 # The other entry point, because one was not enough
+  seed.ts                  # Populates the database with beautiful lies
+
+  admin/                   # God mode
+  analytics/               # Graphs that go up and to the right (hopefully)
+  auth/                    # Keeping unauthorized users out (authorized ones too, sometimes)
+    dto/                   # Data Transfer Objects. Bureaucracy for your data.
+    strategies/            # Passport strategies. JWT, local, existential.
+    utils/                 # Auth utilities. Where the magic happens.
+  bookings/                # The money-making module
+    dto/                   # More bureaucracy
+
+prisma/
+  schema.prisma            # The single source of truth. Guard it with your life.
+
+scripts/
+  init-db.js               # Database initialization. Run once. Pray twice.
 ```
 
-### Adding New Features
+---
 
-1. Create a new module using NestJS CLI:
-```bash
-nest generate module feature-name
-nest generate service feature-name
-nest generate controller feature-name
-```
+## Dependencies
 
-2. Update database schema in `prisma/schema.prisma`
-3. Run `npm run db:generate` and `npm run db:push`
-4. Add validation DTOs in the module's `dto/` folder
-5. Implement business logic in the service
-6. Add API endpoints in the controller
-7. Add tests for new functionality
+### Production (53 packages of varying trustworthiness)
+
+The full list lives in `package.json`. Here are the highlights, or lowlights, depending on your perspective:
+
+- **@nestjs/*** `^11.x` -- The framework. Seven packages deep. We are committed.
+- **@prisma/client** `^7.3.0` -- ORM. Because writing raw SQL builds character, but we are not here for character development.
+- **bcryptjs** `^3.0.3` -- Password hashing. The one thing we actually take seriously.
+- **stripe** `^20.3.1` -- Payment processing. Handle with care and a lawyer.
+- **zod** `^4.3.6` -- Schema validation. Trust nothing. Validate everything.
+- **multer** `^2.0.2` -- File uploads. What could possibly go wrong.
+
+### Development (27 packages that exist solely to yell at you)
+
+- **typescript** `^5.9.3` -- The language. The myth. The compiler errors.
+- **jest** `^30.2.0` -- Testing framework. Your tests pass locally. They will not pass in CI.
+- **eslint** `^10.0.0` -- Linter. 847 rules, all of them angry.
+- **prettier** `^3.8.1` -- Code formatter. Ending arguments since 2017.
+- **prisma** `^7.3.0` -- CLI tools. For when you need to regenerate the client for the ninth time today.
+- **supertest** `^7.2.2` -- HTTP testing. Simulating users so you do not have to.
+
+---
+
+## Environment Variables
+
+See `env.example` for the full template. If that file does not exist, someone has made a grave mistake.
+
+Key variables include:
+- `DATABASE_URL` -- Your database connection string. Treat it like a nuclear launch code.
+- `JWT_SECRET` -- If this leaks, everything leaks.
+- `STRIPE_SECRET_KEY` -- Real money. Real consequences.
+- `CLOUDINARY_*` -- Image storage credentials. Less catastrophic if leaked, but still embarrassing.
+- `SMTP_*` -- Email configuration. For sending password resets into spam folders worldwide.
+
+---
 
 ## Deployment
 
-The backend is optimized for deployment on **Render**:
+Optimized for **Render**, because Heroku decided free tiers were a phase.
 
-### Render Deployment Steps
+1. Create a Web Service on Render.
+2. Connect the repository.
+3. Set build command to `yarn build`.
+4. Set start command to `yarn start:prod`.
+5. Add all environment variables.
+6. Deploy.
+7. Wait.
+8. Refresh.
+9. Check logs.
+10. Fix the thing you forgot.
+11. Redeploy.
 
-1. **Create a new Web Service** on Render
-2. **Connect your GitHub repository**
-3. **Configure build settings**:
-   - Build Command: `npm run build`
-   - Start Command: `npm run start:prod`
-4. **Set environment variables** in Render dashboard:
-   - `DATABASE_URL` - MongoDB Atlas connection string
-   - `JWT_SECRET` - Your JWT secret key
-   - `JWT_EXPIRES_IN` - Token expiration (e.g., "7d")
-   - `NODE_ENV` - Set to "production"
-   - `FRONTEND_URL` - Your frontend URL
-   - Other required environment variables
-5. **Deploy** - Render will automatically:
-   - Run `npm run build` (which includes `prisma generate`)
-   - Start the application with `npm run start:prod`
-
-### MongoDB Atlas Setup
-
-1. Create a MongoDB Atlas account
-2. Create a new cluster
-3. Create a database user
-4. Whitelist your IP address (or use 0.0.0.0/0 for Render)
-5. Get your connection string and add it to `DATABASE_URL`
-
-### Post-Deployment
-
-1. Run database migrations:
-```bash
-npm run db:push
-```
-
-2. Seed initial data (optional):
-```bash
-npm run db:seed
-```
+---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests
-5. Commit your changes (`git commit -m 'Add some amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
+1. Fork the repository.
+2. Create a feature branch.
+3. Write code that works.
+4. Write tests that prove it works.
+5. Open a Pull Request.
+6. Wait for review.
+7. Address feedback.
+8. Wait for re-review.
+9. Merge.
+10. Discover it broke something else.
+
+---
 
 ## License
 
-This project is licensed under the MIT License.
+MIT. Do whatever you want with it. We are not responsible for the consequences.
+
+---
+
+<p align="center"><sub>Built with mass amounts of mass-produced coffee and mass-produced existential dread by the SM Holdings engineering team.</sub></p>
