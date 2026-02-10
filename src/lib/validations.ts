@@ -81,6 +81,48 @@ export const updateBookingSchema = z.object({
   specialRequests: z.string().optional()
 });
 
+// External booking import validation (Booking.com, Airbnb, etc.)
+export const bookingSourceEnum = z.enum(['DIRECT', 'BOOKING_COM', 'AIRBNB', 'VRBO', 'EXPEDIA', 'MANUAL', 'OTHER']);
+
+export const importExternalBookingSchema = z.object({
+  propertyId: z.string(),
+  source: bookingSourceEnum,
+  externalId: z.string().min(1),
+  externalPlatform: z.string().optional(),
+  checkIn: z.string().datetime(),
+  checkOut: z.string().datetime(),
+  guests: z.number().int().min(1),
+  totalPrice: z.number().positive(),
+  basePrice: z.number().positive().optional(),
+  cleaningFee: z.number().min(0).optional(),
+  currency: z.string().default('EUR'),
+  commissionRate: z.number().min(0).max(100).optional(),
+  commissionAmount: z.number().min(0).optional(),
+  guestName: z.string().min(1),
+  guestEmail: z.string().email(),
+  guestPhone: z.string().optional(),
+  externalGuestId: z.string().optional(),
+  specialRequests: z.string().optional(),
+  iCalUid: z.string().optional(),
+  externalData: z.record(z.any()).optional()
+});
+
+export const updateExternalBookingSchema = z.object({
+  status: z.enum(['PENDING', 'CONFIRMED', 'CHECKED_IN', 'COMPLETED', 'CANCELLED', 'NO_SHOW']).optional(),
+  paymentStatus: z.enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'PARTIALLY_REFUNDED']).optional(),
+  checkIn: z.string().datetime().optional(),
+  checkOut: z.string().datetime().optional(),
+  guests: z.number().int().min(1).optional(),
+  totalPrice: z.number().positive().optional(),
+  commissionRate: z.number().min(0).max(100).optional(),
+  commissionAmount: z.number().min(0).optional(),
+  guestName: z.string().optional(),
+  guestEmail: z.string().email().optional(),
+  guestPhone: z.string().optional(),
+  specialRequests: z.string().optional(),
+  externalData: z.record(z.any()).optional()
+});
+
 // Review validations
 export const createReviewSchema = z.object({
   propertyId: z.string(),

@@ -19,6 +19,7 @@ import { UploadModule } from './upload/upload.module';
 import { ContentModule } from './content/content.module';
 import { MediaModule } from './media/media.module';
 import { SettingsModule } from './settings/settings.module';
+import { ExternalBookingsModule } from './external-bookings/external-bookings.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -46,6 +47,7 @@ import { AppController } from './app.controller';
     ContentModule,
     MediaModule,
     SettingsModule,
+    ExternalBookingsModule,
   ],
   controllers: [AppController],
   providers: [],

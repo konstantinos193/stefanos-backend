@@ -202,6 +202,7 @@ export class BookingsService {
         currency: priceBreakdown.currency,
         ownerRevenue,
         platformFee,
+        source: 'DIRECT',
         guestName: createBookingDto.guestName,
         guestEmail: createBookingDto.guestEmail,
         guestPhone: createBookingDto.guestPhone,

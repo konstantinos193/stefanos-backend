@@ -182,6 +182,7 @@ router.post('/', async (req, res, next) => {
         cleaningFee: property.cleaningFee || 0,
         serviceFee: serviceFeeAmount,
         taxes: property.taxes || 0,
+        source: 'DIRECT',
         guestName: data.guestName,
         guestEmail: data.guestEmail,
         guestPhone: data.guestPhone,

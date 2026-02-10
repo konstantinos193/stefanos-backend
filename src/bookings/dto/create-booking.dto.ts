@@ -18,6 +18,16 @@ export enum PaymentStatus {
   PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED',
 }
 
+export enum BookingSource {
+  DIRECT = 'DIRECT',
+  BOOKING_COM = 'BOOKING_COM',
+  AIRBNB = 'AIRBNB',
+  VRBO = 'VRBO',
+  EXPEDIA = 'EXPEDIA',
+  MANUAL = 'MANUAL',
+  OTHER = 'OTHER',
+}
+
 export class CreateBookingDto {
   @ApiProperty({ example: 'property-id-123' })
   @IsString()
