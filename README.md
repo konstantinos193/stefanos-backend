@@ -22,9 +22,9 @@
 
 ## Overview
 
-A backend API for the SM Holdings real estate platform. It manages properties, bookings, users, payments, content, media, cleaning schedules, external booking imports, audit logs, and all the other things that keep you awake at 3 AM wondering why the production database just decided to take a vacation.
+A backend API for the SM Holdings hospitality and real estate platform, currently powering the **Incanto Hotel** in Preveza, Greece. It manages rooms, bookings, users, payments, content, media, cleaning schedules, external booking imports, audit logs, and all the other things that keep you awake at 3 AM wondering why the production database just decided to take a vacation.
 
-Built with NestJS because we wanted the verbosity of Java with the runtime errors of JavaScript. The best of both worlds, really. Ships with 22 modules, because modular architecture means modular suffering.
+Built with NestJS because we wanted the verbosity of Java with the runtime errors of JavaScript. The best of both worlds, really. Ships with 21 modules, because modular architecture means modular suffering.
 
 ---
 
@@ -56,17 +56,17 @@ Because listing dependencies is the closest thing we have to a personality.
 
 ## Features
 
-- **Property Management** -- Full CRUD with multilingual support (Greek/English). Create properties, read them, update them, and delete them when the client changes their mind for the fourth time. Supports nine property types from apartments to luxury investments. Status-based filtering (Active, Inactive, Maintenance) on all list queries.
+- **Property Management** -- Full CRUD with multilingual support (Greek/English). Create properties, read them, update them, and delete them when the client changes their mind for the fourth time. Supports nine property types from apartments to luxury investments. Status-based filtering (Active, Inactive, Maintenance, Suspended) on all list queries.
 - **Booking System** -- Conflict resolution included. Multi-source bookings (direct, Booking.com, Airbnb, VRBO, Expedia, manual). Advanced query filtering by status, date range, and full-text search across guest name, email, and booking ID. Bulk export endpoint for reporting. The only conflict it cannot resolve is between you and the project deadline.
 - **External Booking Imports** -- Pull bookings from third-party platforms. Commission tracking, iCal sync, and deduplication. Because managing one booking source was too simple.
 - **User Management** -- Multi-role system (Admin, Property Owner, Manager, User). MFA support, Stripe Connect accounts, email/phone verification. A hierarchy of suffering, now with two-factor authentication.
-- **Room Management** -- Dynamic rooms per property with individual pricing, availability rules, content, and virtual tour URLs. Rooms within rooms. It is rooms all the way down.
+- **Room Management** -- Dynamic rooms per property with individual pricing, availability rules, content, virtual tour URLs, and occupancy tracking. Public availability search with date-range and guest-count filtering. Rooms within rooms. It is rooms all the way down.
 - **Property Groups** -- Subholdings for organizing properties under a single owner. Corporate real estate, but make it nested.
 - **Content Management** -- Full CMS with pages, sections, SEO metadata, and a media library. Multilingual, because bugs should be accessible to everyone.
 - **Media Library** -- Centralized media management with categories, thumbnails, alt text, and content associations. Cloudinary on the backend, chaos on the frontend.
 - **Editions & Knowledge** -- Dynamic editions and knowledge articles with categories, tags, and read times. Content marketing, automated.
 - **Services** -- Manage service offerings with multilingual descriptions, features, and pricing.
-- **Payments** -- Stripe integration with Connect payouts, refunds, and multiple payment methods. The money flows in. The bugs flow out. Circle of life.
+- **Payments** -- Stripe integration with Connect payouts, refunds, and multiple payment methods (credit/debit card, Apple Pay, Google Pay, PayPal, bank transfer, Stripe Link). The money flows in. The bugs flow out. Circle of life.
 - **Analytics** -- Revenue, occupancy, ratings, and profit margins per property. Daily, weekly, monthly, quarterly, yearly. Numbers on a dashboard. Whether they mean anything is a philosophical question.
 - **Cleaning Schedules** -- Track cleaning frequency, assignments, and history per property. Cleanliness ratings on reviews. Someone has to care about the towels.
 - **Reviews** -- Multi-dimensional ratings (cleanliness, accuracy, communication, location, value). Host responses. Public/private visibility. Feedback, formalized.
@@ -86,7 +86,8 @@ Because listing dependencies is the closest thing we have to a personality.
 
 - **Node.js 18+** -- If you are still on Node 14, this README cannot help you. Nobody can.
 - **yarn** or **npm** -- Pick one. Commit. Do not switch mid-project like a psychopath.
-- A **Turso** database (or compatible LibSQL) and/or a **MongoDB** instance.
+- A **Turso** database (or compatible LibSQL) for the relational schema.
+- A **MongoDB** instance for document-based operations.
 - The will to live (optional but recommended).
 
 ### Installation
@@ -109,7 +110,7 @@ cp env.example .env
 
 ### Database Setup
 
-The application uses a dual-database architecture. Prisma with the LibSQL adapter handles the relational schema (Turso), while MongoDB handles document-based operations. Yes, two databases. No, we will not be taking questions.
+The application uses a dual-database architecture. Prisma with the LibSQL adapter handles the relational schema (Turso), while MongoDB handles document-based operations (stats, aggregations). Yes, two databases. No, we will not be taking questions.
 
 ```bash
 # Generate the Prisma client
@@ -117,6 +118,9 @@ npx prisma generate
 
 # Initialize the database schema
 yarn db:init
+
+# Run migrations (if upgrading from a previous schema)
+yarn db:migrate
 
 # Seed with sample data (optional, but recommended
 # unless you enjoy staring at empty tables)
@@ -161,6 +165,7 @@ All the commands you will forget exist and then rediscover six months later.
 | `yarn test:e2e` | End-to-end tests. The full horror show. |
 | `yarn db:init` | Initializes the database schema. |
 | `yarn db:seed` | Seeds the database with sample data via tsx. |
+| `yarn db:migrate` | Runs database migrations for schema changes. |
 
 ---
 
@@ -168,7 +173,7 @@ All the commands you will forget exist and then rediscover six months later.
 
 ```
 src/
-  app.module.ts              # The root of all evil (22 module imports)
+  app.module.ts              # The root of all evil (21 module imports)
   app.controller.ts          # Health checks, public stats, and existential dread
   main.ts                    # NestJS entry point. Swagger, CORS (with Vercel preview support), Helmet, the works.
   index.ts                   # Legacy Express entry point. Still here. Still judging. Also has Vercel preview CORS.
@@ -203,7 +208,7 @@ src/
   properties/                # Property CRUD and management
   property-groups/           # Subholding / property group management
   reviews/                   # Review system with multi-dimensional ratings
-  rooms/                     # Dynamic room management
+  rooms/                     # Dynamic room management (public search, occupancy, availability)
   routes/                    # Legacy Express route handlers (auth, bookings, etc.)
   services/                  # Service offerings management
   settings/                  # Key-value configuration store
@@ -211,19 +216,22 @@ src/
   users/                     # User CRUD and profile management
 
 prisma/
-  schema.prisma              # The single source of truth. 873 lines. Guard it with your life.
+  schema.prisma              # The single source of truth. 880 lines. Guard it with your life.
   generated/                 # Prisma client output. Do not touch.
 
 scripts/
   init-db.js                 # Database initialization. Run once. Pray twice.
+  migrate-db.js              # Schema migrations. For when the schema evolves faster than your sanity.
   clear-bookings.ts          # Nuclear option for the bookings table.
+  seed-incanto-rooms.ts      # Seeds Incanto hotel rooms. The hotel that started it all.
+  refresh-availability.ts    # Refreshes room availability data. Because stale dates help nobody.
 ```
 
 ---
 
 ## Dependencies
 
-### Production (30 packages of varying trustworthiness)
+### Production (28 packages of varying trustworthiness)
 
 The full list lives in `package.json`. Here are the highlights, or lowlights, depending on your perspective:
 
@@ -237,7 +245,7 @@ The full list lives in `package.json`. Here are the highlights, or lowlights, de
 - **cloudinary** `^2.9.0` -- Image management. Optimizing photos until they are unrecognizable.
 - **nodemailer** `^8.0.1` -- Email delivery. Into spam folders worldwide.
 
-### Development (27 packages that exist solely to yell at you)
+### Development (22 packages that exist solely to yell at you)
 
 - **typescript** `^5.9.3` -- The language. The myth. The compiler errors.
 - **jest** `^30.2.0` -- Testing framework. Your tests pass locally. They will not pass in CI.
@@ -277,7 +285,7 @@ Key variables include:
 
 ## API Documentation
 
-Swagger UI is available at `/docs` when the server is running. It documents every endpoint across all 22 modules. Nobody reads it, but it is there, silently judging your API calls.
+Swagger UI is available at `/docs` when the server is running. It documents every endpoint across all 21 modules. Nobody reads it, but it is there, silently judging your API calls.
 
 The API uses the global prefix `/api`, so all endpoints are at `http://localhost:3001/api/*`.
 
@@ -288,7 +296,7 @@ Key endpoint groups:
 - `/api/properties` -- Property CRUD
 - `/api/bookings` -- Booking management
 - `/api/external-bookings` -- Third-party booking imports
-- `/api/rooms` -- Dynamic room management
+- `/api/rooms` -- Dynamic room management (includes public endpoints: list, search by availability, occupancy)
 - `/api/property-groups` -- Subholding management
 - `/api/payments` -- Stripe payments and payouts
 - `/api/reviews` -- Review system
@@ -310,7 +318,7 @@ Key endpoint groups:
 
 Optimized for **Render** with a `render.yaml` blueprint, because Heroku decided free tiers were a phase.
 
-The blueprint defines a PostgreSQL database and a Node.js web service. The build command handles everything: install, Prisma generate, build, and migrate.
+The blueprint defines a PostgreSQL database and a Node.js web service. The build command handles everything: install, Prisma generate, build, and migrate. The primary data layer uses **Turso (LibSQL)** via the Prisma adapter, with **MongoDB** as a secondary store for aggregations and stats.
 
 1. Create a Web Service on Render (or use the blueprint).
 2. Connect the repository.
