@@ -33,6 +33,21 @@ export class CreateRoomDto {
 
   @IsNumber()
   @Min(0)
+  @IsOptional()
+  maxAdults?: number;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  maxChildren?: number;
+
+  @IsNumber()
+  @Min(0)
+  @IsOptional()
+  maxInfants?: number;
+
+  @IsNumber()
+  @Min(0)
   basePrice: number;
 
   @IsBoolean()

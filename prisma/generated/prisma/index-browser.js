@@ -226,6 +226,8 @@ exports.Prisma.BookingScalarFieldEnum = {
   externalGuestId: 'externalGuestId',
   iCalUid: 'iCalUid',
   lastSyncedAt: 'lastSyncedAt',
+  roomId: 'roomId',
+  roomName: 'roomName',
   guestName: 'guestName',
   guestEmail: 'guestEmail',
   guestPhone: 'guestPhone',

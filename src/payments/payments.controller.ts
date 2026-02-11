@@ -50,6 +50,15 @@ export class PaymentsController {
     return this.paymentsService.confirmPayment(paymentIntentId);
   }
 
+  @Post('public/confirm-session')
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  async confirmCheckoutSession(
+    @Body() body: { sessionId: string },
+  ): Promise<{ status: string; bookingId: string | null }> {
+    return this.paymentsService.confirmCheckoutSession(body.sessionId);
+  }
+
   @Post('refund')
   @HttpCode(HttpStatus.OK)
   async refundPayment(

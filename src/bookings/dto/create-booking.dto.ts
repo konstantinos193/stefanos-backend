@@ -64,6 +64,16 @@ export class CreateBookingDto {
   @IsString()
   specialRequests?: string;
 
+  @ApiPropertyOptional({ example: 'room-id-123' })
+  @IsOptional()
+  @IsString()
+  roomId?: string;
+
+  @ApiPropertyOptional({ example: 'Deluxe Suite' })
+  @IsOptional()
+  @IsString()
+  roomName?: string;
+
   @ApiPropertyOptional({ example: 'credit_card' })
   @IsOptional()
   @IsString()

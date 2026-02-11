@@ -1,4 +1,22 @@
-import { IsEmail, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import { IsArray, IsEmail, IsNumber, IsOptional, IsString, Min, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+export class SelectedRoomDto {
+  @IsString()
+  roomId: string;
+
+  @IsOptional()
+  @IsString()
+  roomName?: string;
+
+  @IsNumber()
+  @Min(1)
+  quantity: number;
+
+  @IsNumber()
+  @Min(0)
+  pricePerNight: number;
+}
 
 export class CreatePublicCheckoutSessionDto {
   @IsString()
@@ -34,6 +52,32 @@ export class CreatePublicCheckoutSessionDto {
   @IsOptional()
   @IsString()
   specialRequests?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  adults?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  children?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  infants?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  quantity?: number;
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => SelectedRoomDto)
+  selectedRooms?: SelectedRoomDto[];
 
   @IsString()
   successUrl: string;

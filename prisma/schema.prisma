@@ -227,6 +227,10 @@ model Booking {
   iCalUid         String?       // iCal UID for calendar sync
   lastSyncedAt    DateTime?     // Last time this booking was synced with external platform
   
+  // Room Info (for hotel bookings with dynamic rooms)
+  roomId          String?
+  roomName        String?
+  
   // Guest Info
   guestName       String
   guestEmail      String
@@ -526,6 +530,9 @@ model Room {
   nameEn      String?
   type        RoomType
   capacity    Int
+  maxAdults   Int?
+  maxChildren Int?
+  maxInfants  Int?
   basePrice   Float
   isBookable  Boolean  @default(true)
   amenities   Json? // Array of amenity IDs

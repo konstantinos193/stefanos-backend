@@ -60,10 +60,45 @@ export class RoomsService {
       where.isBookable = true; // Guests only see bookable rooms
     }
 
-    return this.prisma.room.findMany({
+    const rooms = await this.prisma.room.findMany({
       where,
+      include: {
+        property: {
+          select: {
+            id: true,
+            titleGr: true,
+            titleEn: true,
+          },
+        },
+      },
       orderBy: { createdAt: 'desc' },
     });
+
+    return {
+      success: true,
+      data: { rooms },
+    };
+  }
+
+  async findAllBookable() {
+    const rooms = await this.prisma.room.findMany({
+      where: { isBookable: true },
+      include: {
+        property: {
+          select: {
+            id: true,
+            titleGr: true,
+            titleEn: true,
+          },
+        },
+      },
+      orderBy: [{ property: { titleGr: 'asc' } }, { name: 'asc' }],
+    });
+
+    return {
+      success: true,
+      data: { rooms },
+    };
   }
 
   async findAllPublic() {
@@ -114,19 +149,34 @@ export class RoomsService {
       orderBy: { basePrice: 'asc' },
     });
 
-    const availabilityChecks = await Promise.all(
-      rooms.map(async (room) => {
-        const availability = await this.calculatePropertyAvailability(room.propertyId, startDate, endDate);
-        return {
-          room,
-          available: availability.available,
-        };
-      }),
-    );
+    const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
 
-    return availabilityChecks
-      .filter((entry) => entry.available)
-      .map((entry) => entry.room);
+    const [availabilityRecords, conflictingBookings] = await Promise.all([
+      this.prisma.propertyAvailability.findMany({
+        where: {
+          propertyId: { in: propertyIds },
+          date: { gte: startDate, lte: endDate },
+          available: true,
+        },
+        select: { propertyId: true },
+      }),
+      this.prisma.booking.findMany({
+        where: {
+          propertyId: { in: propertyIds },
+          status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+          checkIn: { lte: endDate },
+          checkOut: { gte: startDate },
+        },
+        select: { propertyId: true },
+      }),
+    ]);
+
+    const availablePropertyIds = new Set(availabilityRecords.map((r) => r.propertyId));
+    const bookedPropertyIds = new Set(conflictingBookings.map((b) => b.propertyId));
+
+    return rooms.filter(
+      (room) => availablePropertyIds.has(room.propertyId) && !bookedPropertyIds.has(room.propertyId),
+    );
   }
 
   async findOnePublic(id: string) {
@@ -257,6 +307,111 @@ export class RoomsService {
     }
 
     return { startDate, endDate };
+  }
+
+  async getOccupancyForRange(startDateStr: string, endDateStr: string) {
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+      throw new BadRequestException('Invalid startDate or endDate');
+    }
+
+    if (endDate < startDate) {
+      throw new BadRequestException('endDate must be after startDate');
+    }
+
+    // Fetch all bookable rooms in one query
+    const rooms = await this.prisma.room.findMany({
+      where: { isBookable: true },
+      select: { id: true, propertyId: true },
+    });
+
+    const totalRooms = rooms.length;
+    if (totalRooms === 0) {
+      return { dates: {}, totalRooms: 0 };
+    }
+
+    // Get unique property IDs
+    const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
+
+    // Fetch all overlapping bookings for these properties in one query
+    const bookings = await this.prisma.booking.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+        status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+        checkIn: { lte: endDate },
+        checkOut: { gte: startDate },
+      },
+      select: { propertyId: true, checkIn: true, checkOut: true },
+    });
+
+    // Fetch availability records for these properties in one query
+    const availabilityRecords = await this.prisma.propertyAvailability.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+        date: { gte: startDate, lte: endDate },
+        available: true,
+      },
+      select: { propertyId: true, date: true },
+    });
+
+    // Build a set of propertyId+date for availability
+    const availabilitySet = new Set<string>();
+    for (const rec of availabilityRecords) {
+      const dateStr = new Date(rec.date).toISOString().split('T')[0];
+      availabilitySet.add(`${rec.propertyId}:${dateStr}`);
+    }
+
+    // Build per-property booking ranges for quick lookup
+    const propertyBookings = new Map<string, Array<{ checkIn: Date; checkOut: Date }>>();
+    for (const b of bookings) {
+      if (!propertyBookings.has(b.propertyId)) {
+        propertyBookings.set(b.propertyId, []);
+      }
+      propertyBookings.get(b.propertyId)!.push({
+        checkIn: new Date(b.checkIn),
+        checkOut: new Date(b.checkOut),
+      });
+    }
+
+    // Compute per-day occupancy
+    const dates: Record<string, { available: number; total: number; occupancy: number }> = {};
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dayStr = currentDate.toISOString().split('T')[0];
+      const nextDay = new Date(currentDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+
+      let availableCount = 0;
+
+      for (const room of rooms) {
+        const hasAvailability = availabilitySet.has(`${room.propertyId}:${dayStr}`);
+        const roomBookings = propertyBookings.get(room.propertyId) || [];
+        const hasConflict = roomBookings.some(
+          (b) => b.checkIn <= nextDay && b.checkOut >= currentDate,
+        );
+
+        if (hasAvailability && !hasConflict) {
+          availableCount++;
+        }
+      }
+
+      const occupancyRate = totalRooms > 0
+        ? Math.round(((totalRooms - availableCount) / totalRooms) * 100)
+        : 0;
+
+      dates[dayStr] = {
+        available: availableCount,
+        total: totalRooms,
+        occupancy: occupancyRate,
+      };
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return { dates, totalRooms };
   }
 
   private async calculatePropertyAvailability(propertyId: string, startDate: Date, endDate: Date) {

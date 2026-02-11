@@ -9463,6 +9463,8 @@ export namespace Prisma {
     externalGuestId: string | null
     iCalUid: string | null
     lastSyncedAt: Date | null
+    roomId: string | null
+    roomName: string | null
     guestName: string | null
     guestEmail: string | null
     guestPhone: string | null
@@ -9497,6 +9499,8 @@ export namespace Prisma {
     externalGuestId: string | null
     iCalUid: string | null
     lastSyncedAt: Date | null
+    roomId: string | null
+    roomName: string | null
     guestName: string | null
     guestEmail: string | null
     guestPhone: string | null
@@ -9532,6 +9536,8 @@ export namespace Prisma {
     externalGuestId: number
     iCalUid: number
     lastSyncedAt: number
+    roomId: number
+    roomName: number
     guestName: number
     guestEmail: number
     guestPhone: number
@@ -9596,6 +9602,8 @@ export namespace Prisma {
     externalGuestId?: true
     iCalUid?: true
     lastSyncedAt?: true
+    roomId?: true
+    roomName?: true
     guestName?: true
     guestEmail?: true
     guestPhone?: true
@@ -9630,6 +9638,8 @@ export namespace Prisma {
     externalGuestId?: true
     iCalUid?: true
     lastSyncedAt?: true
+    roomId?: true
+    roomName?: true
     guestName?: true
     guestEmail?: true
     guestPhone?: true
@@ -9665,6 +9675,8 @@ export namespace Prisma {
     externalGuestId?: true
     iCalUid?: true
     lastSyncedAt?: true
+    roomId?: true
+    roomName?: true
     guestName?: true
     guestEmail?: true
     guestPhone?: true
@@ -9787,6 +9799,8 @@ export namespace Prisma {
     externalGuestId: string | null
     iCalUid: string | null
     lastSyncedAt: Date | null
+    roomId: string | null
+    roomName: string | null
     guestName: string
     guestEmail: string
     guestPhone: string | null
@@ -9841,6 +9855,8 @@ export namespace Prisma {
     externalGuestId?: boolean
     iCalUid?: boolean
     lastSyncedAt?: boolean
+    roomId?: boolean
+    roomName?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9883,6 +9899,8 @@ export namespace Prisma {
     externalGuestId?: boolean
     iCalUid?: boolean
     lastSyncedAt?: boolean
+    roomId?: boolean
+    roomName?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9920,6 +9938,8 @@ export namespace Prisma {
     externalGuestId?: boolean
     iCalUid?: boolean
     lastSyncedAt?: boolean
+    roomId?: boolean
+    roomName?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9957,6 +9977,8 @@ export namespace Prisma {
     externalGuestId?: boolean
     iCalUid?: boolean
     lastSyncedAt?: boolean
+    roomId?: boolean
+    roomName?: boolean
     guestName?: boolean
     guestEmail?: boolean
     guestPhone?: boolean
@@ -9965,7 +9987,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "guestId" | "status" | "paymentStatus" | "checkIn" | "checkOut" | "guests" | "totalPrice" | "basePrice" | "cleaningFee" | "serviceFee" | "taxes" | "currency" | "ownerRevenue" | "platformFee" | "source" | "externalId" | "externalPlatform" | "externalData" | "commissionRate" | "commissionAmount" | "netRevenue" | "externalGuestId" | "iCalUid" | "lastSyncedAt" | "guestName" | "guestEmail" | "guestPhone" | "specialRequests" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "guestId" | "status" | "paymentStatus" | "checkIn" | "checkOut" | "guests" | "totalPrice" | "basePrice" | "cleaningFee" | "serviceFee" | "taxes" | "currency" | "ownerRevenue" | "platformFee" | "source" | "externalId" | "externalPlatform" | "externalData" | "commissionRate" | "commissionAmount" | "netRevenue" | "externalGuestId" | "iCalUid" | "lastSyncedAt" | "roomId" | "roomName" | "guestName" | "guestEmail" | "guestPhone" | "specialRequests" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     guest?: boolean | UserDefaultArgs<ExtArgs>
@@ -10021,6 +10043,8 @@ export namespace Prisma {
       externalGuestId: string | null
       iCalUid: string | null
       lastSyncedAt: Date | null
+      roomId: string | null
+      roomName: string | null
       guestName: string
       guestEmail: string
       guestPhone: string | null
@@ -10482,6 +10506,8 @@ export namespace Prisma {
     readonly externalGuestId: FieldRef<"Booking", 'String'>
     readonly iCalUid: FieldRef<"Booking", 'String'>
     readonly lastSyncedAt: FieldRef<"Booking", 'DateTime'>
+    readonly roomId: FieldRef<"Booking", 'String'>
+    readonly roomName: FieldRef<"Booking", 'String'>
     readonly guestName: FieldRef<"Booking", 'String'>
     readonly guestEmail: FieldRef<"Booking", 'String'>
     readonly guestPhone: FieldRef<"Booking", 'String'>
@@ -35566,6 +35592,8 @@ export namespace Prisma {
     externalGuestId: 'externalGuestId',
     iCalUid: 'iCalUid',
     lastSyncedAt: 'lastSyncedAt',
+    roomId: 'roomId',
+    roomName: 'roomName',
     guestName: 'guestName',
     guestEmail: 'guestEmail',
     guestPhone: 'guestPhone',
@@ -36755,6 +36783,8 @@ export namespace Prisma {
     externalGuestId?: StringNullableFilter<"Booking"> | string | null
     iCalUid?: StringNullableFilter<"Booking"> | string | null
     lastSyncedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    roomId?: StringNullableFilter<"Booking"> | string | null
+    roomName?: StringNullableFilter<"Booking"> | string | null
     guestName?: StringFilter<"Booking"> | string
     guestEmail?: StringFilter<"Booking"> | string
     guestPhone?: StringNullableFilter<"Booking"> | string | null
@@ -36796,6 +36826,8 @@ export namespace Prisma {
     externalGuestId?: SortOrderInput | SortOrder
     iCalUid?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
+    roomId?: SortOrderInput | SortOrder
+    roomName?: SortOrderInput | SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrderInput | SortOrder
@@ -36841,6 +36873,8 @@ export namespace Prisma {
     externalGuestId?: StringNullableFilter<"Booking"> | string | null
     iCalUid?: StringNullableFilter<"Booking"> | string | null
     lastSyncedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    roomId?: StringNullableFilter<"Booking"> | string | null
+    roomName?: StringNullableFilter<"Booking"> | string | null
     guestName?: StringFilter<"Booking"> | string
     guestEmail?: StringFilter<"Booking"> | string
     guestPhone?: StringNullableFilter<"Booking"> | string | null
@@ -36882,6 +36916,8 @@ export namespace Prisma {
     externalGuestId?: SortOrderInput | SortOrder
     iCalUid?: SortOrderInput | SortOrder
     lastSyncedAt?: SortOrderInput | SortOrder
+    roomId?: SortOrderInput | SortOrder
+    roomName?: SortOrderInput | SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrderInput | SortOrder
@@ -36925,6 +36961,8 @@ export namespace Prisma {
     externalGuestId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     iCalUid?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     lastSyncedAt?: DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
+    roomId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    roomName?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     guestName?: StringWithAggregatesFilter<"Booking"> | string
     guestEmail?: StringWithAggregatesFilter<"Booking"> | string
     guestPhone?: StringNullableWithAggregatesFilter<"Booking"> | string | null
@@ -39540,6 +39578,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -39581,6 +39621,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -39618,6 +39660,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39659,6 +39703,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39698,6 +39744,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -39731,6 +39779,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -39766,6 +39816,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -42818,6 +42870,8 @@ export namespace Prisma {
     externalGuestId?: SortOrder
     iCalUid?: SortOrder
     lastSyncedAt?: SortOrder
+    roomId?: SortOrder
+    roomName?: SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrder
@@ -42866,6 +42920,8 @@ export namespace Prisma {
     externalGuestId?: SortOrder
     iCalUid?: SortOrder
     lastSyncedAt?: SortOrder
+    roomId?: SortOrder
+    roomName?: SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrder
@@ -42900,6 +42956,8 @@ export namespace Prisma {
     externalGuestId?: SortOrder
     iCalUid?: SortOrder
     lastSyncedAt?: SortOrder
+    roomId?: SortOrder
+    roomName?: SortOrder
     guestName?: SortOrder
     guestEmail?: SortOrder
     guestPhone?: SortOrder
@@ -46784,6 +46842,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -46823,6 +46883,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -47201,6 +47263,8 @@ export namespace Prisma {
     externalGuestId?: StringNullableFilter<"Booking"> | string | null
     iCalUid?: StringNullableFilter<"Booking"> | string | null
     lastSyncedAt?: DateTimeNullableFilter<"Booking"> | Date | string | null
+    roomId?: StringNullableFilter<"Booking"> | string | null
+    roomName?: StringNullableFilter<"Booking"> | string | null
     guestName?: StringFilter<"Booking"> | string
     guestEmail?: StringFilter<"Booking"> | string
     guestPhone?: StringNullableFilter<"Booking"> | string | null
@@ -47528,6 +47592,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -47567,6 +47633,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49615,6 +49683,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49655,6 +49725,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -49891,6 +49963,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -49931,6 +50005,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50151,6 +50227,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50191,6 +50269,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50362,6 +50442,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50402,6 +50484,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50438,6 +50522,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50478,6 +50564,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50595,6 +50683,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50635,6 +50725,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -50878,6 +50970,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -50918,6 +51012,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -51083,6 +51179,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -51123,6 +51221,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53533,6 +53633,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -53807,6 +53909,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53846,6 +53950,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53884,6 +53990,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54191,6 +54299,8 @@ export namespace Prisma {
     externalGuestId?: string | null
     iCalUid?: string | null
     lastSyncedAt?: Date | string | null
+    roomId?: string | null
+    roomName?: string | null
     guestName: string
     guestEmail: string
     guestPhone?: string | null
@@ -54356,6 +54466,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54395,6 +54507,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -54433,6 +54547,8 @@ export namespace Prisma {
     externalGuestId?: NullableStringFieldUpdateOperationsInput | string | null
     iCalUid?: NullableStringFieldUpdateOperationsInput | string | null
     lastSyncedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    roomId?: NullableStringFieldUpdateOperationsInput | string | null
+    roomName?: NullableStringFieldUpdateOperationsInput | string | null
     guestName?: StringFieldUpdateOperationsInput | string
     guestEmail?: StringFieldUpdateOperationsInput | string
     guestPhone?: NullableStringFieldUpdateOperationsInput | string | null

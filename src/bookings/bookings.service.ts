@@ -281,6 +281,8 @@ export class BookingsService {
         ownerRevenue,
         platformFee,
         source: 'DIRECT',
+        roomId: createBookingDto.roomId || null,
+        roomName: createBookingDto.roomName || null,
         guestName: createBookingDto.guestName,
         guestEmail: createBookingDto.guestEmail,
         guestPhone: createBookingDto.guestPhone,

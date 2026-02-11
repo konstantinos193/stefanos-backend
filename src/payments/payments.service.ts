@@ -37,6 +37,8 @@ export class PaymentsService {
       guestEmail: createPublicCheckoutSessionDto.guestEmail,
       guestPhone: createPublicCheckoutSessionDto.guestPhone,
       specialRequests: createPublicCheckoutSessionDto.specialRequests,
+      roomId: createPublicCheckoutSessionDto.roomId,
+      roomName: createPublicCheckoutSessionDto.roomName,
       paymentMethod: 'credit_card',
     });
 
@@ -490,6 +492,41 @@ export class PaymentsService {
         ownerRevenue,
       },
     });
+  }
+
+  async confirmCheckoutSession(sessionId: string): Promise<{ status: string; bookingId: string | null }> {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new BadRequestException('Stripe is not configured');
+    }
+
+    // Find payment by transactionId (which stores the session ID)
+    const payment = await this.prisma.payment.findFirst({
+      where: { transactionId: sessionId },
+      include: { booking: true },
+    });
+
+    if (!payment) {
+      throw new NotFoundException('Payment not found for this session');
+    }
+
+    // If already completed, return early
+    if (payment.status === PaymentStatus.COMPLETED) {
+      return { status: 'COMPLETED', bookingId: payment.bookingId };
+    }
+
+    try {
+      // Retrieve the checkout session from Stripe
+      const session = await this.stripe.checkout.sessions.retrieve(sessionId);
+
+      if (session.payment_status === 'paid') {
+        await this.handleCheckoutSessionCompleted(session);
+        return { status: 'COMPLETED', bookingId: payment.bookingId };
+      }
+
+      return { status: payment.status, bookingId: payment.bookingId };
+    } catch (error) {
+      throw new BadRequestException(`Session confirmation failed: ${error.message}`);
+    }
   }
 
   async getPaymentById(paymentId: string, userId: string): Promise<PaymentResponseDto> {

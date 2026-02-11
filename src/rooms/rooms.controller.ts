@@ -30,6 +30,15 @@ export class RoomsController {
   }
 
   @Public()
+  @Get('public/occupancy')
+  getOccupancy(
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ) {
+    return this.roomsService.getOccupancyForRange(startDate, endDate);
+  }
+
+  @Public()
   @Get('public/search')
   findAvailablePublic(
     @Query('checkIn') checkIn: string,
@@ -46,6 +55,13 @@ export class RoomsController {
     return this.roomsService.findOnePublic(id);
   }
 
+  @Get('bookable')
+  @Roles('PROPERTY_OWNER', 'ADMIN')
+  @UseGuards(RolesGuard)
+  findAllBookable() {
+    return this.roomsService.findAllBookable();
+  }
+
   @Post()
   @Roles('PROPERTY_OWNER', 'ADMIN')
   @UseGuards(RolesGuard)
@@ -59,25 +75,6 @@ export class RoomsController {
     @CurrentUser() userId?: string,
   ) {
     return this.roomsService.findAll(propertyId, userId);
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string, @CurrentUser() userId?: string) {
-    return this.roomsService.findOne(id, userId);
-  }
-
-  @Public()
-  @Get(':id/availability')
-  getAvailability(
-    @Param('id') id: string,
-    @Query('startDate') startDate: string,
-    @Query('endDate') endDate: string,
-  ) {
-    return this.roomsService.getRoomAvailability(
-      id,
-      new Date(startDate),
-      new Date(endDate),
-    );
   }
 
   @Patch(':id')
@@ -96,6 +93,25 @@ export class RoomsController {
   @UseGuards(RolesGuard)
   remove(@Param('id') id: string, @CurrentUser() userId: string) {
     return this.roomsService.remove(id, userId);
+  }
+
+  @Public()
+  @Get(':id/availability')
+  getAvailability(
+    @Param('id') id: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ) {
+    return this.roomsService.getRoomAvailability(
+      id,
+      new Date(startDate),
+      new Date(endDate),
+    );
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string, @CurrentUser() userId?: string) {
+    return this.roomsService.findOne(id, userId);
   }
 }
 
