@@ -4,6 +4,12 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PropertyType } from './create-property.dto';
 
+export enum PropertyStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  MAINTENANCE = 'MAINTENANCE',
+}
+
 export class PropertyQueryDto extends PaginationDto {
   @ApiPropertyOptional({ example: 'Athens' })
   @IsOptional()
@@ -47,5 +53,10 @@ export class PropertyQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   amenities?: string;
+
+  @ApiPropertyOptional({ enum: PropertyStatus, default: PropertyStatus.ACTIVE })
+  @IsOptional()
+  @IsEnum(PropertyStatus)
+  status?: PropertyStatus;
 }
 

@@ -4,7 +4,7 @@ import { BookingsService } from './bookings.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
-import { PaginationDto } from '../common/dto/pagination.dto';
+import { BookingQueryDto } from './dto/booking-query.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
@@ -19,8 +19,15 @@ export class BookingsController {
   @Get()
   @ApiOperation({ summary: 'Get all bookings' })
   @ApiResponse({ status: 200 })
-  findAll(@Query() query: PaginationDto) {
+  findAll(@Query() query: BookingQueryDto) {
     return this.bookingsService.findAll(query);
+  }
+
+  @Get('export')
+  @ApiOperation({ summary: 'Export all bookings (no pagination limit)' })
+  @ApiResponse({ status: 200 })
+  exportAll() {
+    return this.bookingsService.exportAll();
   }
 
   @Get(':id')

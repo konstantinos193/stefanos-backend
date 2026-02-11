@@ -51,6 +51,14 @@ async function bootstrap() {
       if (origin === adminUrl || origin.includes('admin') || origin.includes('3002')) {
         return callback(null, true);
       }
+
+      // Allow Vercel preview/branch deployments for licanto and smholdings
+      const isVercelPreview = /^https:\/\/licanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
+        || /^https:\/\/incanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
+        || /^https:\/\/smholdings[a-z0-9-]*\.vercel\.app$/i.test(origin);
+      if (isVercelPreview) {
+        return callback(null, true);
+      }
       
       if (allowedOrigins.includes(origin)) {
         callback(null, true);

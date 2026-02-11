@@ -11,11 +11,11 @@ export class PropertiesService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(query: PropertyQueryDto) {
-    const { page = 1, limit = 10, sortBy, sortOrder = 'desc', location, type, guests, minPrice, maxPrice, amenities } = query;
+    const { page = 1, limit = 10, sortBy, sortOrder = 'desc', location, type, guests, minPrice, maxPrice, amenities, status } = query;
     const skip = (page - 1) * limit;
 
     const where: any = {
-      status: 'ACTIVE',
+      status: status || 'ACTIVE',
     };
 
     if (location) {

@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
-import { PaginationDto } from '../common/dto/pagination.dto';
+import { BookingQueryDto } from './dto/booking-query.dto';
 import { getPagination } from '../common/utils/pagination.util';
 import { FinancialUtil } from '../common/utils/financial.util';
 
@@ -11,8 +11,8 @@ import { FinancialUtil } from '../common/utils/financial.util';
 export class BookingsService {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(query: PaginationDto) {
-    const { page = 1, limit = 10, sortBy, sortOrder = 'desc' } = query;
+  async findAll(query: BookingQueryDto) {
+    const { page = 1, limit = 10, sortBy, sortOrder = 'desc', search, status, dateFrom, dateTo } = query;
     const skip = (page - 1) * limit;
 
     const orderBy: any = {};
@@ -22,8 +22,52 @@ export class BookingsService {
       orderBy.createdAt = 'desc';
     }
 
+    const where: any = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (dateFrom || dateTo) {
+      where.checkIn = {};
+      if (dateFrom) {
+        where.checkIn.gte = new Date(dateFrom);
+      }
+      if (dateTo) {
+        where.checkIn.lte = new Date(dateTo);
+      }
+    }
+
+    if (search) {
+      const searchTerm = search.trim();
+      where.OR = [
+        { guestName: { contains: searchTerm, mode: 'insensitive' } },
+        { guestEmail: { contains: searchTerm, mode: 'insensitive' } },
+        { guestPhone: { contains: searchTerm, mode: 'insensitive' } },
+        { id: { contains: searchTerm, mode: 'insensitive' } },
+        {
+          guest: {
+            OR: [
+              { name: { contains: searchTerm, mode: 'insensitive' } },
+              { email: { contains: searchTerm, mode: 'insensitive' } },
+              { phone: { contains: searchTerm, mode: 'insensitive' } },
+            ],
+          },
+        },
+        {
+          property: {
+            OR: [
+              { titleGr: { contains: searchTerm, mode: 'insensitive' } },
+              { titleEn: { contains: searchTerm, mode: 'insensitive' } },
+            ],
+          },
+        },
+      ];
+    }
+
     const [bookings, total] = await Promise.all([
       this.prisma.booking.findMany({
+        where,
         include: {
           property: {
             select: {
@@ -48,7 +92,7 @@ export class BookingsService {
         skip,
         take: limit,
       }),
-      this.prisma.booking.count(),
+      this.prisma.booking.count({ where }),
     ]);
 
     const pagination = getPagination(page, limit, total);
@@ -58,6 +102,40 @@ export class BookingsService {
       data: {
         bookings,
         pagination,
+      },
+    };
+  }
+
+  async exportAll() {
+    const bookings = await this.prisma.booking.findMany({
+      include: {
+        property: {
+          select: {
+            id: true,
+            titleGr: true,
+            titleEn: true,
+            images: true,
+            address: true,
+            city: true,
+          },
+        },
+        guest: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return {
+      success: true,
+      data: {
+        bookings,
+        total: bookings.length,
       },
     };
   }

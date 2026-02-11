@@ -52,6 +52,12 @@ app.use(cors({
     const isLocalhostOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
     if (isLocalhostOrigin) return callback(null, true);
 
+    // Allow Vercel preview/branch deployments for licanto and smholdings
+    const isVercelPreview = /^https:\/\/licanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
+      || /^https:\/\/incanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
+      || /^https:\/\/smholdings[a-z0-9-]*\.vercel\.app$/i.test(origin);
+    if (isVercelPreview) return callback(null, true);
+
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {

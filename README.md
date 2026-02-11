@@ -56,8 +56,8 @@ Because listing dependencies is the closest thing we have to a personality.
 
 ## Features
 
-- **Property Management** -- Full CRUD with multilingual support (Greek/English). Create properties, read them, update them, and delete them when the client changes their mind for the fourth time. Supports nine property types from apartments to luxury investments.
-- **Booking System** -- Conflict resolution included. Multi-source bookings (direct, Booking.com, Airbnb, VRBO, Expedia, manual). The only conflict it cannot resolve is between you and the project deadline.
+- **Property Management** -- Full CRUD with multilingual support (Greek/English). Create properties, read them, update them, and delete them when the client changes their mind for the fourth time. Supports nine property types from apartments to luxury investments. Status-based filtering (Active, Inactive, Maintenance) on all list queries.
+- **Booking System** -- Conflict resolution included. Multi-source bookings (direct, Booking.com, Airbnb, VRBO, Expedia, manual). Advanced query filtering by status, date range, and full-text search across guest name, email, and booking ID. Bulk export endpoint for reporting. The only conflict it cannot resolve is between you and the project deadline.
 - **External Booking Imports** -- Pull bookings from third-party platforms. Commission tracking, iCal sync, and deduplication. Because managing one booking source was too simple.
 - **User Management** -- Multi-role system (Admin, Property Owner, Manager, User). MFA support, Stripe Connect accounts, email/phone verification. A hierarchy of suffering, now with two-factor authentication.
 - **Room Management** -- Dynamic rooms per property with individual pricing, availability rules, content, and virtual tour URLs. Rooms within rooms. It is rooms all the way down.
@@ -170,8 +170,8 @@ All the commands you will forget exist and then rediscover six months later.
 src/
   app.module.ts              # The root of all evil (22 module imports)
   app.controller.ts          # Health checks, public stats, and existential dread
-  main.ts                    # NestJS entry point. Swagger, CORS, Helmet, the works.
-  index.ts                   # Legacy Express entry point. Still here. Still judging.
+  main.ts                    # NestJS entry point. Swagger, CORS (with Vercel preview support), Helmet, the works.
+  index.ts                   # Legacy Express entry point. Still here. Still judging. Also has Vercel preview CORS.
   seed.ts                    # Populates the database with beautiful lies
 
   admin/                     # God mode
@@ -180,7 +180,7 @@ src/
     dto/                     # Data Transfer Objects. Bureaucracy for your data.
     strategies/              # Passport strategies. JWT, local, existential.
     utils/                   # Auth utilities. Where the magic happens.
-  bookings/                  # The money-making module
+  bookings/                  # The money-making module (search, filter, export, conflict detection)
   cleaning/                  # Towel logistics
   common/                    # Shared infrastructure
     decorators/              # Custom decorators. Because NestJS did not have enough.
@@ -262,7 +262,7 @@ Key variables include:
 | `JWT_EXPIRES_IN` | Token expiry. Default `7d`. Adjust based on your paranoia level. |
 | `PORT` | Server port. Default `3001`. |
 | `NODE_ENV` | `development` or `production`. Determines how much error detail you get. |
-| `FRONTEND_URL` | Comma-separated allowed origins for CORS. |
+| `FRONTEND_URL` | Comma-separated allowed origins for CORS. Vercel preview deployments for licanto/incanto/smholdings are auto-allowed. |
 | `ADMIN_URL` | Admin panel URL. Always allowed through CORS because admins are special. |
 | `STRIPE_SECRET_KEY` | Real money. Real consequences. |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook verification. |
