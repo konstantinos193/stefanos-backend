@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { prisma } from '../lib/db';
 import { validateSchema, createUserSchema, loginSchema } from '../lib/validations';
 import { hashPassword, verifyPassword, generateToken, verifyToken, createError } from '../lib/utils';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Register
 router.post('/register', async (req, res, next) => {

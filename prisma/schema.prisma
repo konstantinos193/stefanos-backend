@@ -532,6 +532,7 @@ model Room {
   nameEn      String?
   type        RoomType
   capacity    Int
+  maxAdults   Int?    // Optional field for adult capacity breakdown
   basePrice   Float
   isBookable  Boolean  @default(true)
   amenities   Json? // Array of amenity IDs

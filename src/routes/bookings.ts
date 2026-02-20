@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { prisma } from '../lib/db';
 import { validateSchema, createBookingSchema, updateBookingSchema, paginationSchema } from '../lib/validations';
 import { createError, getPagination, calculateTotalPrice } from '../lib/utils';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Get all bookings
 router.get('/', async (req, res, next) => {

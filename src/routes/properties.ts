@@ -1,10 +1,10 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { prisma } from '../lib/db';
 import { validateSchema, createPropertySchema, updatePropertySchema, propertySearchSchema, paginationSchema } from '../lib/validations';
 import { createError, getPagination } from '../lib/utils';
 import { PropertyType as PrismaPropertyType } from '../../prisma/generated/prisma';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Get all properties with search and filters
 router.get('/', async (req, res, next) => {

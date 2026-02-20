@@ -1,9 +1,9 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { prisma } from '../lib/db';
 import { validateSchema, createEditionSchema, updateEditionSchema, paginationSchema } from '../lib/validations';
 import { createError, getPagination } from '../lib/utils';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 // Get all editions
 router.get('/', async (req, res, next) => {

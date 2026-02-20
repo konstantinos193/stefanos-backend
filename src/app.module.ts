@@ -23,7 +23,13 @@ import { ExternalBookingsModule } from './external-bookings/external-bookings.mo
 import { LogsModule } from './logs/logs.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { InquiriesModule } from './inquiries/inquiries.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
+import { MessagesModule } from './messages/messages.module';
+import { ReportsModule } from './reports/reports.module';
 import { AppController } from './app.controller';
+import { AuditModule } from './audit/audit.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
 @Module({
   imports: [
@@ -54,9 +60,18 @@ import { AppController } from './app.controller';
     LogsModule,
     NotificationsModule,
     InquiriesModule,
+    MaintenanceModule,
+    MessagesModule,
+    ReportsModule,
+    AuditModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: AuditInterceptor,
+    },
+  ],
 })
 export class AppModule {}
 

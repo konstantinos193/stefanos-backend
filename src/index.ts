@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Express } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -14,11 +14,12 @@ import userRoutes from './routes/users';
 import editionRoutes from './routes/editions';
 import serviceRoutes from './routes/services';
 import knowledgeRoutes from './routes/knowledge';
+import helpRoutes from './routes/help';
 
 // Load environment variables
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PORT || 3001;
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
@@ -42,6 +43,7 @@ app.use(cors({
       'https://smholdings.gr',
       'https://licanto.smholdings.gr',
       'https://licanto.vercel.app',
+      'https://stefanos-admin.vercel.app',
       ...(process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(url => url.trim()) : []),
     ];
 
@@ -52,10 +54,11 @@ app.use(cors({
     const isLocalhostOrigin = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
     if (isLocalhostOrigin) return callback(null, true);
 
-    // Allow Vercel preview/branch deployments for licanto and smholdings
+    // Allow Vercel preview/branch deployments for licanto, smholdings, and stefanos
     const isVercelPreview = /^https:\/\/licanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
       || /^https:\/\/incanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
-      || /^https:\/\/smholdings[a-z0-9-]*\.vercel\.app$/i.test(origin);
+      || /^https:\/\/smholdings[a-z0-9-]*\.vercel\.app$/i.test(origin)
+      || /^https:\/\/stefanos[a-z0-9-]*\.vercel\.app$/i.test(origin);
     if (isVercelPreview) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
@@ -88,6 +91,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/editions', editionRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/knowledge', knowledgeRoutes);
+app.use('/api/help', helpRoutes);
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

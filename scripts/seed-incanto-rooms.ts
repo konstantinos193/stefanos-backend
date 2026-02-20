@@ -109,6 +109,7 @@ async function main() {
         nameGr: tpl.nameGr,
         type: tpl.type,
         capacity: tpl.capacity,
+        maxAdults: tpl.maxAdults || tpl.capacity, // Default to total capacity if not specified
         basePrice: tpl.basePrice,
         isBookable: true,
         amenities: tpl.amenities,
