@@ -24,6 +24,11 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+  // Increase body size limits for file uploads
+  const express = require('express');
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
   // CORS - Support multiple origins (frontend + admin panel)
   // Admin panel is always allowed and never restricted
   const envOrigins = process.env.FRONTEND_URL 

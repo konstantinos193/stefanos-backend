@@ -14,7 +14,7 @@ import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { CurrentUser } from '../common/decorators/current-user.decorator';
+import { CurrentUserWithRole } from '../common/decorators/current-user-with-role.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 import { Public } from '../common/decorators/public.decorator';
@@ -78,16 +78,16 @@ export class RoomsController {
   @Post()
   @Roles('PROPERTY_OWNER', 'ADMIN')
   @UseGuards(RolesGuard)
-  create(@Body() createRoomDto: CreateRoomDto, @CurrentUser() userId: string) {
-    return this.roomsService.create(createRoomDto, userId);
+  create(@Body() createRoomDto: CreateRoomDto, @CurrentUserWithRole() user: any) {
+    return this.roomsService.create(createRoomDto, user.userId || user.id);
   }
 
   @Get('property/:propertyId')
   findAll(
     @Param('propertyId') propertyId: string,
-    @CurrentUser() userId?: string,
+    @CurrentUserWithRole() user?: any,
   ) {
-    return this.roomsService.findAll(propertyId, userId);
+    return this.roomsService.findAll(propertyId, user?.userId || user?.id);
   }
 
   @Patch(':id')
@@ -96,7 +96,7 @@ export class RoomsController {
   update(
     @Param('id') id: string,
     @Body() updateRoomDto: UpdateRoomDto,
-    @CurrentUser() user: any,
+    @CurrentUserWithRole() user: any,
   ) {
     return this.roomsService.update(id, updateRoomDto, user.userId || user.id, user.role);
   }
@@ -104,7 +104,7 @@ export class RoomsController {
   @Delete(':id')
   @Roles('PROPERTY_OWNER', 'ADMIN')
   @UseGuards(RolesGuard)
-  remove(@Param('id') id: string, @CurrentUser() user: any) {
+  remove(@Param('id') id: string, @CurrentUserWithRole() user: any) {
     return this.roomsService.remove(id, user.userId || user.id, user.role);
   }
 
@@ -123,8 +123,8 @@ export class RoomsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @CurrentUser() userId?: string) {
-    return this.roomsService.findOne(id, userId);
+  findOne(@Param('id') id: string, @CurrentUserWithRole() user?: any) {
+    return this.roomsService.findOne(id, user?.userId || user?.id);
   }
 }
 

@@ -20,7 +20,11 @@ export class UploadController {
   @Post('room-image')
   @Roles('PROPERTY_OWNER', 'ADMIN')
   @UseGuards(RolesGuard)
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('image', {
+    limits: {
+      fileSize: 50 * 1024 * 1024, // 50MB
+    },
+  }))
   async uploadRoomImage(
     @UploadedFile() file: Express.Multer.File,
     @Body('folder') folder?: string,
