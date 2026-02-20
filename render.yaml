@@ -11,8 +11,8 @@ services:
     env: node
     region: oregon
     plan: free
-    buildCommand: npm install --include=dev && npx prisma generate && npm run build && npx prisma migrate deploy
-    startCommand: npm run start:prod
+    buildCommand: yarn install && npx prisma generate && yarn build && npx prisma migrate deploy
+    startCommand: yarn start:prod
     envVars:
       - key: NODE_ENV
         value: production

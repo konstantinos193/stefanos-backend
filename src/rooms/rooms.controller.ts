@@ -63,16 +63,14 @@ export class RoomsController {
     return this.roomsService.findOnePublic(id);
   }
 
+  @Public()
   @Get('dashboard-stats')
-  @Roles('PROPERTY_OWNER', 'ADMIN')
-  @UseGuards(RolesGuard)
   getDashboardStats() {
     return this.roomsService.getDashboardStats();
   }
 
+  @Public()
   @Get('bookable')
-  @Roles('PROPERTY_OWNER', 'ADMIN')
-  @UseGuards(RolesGuard)
   findAllBookable() {
     return this.roomsService.findAllBookable();
   }
