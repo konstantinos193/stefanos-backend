@@ -379,9 +379,6 @@ exports.Prisma.RoomScalarFieldEnum = {
   nameEn: 'nameEn',
   type: 'type',
   capacity: 'capacity',
-  maxAdults: 'maxAdults',
-  maxChildren: 'maxChildren',
-  maxInfants: 'maxInfants',
   basePrice: 'basePrice',
   isBookable: 'isBookable',
   amenities: 'amenities',
@@ -712,7 +709,8 @@ exports.RoomType = exports.$Enums.RoomType = {
   BALCONY: 'BALCONY',
   TERRACE: 'TERRACE',
   GARDEN: 'GARDEN',
-  OTHER: 'OTHER'
+  OTHER: 'OTHER',
+  APARTMENT: 'APARTMENT'
 };
 
 exports.CleaningFrequency = exports.$Enums.CleaningFrequency = {

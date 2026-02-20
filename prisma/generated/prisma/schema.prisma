@@ -532,9 +532,6 @@ model Room {
   nameEn        String?
   type          RoomType
   capacity      Int
-  maxAdults     Int?
-  maxChildren   Int?
-  maxInfants    Int?
   basePrice     Float
   isBookable    Boolean  @default(true)
   amenities     Json? // Array of amenity IDs
@@ -567,6 +564,13 @@ enum RoomType {
   TERRACE
   GARDEN
   OTHER
+  APARTMENT
+}
+
+enum RoomCategory {
+  LUXURY
+  EXCLUSIVE
+  STANDARD
 }
 
 // Property Group (Subholding)

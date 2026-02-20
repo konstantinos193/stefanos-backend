@@ -7,7 +7,7 @@ import {
   IsArray,
   Min,
 } from 'class-validator';
-import { RoomType } from '../../database/types';
+import { RoomType, RoomCategory } from '../../database/types';
 
 export class CreateRoomDto {
   @IsString()
@@ -26,6 +26,10 @@ export class CreateRoomDto {
 
   @IsEnum(RoomType)
   type: RoomType;
+
+  @IsEnum(RoomCategory)
+  @IsOptional()
+  category?: RoomCategory;
 
   @IsNumber()
   @Min(1)

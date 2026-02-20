@@ -108,6 +108,12 @@ export enum RoomType {
   APARTMENT = 'APARTMENT',
 }
 
+export enum RoomCategory {
+  LUXURY = 'LUXURY',
+  EXCLUSIVE = 'EXCLUSIVE',
+  STANDARD = 'STANDARD',
+}
+
 export enum CleaningFrequency {
   AFTER_EACH_BOOKING = 'AFTER_EACH_BOOKING',
   DAILY = 'DAILY',
