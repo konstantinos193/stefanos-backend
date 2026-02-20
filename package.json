@@ -17,6 +17,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:endpoints": "node test-endpoints.js",
     "db:init": "node scripts/init-db.js",
     "db:seed": "tsx src/seed.ts",
     "db:migrate": "node scripts/migrate-db.js"

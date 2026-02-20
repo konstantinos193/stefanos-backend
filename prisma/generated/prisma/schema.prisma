@@ -49,6 +49,7 @@ model User {
   propertyGroups    PropertyGroup[]
   rooms             Room[]
   cleaningSchedules CleaningSchedule[]
+  inquiries         Inquiry[]
 
   @@map("users")
 }
@@ -133,6 +134,7 @@ model Property {
   cleaningSchedules CleaningSchedule[]
   propertyGroup     PropertyGroup?         @relation(fields: [propertyGroupId], references: [id], onDelete: SetNull)
   payments          Payment[]
+  inquiries         Inquiry[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -530,6 +532,9 @@ model Room {
   nameEn        String?
   type          RoomType
   capacity      Int
+  maxAdults     Int?
+  maxChildren   Int?
+  maxInfants    Int?
   basePrice     Float
   isBookable    Boolean  @default(true)
   amenities     Json? // Array of amenity IDs
@@ -873,4 +878,49 @@ model RoomAvailabilityRule {
   updatedAt DateTime @updatedAt
 
   @@map("room_availability_rules")
+}
+
+// Property Inquiries
+model Inquiry {
+  id         String          @id @default(uuid())
+  propertyId String
+  name       String
+  email      String
+  phone      String?
+  message    String
+  status     InquiryStatus   @default(NEW)
+  priority   InquiryPriority @default(MEDIUM)
+
+  // Response tracking
+  respondedAt DateTime?
+  respondedBy String?
+  response    String?
+
+  // Admin notes
+  adminNotes String?
+  assignedTo String? // Admin user ID assigned to handle
+
+  // Relations
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  assignee User?    @relation(fields: [assignedTo], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("inquiries")
+}
+
+enum InquiryStatus {
+  NEW
+  IN_PROGRESS
+  RESPONDED
+  CLOSED
+  SPAM
+}
+
+enum InquiryPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
 }

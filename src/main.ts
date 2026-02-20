@@ -31,7 +31,7 @@ async function bootstrap() {
     : [];
   
   // Always include localhost:3000 and localhost:3002 for development
-  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:57814', 'https://smholdings.gr', 'https://licanto.smholdings.gr', 'https://licanto.vercel.app'];
+  const defaultOrigins = ['http://localhost:3000', 'http://localhost:3002', 'http://localhost:57814', 'https://smholdings.gr', 'https://licanto.smholdings.gr', 'https://licanto.vercel.app', 'https://stefanos-admin.vercel.app'];
   const adminUrl = process.env.ADMIN_URL || 'http://localhost:3002';
   const allowedOrigins = [...new Set([...defaultOrigins, ...envOrigins, adminUrl])];
   
@@ -52,10 +52,11 @@ async function bootstrap() {
         return callback(null, true);
       }
 
-      // Allow Vercel preview/branch deployments for licanto and smholdings
+      // Allow Vercel preview/branch deployments for licanto, smholdings, and stefanos-admin
       const isVercelPreview = /^https:\/\/licanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
         || /^https:\/\/incanto[a-z0-9-]*\.vercel\.app$/i.test(origin)
-        || /^https:\/\/smholdings[a-z0-9-]*\.vercel\.app$/i.test(origin);
+        || /^https:\/\/smholdings[a-z0-9-]*\.vercel\.app$/i.test(origin)
+        || /^https:\/\/stefanos-admin[a-z0-9-]*\.vercel\.app$/i.test(origin);
       if (isVercelPreview) {
         return callback(null, true);
       }

@@ -143,6 +143,11 @@ export type RoomContent = $Result.DefaultSelection<Prisma.$RoomContentPayload>
  * 
  */
 export type RoomAvailabilityRule = $Result.DefaultSelection<Prisma.$RoomAvailabilityRulePayload>
+/**
+ * Model Inquiry
+ * 
+ */
+export type Inquiry = $Result.DefaultSelection<Prisma.$InquiryPayload>
 
 /**
  * Enums
@@ -303,7 +308,8 @@ export const RoomType: {
   BALCONY: 'BALCONY',
   TERRACE: 'TERRACE',
   GARDEN: 'GARDEN',
-  OTHER: 'OTHER'
+  OTHER: 'OTHER',
+  APARTMENT: 'APARTMENT'
 };
 
 export type RoomType = (typeof RoomType)[keyof typeof RoomType]
@@ -377,6 +383,27 @@ export const SettingType: {
 };
 
 export type SettingType = (typeof SettingType)[keyof typeof SettingType]
+
+
+export const InquiryStatus: {
+  NEW: 'NEW',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESPONDED: 'RESPONDED',
+  CLOSED: 'CLOSED',
+  SPAM: 'SPAM'
+};
+
+export type InquiryStatus = (typeof InquiryStatus)[keyof typeof InquiryStatus]
+
+
+export const InquiryPriority: {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
+export type InquiryPriority = (typeof InquiryPriority)[keyof typeof InquiryPriority]
 
 }
 
@@ -459,6 +486,14 @@ export const MediaCategory: typeof $Enums.MediaCategory
 export type SettingType = $Enums.SettingType
 
 export const SettingType: typeof $Enums.SettingType
+
+export type InquiryStatus = $Enums.InquiryStatus
+
+export const InquiryStatus: typeof $Enums.InquiryStatus
+
+export type InquiryPriority = $Enums.InquiryPriority
+
+export const InquiryPriority: typeof $Enums.InquiryPriority
 
 /**
  * ##  Prisma Client ʲˢ
@@ -836,6 +871,16 @@ export class PrismaClient<
     * ```
     */
   get roomAvailabilityRule(): Prisma.RoomAvailabilityRuleDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inquiry`: Exposes CRUD operations for the **Inquiry** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Inquiries
+    * const inquiries = await prisma.inquiry.findMany()
+    * ```
+    */
+  get inquiry(): Prisma.InquiryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1295,7 +1340,8 @@ export namespace Prisma {
     Media: 'Media',
     Setting: 'Setting',
     RoomContent: 'RoomContent',
-    RoomAvailabilityRule: 'RoomAvailabilityRule'
+    RoomAvailabilityRule: 'RoomAvailabilityRule',
+    Inquiry: 'Inquiry'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1311,7 +1357,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "property" | "amenity" | "propertyAmenity" | "booking" | "propertyAvailability" | "review" | "maintenanceRequest" | "message" | "notification" | "edition" | "service" | "knowledgeArticle" | "payment" | "room" | "propertyGroup" | "cleaningSchedule" | "propertyAnalytics" | "propertyNote" | "auditLog" | "content" | "contentMedia" | "media" | "setting" | "roomContent" | "roomAvailabilityRule"
+      modelProps: "user" | "property" | "amenity" | "propertyAmenity" | "booking" | "propertyAvailability" | "review" | "maintenanceRequest" | "message" | "notification" | "edition" | "service" | "knowledgeArticle" | "payment" | "room" | "propertyGroup" | "cleaningSchedule" | "propertyAnalytics" | "propertyNote" | "auditLog" | "content" | "contentMedia" | "media" | "setting" | "roomContent" | "roomAvailabilityRule" | "inquiry"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3239,6 +3285,80 @@ export namespace Prisma {
           }
         }
       }
+      Inquiry: {
+        payload: Prisma.$InquiryPayload<ExtArgs>
+        fields: Prisma.InquiryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InquiryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InquiryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          findFirst: {
+            args: Prisma.InquiryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InquiryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          findMany: {
+            args: Prisma.InquiryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>[]
+          }
+          create: {
+            args: Prisma.InquiryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          createMany: {
+            args: Prisma.InquiryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InquiryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>[]
+          }
+          delete: {
+            args: Prisma.InquiryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          update: {
+            args: Prisma.InquiryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          deleteMany: {
+            args: Prisma.InquiryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InquiryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InquiryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>[]
+          }
+          upsert: {
+            args: Prisma.InquiryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InquiryPayload>
+          }
+          aggregate: {
+            args: Prisma.InquiryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInquiry>
+          }
+          groupBy: {
+            args: Prisma.InquiryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InquiryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InquiryCountArgs<ExtArgs>
+            result: $Utils.Optional<InquiryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3373,6 +3493,7 @@ export namespace Prisma {
     setting?: SettingOmit
     roomContent?: RoomContentOmit
     roomAvailabilityRule?: RoomAvailabilityRuleOmit
+    inquiry?: InquiryOmit
   }
 
   /* Types for Logging */
@@ -3462,6 +3583,7 @@ export namespace Prisma {
     propertyGroups: number
     rooms: number
     cleaningSchedules: number
+    inquiries: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3474,6 +3596,7 @@ export namespace Prisma {
     propertyGroups?: boolean | UserCountOutputTypeCountPropertyGroupsArgs
     rooms?: boolean | UserCountOutputTypeCountRoomsArgs
     cleaningSchedules?: boolean | UserCountOutputTypeCountCleaningSchedulesArgs
+    inquiries?: boolean | UserCountOutputTypeCountInquiriesArgs
   }
 
   // Custom InputTypes
@@ -3550,6 +3673,13 @@ export namespace Prisma {
     where?: CleaningScheduleWhereInput
   }
 
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
+  }
+
 
   /**
    * Count Type PropertyCountOutputType
@@ -3566,6 +3696,7 @@ export namespace Prisma {
     analytics: number
     cleaningSchedules: number
     payments: number
+    inquiries: number
   }
 
   export type PropertyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3579,6 +3710,7 @@ export namespace Prisma {
     analytics?: boolean | PropertyCountOutputTypeCountAnalyticsArgs
     cleaningSchedules?: boolean | PropertyCountOutputTypeCountCleaningSchedulesArgs
     payments?: boolean | PropertyCountOutputTypeCountPaymentsArgs
+    inquiries?: boolean | PropertyCountOutputTypeCountInquiriesArgs
   }
 
   // Custom InputTypes
@@ -3660,6 +3792,13 @@ export namespace Prisma {
    */
   export type PropertyCountOutputTypeCountPaymentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PaymentWhereInput
+  }
+
+  /**
+   * PropertyCountOutputType without action
+   */
+  export type PropertyCountOutputTypeCountInquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
   }
 
 
@@ -4161,6 +4300,7 @@ export namespace Prisma {
     propertyGroups?: boolean | User$propertyGroupsArgs<ExtArgs>
     rooms?: boolean | User$roomsArgs<ExtArgs>
     cleaningSchedules?: boolean | User$cleaningSchedulesArgs<ExtArgs>
+    inquiries?: boolean | User$inquiriesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -4241,6 +4381,7 @@ export namespace Prisma {
     propertyGroups?: boolean | User$propertyGroupsArgs<ExtArgs>
     rooms?: boolean | User$roomsArgs<ExtArgs>
     cleaningSchedules?: boolean | User$cleaningSchedulesArgs<ExtArgs>
+    inquiries?: boolean | User$inquiriesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -4258,6 +4399,7 @@ export namespace Prisma {
       propertyGroups: Prisma.$PropertyGroupPayload<ExtArgs>[]
       rooms: Prisma.$RoomPayload<ExtArgs>[]
       cleaningSchedules: Prisma.$CleaningSchedulePayload<ExtArgs>[]
+      inquiries: Prisma.$InquiryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4682,6 +4824,7 @@ export namespace Prisma {
     propertyGroups<T extends User$propertyGroupsArgs<ExtArgs> = {}>(args?: Subset<T, User$propertyGroupsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PropertyGroupPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rooms<T extends User$roomsArgs<ExtArgs> = {}>(args?: Subset<T, User$roomsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cleaningSchedules<T extends User$cleaningSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, User$cleaningSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CleaningSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inquiries<T extends User$inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, User$inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5332,6 +5475,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.inquiries
+   */
+  export type User$inquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    cursor?: InquiryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5904,6 +6071,7 @@ export namespace Prisma {
     cleaningSchedules?: boolean | Property$cleaningSchedulesArgs<ExtArgs>
     propertyGroup?: boolean | Property$propertyGroupArgs<ExtArgs>
     payments?: boolean | Property$paymentsArgs<ExtArgs>
+    inquiries?: boolean | Property$inquiriesArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["property"]>
 
@@ -6060,6 +6228,7 @@ export namespace Prisma {
     cleaningSchedules?: boolean | Property$cleaningSchedulesArgs<ExtArgs>
     propertyGroup?: boolean | Property$propertyGroupArgs<ExtArgs>
     payments?: boolean | Property$paymentsArgs<ExtArgs>
+    inquiries?: boolean | Property$inquiriesArgs<ExtArgs>
     _count?: boolean | PropertyCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PropertyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6086,6 +6255,7 @@ export namespace Prisma {
       cleaningSchedules: Prisma.$CleaningSchedulePayload<ExtArgs>[]
       propertyGroup: Prisma.$PropertyGroupPayload<ExtArgs> | null
       payments: Prisma.$PaymentPayload<ExtArgs>[]
+      inquiries: Prisma.$InquiryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -6536,6 +6706,7 @@ export namespace Prisma {
     cleaningSchedules<T extends Property$cleaningSchedulesArgs<ExtArgs> = {}>(args?: Subset<T, Property$cleaningSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CleaningSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     propertyGroup<T extends Property$propertyGroupArgs<ExtArgs> = {}>(args?: Subset<T, Property$propertyGroupArgs<ExtArgs>>): Prisma__PropertyGroupClient<$Result.GetResult<Prisma.$PropertyGroupPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     payments<T extends Property$paymentsArgs<ExtArgs> = {}>(args?: Subset<T, Property$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    inquiries<T extends Property$inquiriesArgs<ExtArgs> = {}>(args?: Subset<T, Property$inquiriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -7257,6 +7428,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
+  }
+
+  /**
+   * Property.inquiries
+   */
+  export type Property$inquiriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    cursor?: InquiryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
   }
 
   /**
@@ -21415,11 +21610,17 @@ export namespace Prisma {
 
   export type RoomAvgAggregateOutputType = {
     capacity: number | null
+    maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
   }
 
   export type RoomSumAggregateOutputType = {
     capacity: number | null
+    maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
   }
 
@@ -21431,6 +21632,9 @@ export namespace Prisma {
     nameEn: string | null
     type: $Enums.RoomType | null
     capacity: number | null
+    maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
     isBookable: boolean | null
     descriptionGr: string | null
@@ -21448,6 +21652,9 @@ export namespace Prisma {
     nameEn: string | null
     type: $Enums.RoomType | null
     capacity: number | null
+    maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
     isBookable: boolean | null
     descriptionGr: string | null
@@ -21465,6 +21672,9 @@ export namespace Prisma {
     nameEn: number
     type: number
     capacity: number
+    maxAdults: number
+    maxChildren: number
+    maxInfants: number
     basePrice: number
     isBookable: number
     amenities: number
@@ -21480,11 +21690,17 @@ export namespace Prisma {
 
   export type RoomAvgAggregateInputType = {
     capacity?: true
+    maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
   }
 
   export type RoomSumAggregateInputType = {
     capacity?: true
+    maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
   }
 
@@ -21496,6 +21712,9 @@ export namespace Prisma {
     nameEn?: true
     type?: true
     capacity?: true
+    maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
     isBookable?: true
     descriptionGr?: true
@@ -21513,6 +21732,9 @@ export namespace Prisma {
     nameEn?: true
     type?: true
     capacity?: true
+    maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
     isBookable?: true
     descriptionGr?: true
@@ -21530,6 +21752,9 @@ export namespace Prisma {
     nameEn?: true
     type?: true
     capacity?: true
+    maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
     isBookable?: true
     amenities?: true
@@ -21636,6 +21861,9 @@ export namespace Prisma {
     nameEn: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number
     isBookable: boolean
     amenities: JsonValue | null
@@ -21674,6 +21902,9 @@ export namespace Prisma {
     nameEn?: boolean
     type?: boolean
     capacity?: boolean
+    maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21698,6 +21929,9 @@ export namespace Prisma {
     nameEn?: boolean
     type?: boolean
     capacity?: boolean
+    maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21719,6 +21953,9 @@ export namespace Prisma {
     nameEn?: boolean
     type?: boolean
     capacity?: boolean
+    maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21740,6 +21977,9 @@ export namespace Prisma {
     nameEn?: boolean
     type?: boolean
     capacity?: boolean
+    maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21751,7 +21991,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "nameGr" | "nameEn" | "type" | "capacity" | "basePrice" | "isBookable" | "amenities" | "images" | "descriptionGr" | "descriptionEn" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
+  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "nameGr" | "nameEn" | "type" | "capacity" | "maxAdults" | "maxChildren" | "maxInfants" | "basePrice" | "isBookable" | "amenities" | "images" | "descriptionGr" | "descriptionEn" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     owner?: boolean | UserDefaultArgs<ExtArgs>
@@ -21784,6 +22024,9 @@ export namespace Prisma {
       nameEn: string | null
       type: $Enums.RoomType
       capacity: number
+      maxAdults: number | null
+      maxChildren: number | null
+      maxInfants: number | null
       basePrice: number
       isBookable: boolean
       amenities: Prisma.JsonValue | null
@@ -22227,6 +22470,9 @@ export namespace Prisma {
     readonly nameEn: FieldRef<"Room", 'String'>
     readonly type: FieldRef<"Room", 'RoomType'>
     readonly capacity: FieldRef<"Room", 'Int'>
+    readonly maxAdults: FieldRef<"Room", 'Int'>
+    readonly maxChildren: FieldRef<"Room", 'Int'>
+    readonly maxInfants: FieldRef<"Room", 'Int'>
     readonly basePrice: FieldRef<"Room", 'Float'>
     readonly isBookable: FieldRef<"Room", 'Boolean'>
     readonly amenities: FieldRef<"Room", 'Json'>
@@ -35461,6 +35707,1219 @@ export namespace Prisma {
 
 
   /**
+   * Model Inquiry
+   */
+
+  export type AggregateInquiry = {
+    _count: InquiryCountAggregateOutputType | null
+    _min: InquiryMinAggregateOutputType | null
+    _max: InquiryMaxAggregateOutputType | null
+  }
+
+  export type InquiryMinAggregateOutputType = {
+    id: string | null
+    propertyId: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    message: string | null
+    status: $Enums.InquiryStatus | null
+    priority: $Enums.InquiryPriority | null
+    respondedAt: Date | null
+    respondedBy: string | null
+    response: string | null
+    adminNotes: string | null
+    assignedTo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryMaxAggregateOutputType = {
+    id: string | null
+    propertyId: string | null
+    name: string | null
+    email: string | null
+    phone: string | null
+    message: string | null
+    status: $Enums.InquiryStatus | null
+    priority: $Enums.InquiryPriority | null
+    respondedAt: Date | null
+    respondedBy: string | null
+    response: string | null
+    adminNotes: string | null
+    assignedTo: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InquiryCountAggregateOutputType = {
+    id: number
+    propertyId: number
+    name: number
+    email: number
+    phone: number
+    message: number
+    status: number
+    priority: number
+    respondedAt: number
+    respondedBy: number
+    response: number
+    adminNotes: number
+    assignedTo: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InquiryMinAggregateInputType = {
+    id?: true
+    propertyId?: true
+    name?: true
+    email?: true
+    phone?: true
+    message?: true
+    status?: true
+    priority?: true
+    respondedAt?: true
+    respondedBy?: true
+    response?: true
+    adminNotes?: true
+    assignedTo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryMaxAggregateInputType = {
+    id?: true
+    propertyId?: true
+    name?: true
+    email?: true
+    phone?: true
+    message?: true
+    status?: true
+    priority?: true
+    respondedAt?: true
+    respondedBy?: true
+    response?: true
+    adminNotes?: true
+    assignedTo?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InquiryCountAggregateInputType = {
+    id?: true
+    propertyId?: true
+    name?: true
+    email?: true
+    phone?: true
+    message?: true
+    status?: true
+    priority?: true
+    respondedAt?: true
+    respondedBy?: true
+    response?: true
+    adminNotes?: true
+    assignedTo?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InquiryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Inquiry to aggregate.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Inquiries
+    **/
+    _count?: true | InquiryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InquiryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InquiryMaxAggregateInputType
+  }
+
+  export type GetInquiryAggregateType<T extends InquiryAggregateArgs> = {
+        [P in keyof T & keyof AggregateInquiry]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInquiry[P]>
+      : GetScalarType<T[P], AggregateInquiry[P]>
+  }
+
+
+
+
+  export type InquiryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InquiryWhereInput
+    orderBy?: InquiryOrderByWithAggregationInput | InquiryOrderByWithAggregationInput[]
+    by: InquiryScalarFieldEnum[] | InquiryScalarFieldEnum
+    having?: InquiryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InquiryCountAggregateInputType | true
+    _min?: InquiryMinAggregateInputType
+    _max?: InquiryMaxAggregateInputType
+  }
+
+  export type InquiryGroupByOutputType = {
+    id: string
+    propertyId: string
+    name: string
+    email: string
+    phone: string | null
+    message: string
+    status: $Enums.InquiryStatus
+    priority: $Enums.InquiryPriority
+    respondedAt: Date | null
+    respondedBy: string | null
+    response: string | null
+    adminNotes: string | null
+    assignedTo: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InquiryCountAggregateOutputType | null
+    _min: InquiryMinAggregateOutputType | null
+    _max: InquiryMaxAggregateOutputType | null
+  }
+
+  type GetInquiryGroupByPayload<T extends InquiryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InquiryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InquiryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InquiryGroupByOutputType[P]>
+            : GetScalarType<T[P], InquiryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InquirySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    propertyId?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    message?: boolean
+    status?: boolean
+    priority?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    response?: boolean
+    adminNotes?: boolean
+    assignedTo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    assignee?: boolean | Inquiry$assigneeArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiry"]>
+
+  export type InquirySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    propertyId?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    message?: boolean
+    status?: boolean
+    priority?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    response?: boolean
+    adminNotes?: boolean
+    assignedTo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    assignee?: boolean | Inquiry$assigneeArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiry"]>
+
+  export type InquirySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    propertyId?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    message?: boolean
+    status?: boolean
+    priority?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    response?: boolean
+    adminNotes?: boolean
+    assignedTo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    assignee?: boolean | Inquiry$assigneeArgs<ExtArgs>
+  }, ExtArgs["result"]["inquiry"]>
+
+  export type InquirySelectScalar = {
+    id?: boolean
+    propertyId?: boolean
+    name?: boolean
+    email?: boolean
+    phone?: boolean
+    message?: boolean
+    status?: boolean
+    priority?: boolean
+    respondedAt?: boolean
+    respondedBy?: boolean
+    response?: boolean
+    adminNotes?: boolean
+    assignedTo?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InquiryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "email" | "phone" | "message" | "status" | "priority" | "respondedAt" | "respondedBy" | "response" | "adminNotes" | "assignedTo" | "createdAt" | "updatedAt", ExtArgs["result"]["inquiry"]>
+  export type InquiryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    assignee?: boolean | Inquiry$assigneeArgs<ExtArgs>
+  }
+  export type InquiryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    assignee?: boolean | Inquiry$assigneeArgs<ExtArgs>
+  }
+  export type InquiryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    property?: boolean | PropertyDefaultArgs<ExtArgs>
+    assignee?: boolean | Inquiry$assigneeArgs<ExtArgs>
+  }
+
+  export type $InquiryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Inquiry"
+    objects: {
+      property: Prisma.$PropertyPayload<ExtArgs>
+      assignee: Prisma.$UserPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      propertyId: string
+      name: string
+      email: string
+      phone: string | null
+      message: string
+      status: $Enums.InquiryStatus
+      priority: $Enums.InquiryPriority
+      respondedAt: Date | null
+      respondedBy: string | null
+      response: string | null
+      adminNotes: string | null
+      assignedTo: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inquiry"]>
+    composites: {}
+  }
+
+  type InquiryGetPayload<S extends boolean | null | undefined | InquiryDefaultArgs> = $Result.GetResult<Prisma.$InquiryPayload, S>
+
+  type InquiryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InquiryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InquiryCountAggregateInputType | true
+    }
+
+  export interface InquiryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Inquiry'], meta: { name: 'Inquiry' } }
+    /**
+     * Find zero or one Inquiry that matches the filter.
+     * @param {InquiryFindUniqueArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InquiryFindUniqueArgs>(args: SelectSubset<T, InquiryFindUniqueArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Inquiry that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InquiryFindUniqueOrThrowArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InquiryFindUniqueOrThrowArgs>(args: SelectSubset<T, InquiryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inquiry that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryFindFirstArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InquiryFindFirstArgs>(args?: SelectSubset<T, InquiryFindFirstArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Inquiry that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryFindFirstOrThrowArgs} args - Arguments to find a Inquiry
+     * @example
+     * // Get one Inquiry
+     * const inquiry = await prisma.inquiry.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InquiryFindFirstOrThrowArgs>(args?: SelectSubset<T, InquiryFindFirstOrThrowArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Inquiries that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Inquiries
+     * const inquiries = await prisma.inquiry.findMany()
+     * 
+     * // Get first 10 Inquiries
+     * const inquiries = await prisma.inquiry.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inquiryWithIdOnly = await prisma.inquiry.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InquiryFindManyArgs>(args?: SelectSubset<T, InquiryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Inquiry.
+     * @param {InquiryCreateArgs} args - Arguments to create a Inquiry.
+     * @example
+     * // Create one Inquiry
+     * const Inquiry = await prisma.inquiry.create({
+     *   data: {
+     *     // ... data to create a Inquiry
+     *   }
+     * })
+     * 
+     */
+    create<T extends InquiryCreateArgs>(args: SelectSubset<T, InquiryCreateArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Inquiries.
+     * @param {InquiryCreateManyArgs} args - Arguments to create many Inquiries.
+     * @example
+     * // Create many Inquiries
+     * const inquiry = await prisma.inquiry.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InquiryCreateManyArgs>(args?: SelectSubset<T, InquiryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Inquiries and returns the data saved in the database.
+     * @param {InquiryCreateManyAndReturnArgs} args - Arguments to create many Inquiries.
+     * @example
+     * // Create many Inquiries
+     * const inquiry = await prisma.inquiry.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Inquiries and only return the `id`
+     * const inquiryWithIdOnly = await prisma.inquiry.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InquiryCreateManyAndReturnArgs>(args?: SelectSubset<T, InquiryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Inquiry.
+     * @param {InquiryDeleteArgs} args - Arguments to delete one Inquiry.
+     * @example
+     * // Delete one Inquiry
+     * const Inquiry = await prisma.inquiry.delete({
+     *   where: {
+     *     // ... filter to delete one Inquiry
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InquiryDeleteArgs>(args: SelectSubset<T, InquiryDeleteArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Inquiry.
+     * @param {InquiryUpdateArgs} args - Arguments to update one Inquiry.
+     * @example
+     * // Update one Inquiry
+     * const inquiry = await prisma.inquiry.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InquiryUpdateArgs>(args: SelectSubset<T, InquiryUpdateArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Inquiries.
+     * @param {InquiryDeleteManyArgs} args - Arguments to filter Inquiries to delete.
+     * @example
+     * // Delete a few Inquiries
+     * const { count } = await prisma.inquiry.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InquiryDeleteManyArgs>(args?: SelectSubset<T, InquiryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inquiries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Inquiries
+     * const inquiry = await prisma.inquiry.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InquiryUpdateManyArgs>(args: SelectSubset<T, InquiryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Inquiries and returns the data updated in the database.
+     * @param {InquiryUpdateManyAndReturnArgs} args - Arguments to update many Inquiries.
+     * @example
+     * // Update many Inquiries
+     * const inquiry = await prisma.inquiry.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Inquiries and only return the `id`
+     * const inquiryWithIdOnly = await prisma.inquiry.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InquiryUpdateManyAndReturnArgs>(args: SelectSubset<T, InquiryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Inquiry.
+     * @param {InquiryUpsertArgs} args - Arguments to update or create a Inquiry.
+     * @example
+     * // Update or create a Inquiry
+     * const inquiry = await prisma.inquiry.upsert({
+     *   create: {
+     *     // ... data to create a Inquiry
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Inquiry we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InquiryUpsertArgs>(args: SelectSubset<T, InquiryUpsertArgs<ExtArgs>>): Prisma__InquiryClient<$Result.GetResult<Prisma.$InquiryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Inquiries.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryCountArgs} args - Arguments to filter Inquiries to count.
+     * @example
+     * // Count the number of Inquiries
+     * const count = await prisma.inquiry.count({
+     *   where: {
+     *     // ... the filter for the Inquiries we want to count
+     *   }
+     * })
+    **/
+    count<T extends InquiryCountArgs>(
+      args?: Subset<T, InquiryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InquiryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Inquiry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InquiryAggregateArgs>(args: Subset<T, InquiryAggregateArgs>): Prisma.PrismaPromise<GetInquiryAggregateType<T>>
+
+    /**
+     * Group by Inquiry.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InquiryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InquiryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InquiryGroupByArgs['orderBy'] }
+        : { orderBy?: InquiryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InquiryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInquiryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Inquiry model
+   */
+  readonly fields: InquiryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Inquiry.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InquiryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    property<T extends PropertyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PropertyDefaultArgs<ExtArgs>>): Prisma__PropertyClient<$Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    assignee<T extends Inquiry$assigneeArgs<ExtArgs> = {}>(args?: Subset<T, Inquiry$assigneeArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Inquiry model
+   */
+  interface InquiryFieldRefs {
+    readonly id: FieldRef<"Inquiry", 'String'>
+    readonly propertyId: FieldRef<"Inquiry", 'String'>
+    readonly name: FieldRef<"Inquiry", 'String'>
+    readonly email: FieldRef<"Inquiry", 'String'>
+    readonly phone: FieldRef<"Inquiry", 'String'>
+    readonly message: FieldRef<"Inquiry", 'String'>
+    readonly status: FieldRef<"Inquiry", 'InquiryStatus'>
+    readonly priority: FieldRef<"Inquiry", 'InquiryPriority'>
+    readonly respondedAt: FieldRef<"Inquiry", 'DateTime'>
+    readonly respondedBy: FieldRef<"Inquiry", 'String'>
+    readonly response: FieldRef<"Inquiry", 'String'>
+    readonly adminNotes: FieldRef<"Inquiry", 'String'>
+    readonly assignedTo: FieldRef<"Inquiry", 'String'>
+    readonly createdAt: FieldRef<"Inquiry", 'DateTime'>
+    readonly updatedAt: FieldRef<"Inquiry", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Inquiry findUnique
+   */
+  export type InquiryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry findUniqueOrThrow
+   */
+  export type InquiryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry findFirst
+   */
+  export type InquiryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Inquiries.
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inquiries.
+     */
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry findFirstOrThrow
+   */
+  export type InquiryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiry to fetch.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Inquiries.
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inquiries.
+     */
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry findMany
+   */
+  export type InquiryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter, which Inquiries to fetch.
+     */
+    where?: InquiryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Inquiries to fetch.
+     */
+    orderBy?: InquiryOrderByWithRelationInput | InquiryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Inquiries.
+     */
+    cursor?: InquiryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Inquiries from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Inquiries.
+     */
+    skip?: number
+    distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
+  }
+
+  /**
+   * Inquiry create
+   */
+  export type InquiryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Inquiry.
+     */
+    data: XOR<InquiryCreateInput, InquiryUncheckedCreateInput>
+  }
+
+  /**
+   * Inquiry createMany
+   */
+  export type InquiryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Inquiries.
+     */
+    data: InquiryCreateManyInput | InquiryCreateManyInput[]
+  }
+
+  /**
+   * Inquiry createManyAndReturn
+   */
+  export type InquiryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * The data used to create many Inquiries.
+     */
+    data: InquiryCreateManyInput | InquiryCreateManyInput[]
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Inquiry update
+   */
+  export type InquiryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Inquiry.
+     */
+    data: XOR<InquiryUpdateInput, InquiryUncheckedUpdateInput>
+    /**
+     * Choose, which Inquiry to update.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry updateMany
+   */
+  export type InquiryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Inquiries.
+     */
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyInput>
+    /**
+     * Filter which Inquiries to update
+     */
+    where?: InquiryWhereInput
+    /**
+     * Limit how many Inquiries to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Inquiry updateManyAndReturn
+   */
+  export type InquiryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * The data used to update Inquiries.
+     */
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyInput>
+    /**
+     * Filter which Inquiries to update
+     */
+    where?: InquiryWhereInput
+    /**
+     * Limit how many Inquiries to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Inquiry upsert
+   */
+  export type InquiryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Inquiry to update in case it exists.
+     */
+    where: InquiryWhereUniqueInput
+    /**
+     * In case the Inquiry found by the `where` argument doesn't exist, create a new Inquiry with this data.
+     */
+    create: XOR<InquiryCreateInput, InquiryUncheckedCreateInput>
+    /**
+     * In case the Inquiry was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InquiryUpdateInput, InquiryUncheckedUpdateInput>
+  }
+
+  /**
+   * Inquiry delete
+   */
+  export type InquiryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+    /**
+     * Filter which Inquiry to delete.
+     */
+    where: InquiryWhereUniqueInput
+  }
+
+  /**
+   * Inquiry deleteMany
+   */
+  export type InquiryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Inquiries to delete
+     */
+    where?: InquiryWhereInput
+    /**
+     * Limit how many Inquiries to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Inquiry.assignee
+   */
+  export type Inquiry$assigneeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * Inquiry without action
+   */
+  export type InquiryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Inquiry
+     */
+    select?: InquirySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Inquiry
+     */
+    omit?: InquiryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InquiryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -35775,6 +37234,9 @@ export namespace Prisma {
     nameEn: 'nameEn',
     type: 'type',
     capacity: 'capacity',
+    maxAdults: 'maxAdults',
+    maxChildren: 'maxChildren',
+    maxInfants: 'maxInfants',
     basePrice: 'basePrice',
     isBookable: 'isBookable',
     amenities: 'amenities',
@@ -35980,6 +37442,27 @@ export namespace Prisma {
   };
 
   export type RoomAvailabilityRuleScalarFieldEnum = (typeof RoomAvailabilityRuleScalarFieldEnum)[keyof typeof RoomAvailabilityRuleScalarFieldEnum]
+
+
+  export const InquiryScalarFieldEnum: {
+    id: 'id',
+    propertyId: 'propertyId',
+    name: 'name',
+    email: 'email',
+    phone: 'phone',
+    message: 'message',
+    status: 'status',
+    priority: 'priority',
+    respondedAt: 'respondedAt',
+    respondedBy: 'respondedBy',
+    response: 'response',
+    adminNotes: 'adminNotes',
+    assignedTo: 'assignedTo',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InquiryScalarFieldEnum = (typeof InquiryScalarFieldEnum)[keyof typeof InquiryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -36215,6 +37698,20 @@ export namespace Prisma {
    */
   export type EnumSettingTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SettingType'>
     
+
+
+  /**
+   * Reference to a field of type 'InquiryStatus'
+   */
+  export type EnumInquiryStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'InquiryPriority'
+   */
+  export type EnumInquiryPriorityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InquiryPriority'>
+    
   /**
    * Deep Input Types
    */
@@ -36252,6 +37749,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupListRelationFilter
     rooms?: RoomListRelationFilter
     cleaningSchedules?: CleaningScheduleListRelationFilter
+    inquiries?: InquiryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -36283,6 +37781,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupOrderByRelationAggregateInput
     rooms?: RoomOrderByRelationAggregateInput
     cleaningSchedules?: CleaningScheduleOrderByRelationAggregateInput
+    inquiries?: InquiryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -36317,6 +37816,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupListRelationFilter
     rooms?: RoomListRelationFilter
     cleaningSchedules?: CleaningScheduleListRelationFilter
+    inquiries?: InquiryListRelationFilter
   }, "id" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -36427,6 +37927,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleListRelationFilter
     propertyGroup?: XOR<PropertyGroupNullableScalarRelationFilter, PropertyGroupWhereInput> | null
     payments?: PaymentListRelationFilter
+    inquiries?: InquiryListRelationFilter
   }
 
   export type PropertyOrderByWithRelationInput = {
@@ -36484,6 +37985,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleOrderByRelationAggregateInput
     propertyGroup?: PropertyGroupOrderByWithRelationInput
     payments?: PaymentOrderByRelationAggregateInput
+    inquiries?: InquiryOrderByRelationAggregateInput
   }
 
   export type PropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -36544,6 +38046,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleListRelationFilter
     propertyGroup?: XOR<PropertyGroupNullableScalarRelationFilter, PropertyGroupWhereInput> | null
     payments?: PaymentListRelationFilter
+    inquiries?: InquiryListRelationFilter
   }, "id">
 
   export type PropertyOrderByWithAggregationInput = {
@@ -37809,6 +39312,9 @@ export namespace Prisma {
     nameEn?: StringNullableFilter<"Room"> | string | null
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
+    maxAdults?: IntNullableFilter<"Room"> | number | null
+    maxChildren?: IntNullableFilter<"Room"> | number | null
+    maxInfants?: IntNullableFilter<"Room"> | number | null
     basePrice?: FloatFilter<"Room"> | number
     isBookable?: BoolFilter<"Room"> | boolean
     amenities?: JsonNullableFilter<"Room">
@@ -37832,6 +39338,9 @@ export namespace Prisma {
     nameEn?: SortOrderInput | SortOrder
     type?: SortOrder
     capacity?: SortOrder
+    maxAdults?: SortOrderInput | SortOrder
+    maxChildren?: SortOrderInput | SortOrder
+    maxInfants?: SortOrderInput | SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     amenities?: SortOrderInput | SortOrder
@@ -37858,6 +39367,9 @@ export namespace Prisma {
     nameEn?: StringNullableFilter<"Room"> | string | null
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
+    maxAdults?: IntNullableFilter<"Room"> | number | null
+    maxChildren?: IntNullableFilter<"Room"> | number | null
+    maxInfants?: IntNullableFilter<"Room"> | number | null
     basePrice?: FloatFilter<"Room"> | number
     isBookable?: BoolFilter<"Room"> | boolean
     amenities?: JsonNullableFilter<"Room">
@@ -37881,6 +39393,9 @@ export namespace Prisma {
     nameEn?: SortOrderInput | SortOrder
     type?: SortOrder
     capacity?: SortOrder
+    maxAdults?: SortOrderInput | SortOrder
+    maxChildren?: SortOrderInput | SortOrder
+    maxInfants?: SortOrderInput | SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     amenities?: SortOrderInput | SortOrder
@@ -37908,6 +39423,9 @@ export namespace Prisma {
     nameEn?: StringNullableWithAggregatesFilter<"Room"> | string | null
     type?: EnumRoomTypeWithAggregatesFilter<"Room"> | $Enums.RoomType
     capacity?: IntWithAggregatesFilter<"Room"> | number
+    maxAdults?: IntNullableWithAggregatesFilter<"Room"> | number | null
+    maxChildren?: IntNullableWithAggregatesFilter<"Room"> | number | null
+    maxInfants?: IntNullableWithAggregatesFilter<"Room"> | number | null
     basePrice?: FloatWithAggregatesFilter<"Room"> | number
     isBookable?: BoolWithAggregatesFilter<"Room"> | boolean
     amenities?: JsonNullableWithAggregatesFilter<"Room">
@@ -38903,6 +40421,114 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"RoomAvailabilityRule"> | Date | string
   }
 
+  export type InquiryWhereInput = {
+    AND?: InquiryWhereInput | InquiryWhereInput[]
+    OR?: InquiryWhereInput[]
+    NOT?: InquiryWhereInput | InquiryWhereInput[]
+    id?: StringFilter<"Inquiry"> | string
+    propertyId?: StringFilter<"Inquiry"> | string
+    name?: StringFilter<"Inquiry"> | string
+    email?: StringFilter<"Inquiry"> | string
+    phone?: StringNullableFilter<"Inquiry"> | string | null
+    message?: StringFilter<"Inquiry"> | string
+    status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
+    respondedAt?: DateTimeNullableFilter<"Inquiry"> | Date | string | null
+    respondedBy?: StringNullableFilter<"Inquiry"> | string | null
+    response?: StringNullableFilter<"Inquiry"> | string | null
+    adminNotes?: StringNullableFilter<"Inquiry"> | string | null
+    assignedTo?: StringNullableFilter<"Inquiry"> | string | null
+    createdAt?: DateTimeFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeFilter<"Inquiry"> | Date | string
+    property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
+    assignee?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }
+
+  export type InquiryOrderByWithRelationInput = {
+    id?: SortOrder
+    propertyId?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    respondedBy?: SortOrderInput | SortOrder
+    response?: SortOrderInput | SortOrder
+    adminNotes?: SortOrderInput | SortOrder
+    assignedTo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    property?: PropertyOrderByWithRelationInput
+    assignee?: UserOrderByWithRelationInput
+  }
+
+  export type InquiryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: InquiryWhereInput | InquiryWhereInput[]
+    OR?: InquiryWhereInput[]
+    NOT?: InquiryWhereInput | InquiryWhereInput[]
+    propertyId?: StringFilter<"Inquiry"> | string
+    name?: StringFilter<"Inquiry"> | string
+    email?: StringFilter<"Inquiry"> | string
+    phone?: StringNullableFilter<"Inquiry"> | string | null
+    message?: StringFilter<"Inquiry"> | string
+    status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
+    respondedAt?: DateTimeNullableFilter<"Inquiry"> | Date | string | null
+    respondedBy?: StringNullableFilter<"Inquiry"> | string | null
+    response?: StringNullableFilter<"Inquiry"> | string | null
+    adminNotes?: StringNullableFilter<"Inquiry"> | string | null
+    assignedTo?: StringNullableFilter<"Inquiry"> | string | null
+    createdAt?: DateTimeFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeFilter<"Inquiry"> | Date | string
+    property?: XOR<PropertyScalarRelationFilter, PropertyWhereInput>
+    assignee?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+  }, "id">
+
+  export type InquiryOrderByWithAggregationInput = {
+    id?: SortOrder
+    propertyId?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrderInput | SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    respondedAt?: SortOrderInput | SortOrder
+    respondedBy?: SortOrderInput | SortOrder
+    response?: SortOrderInput | SortOrder
+    adminNotes?: SortOrderInput | SortOrder
+    assignedTo?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InquiryCountOrderByAggregateInput
+    _max?: InquiryMaxOrderByAggregateInput
+    _min?: InquiryMinOrderByAggregateInput
+  }
+
+  export type InquiryScalarWhereWithAggregatesInput = {
+    AND?: InquiryScalarWhereWithAggregatesInput | InquiryScalarWhereWithAggregatesInput[]
+    OR?: InquiryScalarWhereWithAggregatesInput[]
+    NOT?: InquiryScalarWhereWithAggregatesInput | InquiryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Inquiry"> | string
+    propertyId?: StringWithAggregatesFilter<"Inquiry"> | string
+    name?: StringWithAggregatesFilter<"Inquiry"> | string
+    email?: StringWithAggregatesFilter<"Inquiry"> | string
+    phone?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    message?: StringWithAggregatesFilter<"Inquiry"> | string
+    status?: EnumInquiryStatusWithAggregatesFilter<"Inquiry"> | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityWithAggregatesFilter<"Inquiry"> | $Enums.InquiryPriority
+    respondedAt?: DateTimeNullableWithAggregatesFilter<"Inquiry"> | Date | string | null
+    respondedBy?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    response?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    adminNotes?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    assignedTo?: StringNullableWithAggregatesFilter<"Inquiry"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Inquiry"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -38932,6 +40558,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -38963,6 +40590,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUpdateInput = {
@@ -38994,6 +40622,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -39025,6 +40654,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -39146,6 +40776,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateInput = {
@@ -39201,6 +40832,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUpdateInput = {
@@ -39256,6 +40888,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateInput = {
@@ -39311,6 +40944,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateManyInput = {
@@ -40767,6 +42401,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -40789,6 +42426,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -40809,6 +42449,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -40831,6 +42474,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -40852,6 +42498,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -40870,6 +42519,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -40888,6 +42540,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42021,6 +43676,130 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type InquiryCreateInput = {
+    id?: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    property: PropertyCreateNestedOneWithoutInquiriesInput
+    assignee?: UserCreateNestedOneWithoutInquiriesInput
+  }
+
+  export type InquiryUncheckedCreateInput = {
+    id?: string
+    propertyId: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    assignedTo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    property?: PropertyUpdateOneRequiredWithoutInquiriesNestedInput
+    assignee?: UserUpdateOneWithoutInquiriesNestedInput
+  }
+
+  export type InquiryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    propertyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryCreateManyInput = {
+    id?: string
+    propertyId: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    assignedTo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    propertyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -42144,6 +43923,12 @@ export namespace Prisma {
     none?: CleaningScheduleWhereInput
   }
 
+  export type InquiryListRelationFilter = {
+    every?: InquiryWhereInput
+    some?: InquiryWhereInput
+    none?: InquiryWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -42182,6 +43967,10 @@ export namespace Prisma {
   }
 
   export type CleaningScheduleOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InquiryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43610,6 +45399,9 @@ export namespace Prisma {
     nameEn?: SortOrder
     type?: SortOrder
     capacity?: SortOrder
+    maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     amenities?: SortOrder
@@ -43623,6 +45415,9 @@ export namespace Prisma {
 
   export type RoomAvgOrderByAggregateInput = {
     capacity?: SortOrder
+    maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
   }
 
@@ -43634,6 +45429,9 @@ export namespace Prisma {
     nameEn?: SortOrder
     type?: SortOrder
     capacity?: SortOrder
+    maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     descriptionGr?: SortOrder
@@ -43651,6 +45449,9 @@ export namespace Prisma {
     nameEn?: SortOrder
     type?: SortOrder
     capacity?: SortOrder
+    maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     descriptionGr?: SortOrder
@@ -43662,6 +45463,9 @@ export namespace Prisma {
 
   export type RoomSumOrderByAggregateInput = {
     capacity?: SortOrder
+    maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
   }
 
@@ -44359,6 +46163,99 @@ export namespace Prisma {
     minStayOverride?: SortOrder
   }
 
+  export type EnumInquiryStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusFilter<$PrismaModel> | $Enums.InquiryStatus
+  }
+
+  export type EnumInquiryPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityFilter<$PrismaModel> | $Enums.InquiryPriority
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type InquiryCountOrderByAggregateInput = {
+    id?: SortOrder
+    propertyId?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    respondedAt?: SortOrder
+    respondedBy?: SortOrder
+    response?: SortOrder
+    adminNotes?: SortOrder
+    assignedTo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    propertyId?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    respondedAt?: SortOrder
+    respondedBy?: SortOrder
+    response?: SortOrder
+    adminNotes?: SortOrder
+    assignedTo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InquiryMinOrderByAggregateInput = {
+    id?: SortOrder
+    propertyId?: SortOrder
+    name?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    message?: SortOrder
+    status?: SortOrder
+    priority?: SortOrder
+    respondedAt?: SortOrder
+    respondedBy?: SortOrder
+    response?: SortOrder
+    adminNotes?: SortOrder
+    assignedTo?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumInquiryStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel> | $Enums.InquiryStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryStatusFilter<$PrismaModel>
+    _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
+  }
+
+  export type EnumInquiryPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InquiryPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+    _max?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+  }
+
   export type PropertyCreateNestedManyWithoutOwnerInput = {
     create?: XOR<PropertyCreateWithoutOwnerInput, PropertyUncheckedCreateWithoutOwnerInput> | PropertyCreateWithoutOwnerInput[] | PropertyUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutOwnerInput | PropertyCreateOrConnectWithoutOwnerInput[]
@@ -44422,6 +46319,13 @@ export namespace Prisma {
     connect?: CleaningScheduleWhereUniqueInput | CleaningScheduleWhereUniqueInput[]
   }
 
+  export type InquiryCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<InquiryCreateWithoutAssigneeInput, InquiryUncheckedCreateWithoutAssigneeInput> | InquiryCreateWithoutAssigneeInput[] | InquiryUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssigneeInput | InquiryCreateOrConnectWithoutAssigneeInput[]
+    createMany?: InquiryCreateManyAssigneeInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
   export type PropertyUncheckedCreateNestedManyWithoutOwnerInput = {
     create?: XOR<PropertyCreateWithoutOwnerInput, PropertyUncheckedCreateWithoutOwnerInput> | PropertyCreateWithoutOwnerInput[] | PropertyUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutOwnerInput | PropertyCreateOrConnectWithoutOwnerInput[]
@@ -44483,6 +46387,13 @@ export namespace Prisma {
     connectOrCreate?: CleaningScheduleCreateOrConnectWithoutOwnerInput | CleaningScheduleCreateOrConnectWithoutOwnerInput[]
     createMany?: CleaningScheduleCreateManyOwnerInputEnvelope
     connect?: CleaningScheduleWhereUniqueInput | CleaningScheduleWhereUniqueInput[]
+  }
+
+  export type InquiryUncheckedCreateNestedManyWithoutAssigneeInput = {
+    create?: XOR<InquiryCreateWithoutAssigneeInput, InquiryUncheckedCreateWithoutAssigneeInput> | InquiryCreateWithoutAssigneeInput[] | InquiryUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssigneeInput | InquiryCreateOrConnectWithoutAssigneeInput[]
+    createMany?: InquiryCreateManyAssigneeInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -44631,6 +46542,20 @@ export namespace Prisma {
     deleteMany?: CleaningScheduleScalarWhereInput | CleaningScheduleScalarWhereInput[]
   }
 
+  export type InquiryUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<InquiryCreateWithoutAssigneeInput, InquiryUncheckedCreateWithoutAssigneeInput> | InquiryCreateWithoutAssigneeInput[] | InquiryUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssigneeInput | InquiryCreateOrConnectWithoutAssigneeInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutAssigneeInput | InquiryUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: InquiryCreateManyAssigneeInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutAssigneeInput | InquiryUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutAssigneeInput | InquiryUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
   export type PropertyUncheckedUpdateManyWithoutOwnerNestedInput = {
     create?: XOR<PropertyCreateWithoutOwnerInput, PropertyUncheckedCreateWithoutOwnerInput> | PropertyCreateWithoutOwnerInput[] | PropertyUncheckedCreateWithoutOwnerInput[]
     connectOrCreate?: PropertyCreateOrConnectWithoutOwnerInput | PropertyCreateOrConnectWithoutOwnerInput[]
@@ -44757,6 +46682,20 @@ export namespace Prisma {
     deleteMany?: CleaningScheduleScalarWhereInput | CleaningScheduleScalarWhereInput[]
   }
 
+  export type InquiryUncheckedUpdateManyWithoutAssigneeNestedInput = {
+    create?: XOR<InquiryCreateWithoutAssigneeInput, InquiryUncheckedCreateWithoutAssigneeInput> | InquiryCreateWithoutAssigneeInput[] | InquiryUncheckedCreateWithoutAssigneeInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutAssigneeInput | InquiryCreateOrConnectWithoutAssigneeInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutAssigneeInput | InquiryUpsertWithWhereUniqueWithoutAssigneeInput[]
+    createMany?: InquiryCreateManyAssigneeInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutAssigneeInput | InquiryUpdateWithWhereUniqueWithoutAssigneeInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutAssigneeInput | InquiryUpdateManyWithWhereWithoutAssigneeInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
   export type UserCreateNestedOneWithoutPropertiesInput = {
     create?: XOR<UserCreateWithoutPropertiesInput, UserUncheckedCreateWithoutPropertiesInput>
     connectOrCreate?: UserCreateOrConnectWithoutPropertiesInput
@@ -44839,6 +46778,13 @@ export namespace Prisma {
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
   }
 
+  export type InquiryCreateNestedManyWithoutPropertyInput = {
+    create?: XOR<InquiryCreateWithoutPropertyInput, InquiryUncheckedCreateWithoutPropertyInput> | InquiryCreateWithoutPropertyInput[] | InquiryUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutPropertyInput | InquiryCreateOrConnectWithoutPropertyInput[]
+    createMany?: InquiryCreateManyPropertyInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+  }
+
   export type BookingUncheckedCreateNestedManyWithoutPropertyInput = {
     create?: XOR<BookingCreateWithoutPropertyInput, BookingUncheckedCreateWithoutPropertyInput> | BookingCreateWithoutPropertyInput[] | BookingUncheckedCreateWithoutPropertyInput[]
     connectOrCreate?: BookingCreateOrConnectWithoutPropertyInput | BookingCreateOrConnectWithoutPropertyInput[]
@@ -44907,6 +46853,13 @@ export namespace Prisma {
     connectOrCreate?: PaymentCreateOrConnectWithoutPropertyInput | PaymentCreateOrConnectWithoutPropertyInput[]
     createMany?: PaymentCreateManyPropertyInputEnvelope
     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput[]
+  }
+
+  export type InquiryUncheckedCreateNestedManyWithoutPropertyInput = {
+    create?: XOR<InquiryCreateWithoutPropertyInput, InquiryUncheckedCreateWithoutPropertyInput> | InquiryCreateWithoutPropertyInput[] | InquiryUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutPropertyInput | InquiryCreateOrConnectWithoutPropertyInput[]
+    createMany?: InquiryCreateManyPropertyInputEnvelope
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
   }
 
   export type EnumPropertyTypeFieldUpdateOperationsInput = {
@@ -45115,6 +47068,20 @@ export namespace Prisma {
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
   }
 
+  export type InquiryUpdateManyWithoutPropertyNestedInput = {
+    create?: XOR<InquiryCreateWithoutPropertyInput, InquiryUncheckedCreateWithoutPropertyInput> | InquiryCreateWithoutPropertyInput[] | InquiryUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutPropertyInput | InquiryCreateOrConnectWithoutPropertyInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutPropertyInput | InquiryUpsertWithWhereUniqueWithoutPropertyInput[]
+    createMany?: InquiryCreateManyPropertyInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutPropertyInput | InquiryUpdateWithWhereUniqueWithoutPropertyInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutPropertyInput | InquiryUpdateManyWithWhereWithoutPropertyInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+  }
+
   export type BookingUncheckedUpdateManyWithoutPropertyNestedInput = {
     create?: XOR<BookingCreateWithoutPropertyInput, BookingUncheckedCreateWithoutPropertyInput> | BookingCreateWithoutPropertyInput[] | BookingUncheckedCreateWithoutPropertyInput[]
     connectOrCreate?: BookingCreateOrConnectWithoutPropertyInput | BookingCreateOrConnectWithoutPropertyInput[]
@@ -45253,6 +47220,20 @@ export namespace Prisma {
     update?: PaymentUpdateWithWhereUniqueWithoutPropertyInput | PaymentUpdateWithWhereUniqueWithoutPropertyInput[]
     updateMany?: PaymentUpdateManyWithWhereWithoutPropertyInput | PaymentUpdateManyWithWhereWithoutPropertyInput[]
     deleteMany?: PaymentScalarWhereInput | PaymentScalarWhereInput[]
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutPropertyNestedInput = {
+    create?: XOR<InquiryCreateWithoutPropertyInput, InquiryUncheckedCreateWithoutPropertyInput> | InquiryCreateWithoutPropertyInput[] | InquiryUncheckedCreateWithoutPropertyInput[]
+    connectOrCreate?: InquiryCreateOrConnectWithoutPropertyInput | InquiryCreateOrConnectWithoutPropertyInput[]
+    upsert?: InquiryUpsertWithWhereUniqueWithoutPropertyInput | InquiryUpsertWithWhereUniqueWithoutPropertyInput[]
+    createMany?: InquiryCreateManyPropertyInputEnvelope
+    set?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    disconnect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    delete?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    connect?: InquiryWhereUniqueInput | InquiryWhereUniqueInput[]
+    update?: InquiryUpdateWithWhereUniqueWithoutPropertyInput | InquiryUpdateWithWhereUniqueWithoutPropertyInput[]
+    updateMany?: InquiryUpdateManyWithWhereWithoutPropertyInput | InquiryUpdateManyWithWhereWithoutPropertyInput[]
+    deleteMany?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
   }
 
   export type PropertyAmenityCreateNestedManyWithoutAmenityInput = {
@@ -46109,6 +48090,44 @@ export namespace Prisma {
     update?: XOR<XOR<RoomUpdateToOneWithWhereWithoutAvailabilityRulesInput, RoomUpdateWithoutAvailabilityRulesInput>, RoomUncheckedUpdateWithoutAvailabilityRulesInput>
   }
 
+  export type PropertyCreateNestedOneWithoutInquiriesInput = {
+    create?: XOR<PropertyCreateWithoutInquiriesInput, PropertyUncheckedCreateWithoutInquiriesInput>
+    connectOrCreate?: PropertyCreateOrConnectWithoutInquiriesInput
+    connect?: PropertyWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutInquiriesInput = {
+    create?: XOR<UserCreateWithoutInquiriesInput, UserUncheckedCreateWithoutInquiriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInquiriesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumInquiryStatusFieldUpdateOperationsInput = {
+    set?: $Enums.InquiryStatus
+  }
+
+  export type EnumInquiryPriorityFieldUpdateOperationsInput = {
+    set?: $Enums.InquiryPriority
+  }
+
+  export type PropertyUpdateOneRequiredWithoutInquiriesNestedInput = {
+    create?: XOR<PropertyCreateWithoutInquiriesInput, PropertyUncheckedCreateWithoutInquiriesInput>
+    connectOrCreate?: PropertyCreateOrConnectWithoutInquiriesInput
+    upsert?: PropertyUpsertWithoutInquiriesInput
+    connect?: PropertyWhereUniqueInput
+    update?: XOR<XOR<PropertyUpdateToOneWithWhereWithoutInquiriesInput, PropertyUpdateWithoutInquiriesInput>, PropertyUncheckedUpdateWithoutInquiriesInput>
+  }
+
+  export type UserUpdateOneWithoutInquiriesNestedInput = {
+    create?: XOR<UserCreateWithoutInquiriesInput, UserUncheckedCreateWithoutInquiriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutInquiriesInput
+    upsert?: UserUpsertWithoutInquiriesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutInquiriesInput, UserUpdateWithoutInquiriesInput>, UserUncheckedUpdateWithoutInquiriesInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[]
@@ -46700,6 +48719,40 @@ export namespace Prisma {
     _max?: NestedEnumSettingTypeFilter<$PrismaModel>
   }
 
+  export type NestedEnumInquiryStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusFilter<$PrismaModel> | $Enums.InquiryStatus
+  }
+
+  export type NestedEnumInquiryPriorityFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityFilter<$PrismaModel> | $Enums.InquiryPriority
+  }
+
+  export type NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryStatus | EnumInquiryStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryStatus[]
+    notIn?: $Enums.InquiryStatus[]
+    not?: NestedEnumInquiryStatusWithAggregatesFilter<$PrismaModel> | $Enums.InquiryStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryStatusFilter<$PrismaModel>
+    _max?: NestedEnumInquiryStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InquiryPriority | EnumInquiryPriorityFieldRefInput<$PrismaModel>
+    in?: $Enums.InquiryPriority[]
+    notIn?: $Enums.InquiryPriority[]
+    not?: NestedEnumInquiryPriorityWithAggregatesFilter<$PrismaModel> | $Enums.InquiryPriority
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+    _max?: NestedEnumInquiryPriorityFilter<$PrismaModel>
+  }
+
   export type PropertyCreateWithoutOwnerInput = {
     id?: string
     titleGr: string
@@ -46752,6 +48805,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutOwnerInput = {
@@ -46806,6 +48860,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutOwnerInput = {
@@ -47078,6 +49133,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -47099,6 +49157,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -47151,6 +49212,49 @@ export namespace Prisma {
 
   export type CleaningScheduleCreateManyOwnerInputEnvelope = {
     data: CleaningScheduleCreateManyOwnerInput | CleaningScheduleCreateManyOwnerInput[]
+  }
+
+  export type InquiryCreateWithoutAssigneeInput = {
+    id?: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    property: PropertyCreateNestedOneWithoutInquiriesInput
+  }
+
+  export type InquiryUncheckedCreateWithoutAssigneeInput = {
+    id?: string
+    propertyId: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryCreateOrConnectWithoutAssigneeInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutAssigneeInput, InquiryUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type InquiryCreateManyAssigneeInputEnvelope = {
+    data: InquiryCreateManyAssigneeInput | InquiryCreateManyAssigneeInput[]
   }
 
   export type PropertyUpsertWithWhereUniqueWithoutOwnerInput = {
@@ -47459,6 +49563,9 @@ export namespace Prisma {
     nameEn?: StringNullableFilter<"Room"> | string | null
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
+    maxAdults?: IntNullableFilter<"Room"> | number | null
+    maxChildren?: IntNullableFilter<"Room"> | number | null
+    maxInfants?: IntNullableFilter<"Room"> | number | null
     basePrice?: FloatFilter<"Room"> | number
     isBookable?: BoolFilter<"Room"> | boolean
     amenities?: JsonNullableFilter<"Room">
@@ -47502,6 +49609,43 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CleaningSchedule"> | Date | string
   }
 
+  export type InquiryUpsertWithWhereUniqueWithoutAssigneeInput = {
+    where: InquiryWhereUniqueInput
+    update: XOR<InquiryUpdateWithoutAssigneeInput, InquiryUncheckedUpdateWithoutAssigneeInput>
+    create: XOR<InquiryCreateWithoutAssigneeInput, InquiryUncheckedCreateWithoutAssigneeInput>
+  }
+
+  export type InquiryUpdateWithWhereUniqueWithoutAssigneeInput = {
+    where: InquiryWhereUniqueInput
+    data: XOR<InquiryUpdateWithoutAssigneeInput, InquiryUncheckedUpdateWithoutAssigneeInput>
+  }
+
+  export type InquiryUpdateManyWithWhereWithoutAssigneeInput = {
+    where: InquiryScalarWhereInput
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyWithoutAssigneeInput>
+  }
+
+  export type InquiryScalarWhereInput = {
+    AND?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+    OR?: InquiryScalarWhereInput[]
+    NOT?: InquiryScalarWhereInput | InquiryScalarWhereInput[]
+    id?: StringFilter<"Inquiry"> | string
+    propertyId?: StringFilter<"Inquiry"> | string
+    name?: StringFilter<"Inquiry"> | string
+    email?: StringFilter<"Inquiry"> | string
+    phone?: StringNullableFilter<"Inquiry"> | string | null
+    message?: StringFilter<"Inquiry"> | string
+    status?: EnumInquiryStatusFilter<"Inquiry"> | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFilter<"Inquiry"> | $Enums.InquiryPriority
+    respondedAt?: DateTimeNullableFilter<"Inquiry"> | Date | string | null
+    respondedBy?: StringNullableFilter<"Inquiry"> | string | null
+    response?: StringNullableFilter<"Inquiry"> | string | null
+    adminNotes?: StringNullableFilter<"Inquiry"> | string | null
+    assignedTo?: StringNullableFilter<"Inquiry"> | string | null
+    createdAt?: DateTimeFilter<"Inquiry"> | Date | string
+    updatedAt?: DateTimeFilter<"Inquiry"> | Date | string
+  }
+
   export type UserCreateWithoutPropertiesInput = {
     id?: string
     email: string
@@ -47530,6 +49674,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutPropertiesInput = {
@@ -47560,6 +49705,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutPropertiesInput = {
@@ -47791,6 +49937,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -47811,6 +49960,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -48032,6 +50184,49 @@ export namespace Prisma {
     data: PaymentCreateManyPropertyInput | PaymentCreateManyPropertyInput[]
   }
 
+  export type InquiryCreateWithoutPropertyInput = {
+    id?: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    assignee?: UserCreateNestedOneWithoutInquiriesInput
+  }
+
+  export type InquiryUncheckedCreateWithoutPropertyInput = {
+    id?: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    assignedTo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryCreateOrConnectWithoutPropertyInput = {
+    where: InquiryWhereUniqueInput
+    create: XOR<InquiryCreateWithoutPropertyInput, InquiryUncheckedCreateWithoutPropertyInput>
+  }
+
+  export type InquiryCreateManyPropertyInputEnvelope = {
+    data: InquiryCreateManyPropertyInput | InquiryCreateManyPropertyInput[]
+  }
+
   export type UserUpsertWithoutPropertiesInput = {
     update: XOR<UserUpdateWithoutPropertiesInput, UserUncheckedUpdateWithoutPropertiesInput>
     create: XOR<UserCreateWithoutPropertiesInput, UserUncheckedCreateWithoutPropertiesInput>
@@ -48071,6 +50266,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPropertiesInput = {
@@ -48101,6 +50297,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type BookingUpsertWithWhereUniqueWithoutPropertyInput = {
@@ -48404,6 +50601,22 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Payment"> | Date | string
   }
 
+  export type InquiryUpsertWithWhereUniqueWithoutPropertyInput = {
+    where: InquiryWhereUniqueInput
+    update: XOR<InquiryUpdateWithoutPropertyInput, InquiryUncheckedUpdateWithoutPropertyInput>
+    create: XOR<InquiryCreateWithoutPropertyInput, InquiryUncheckedCreateWithoutPropertyInput>
+  }
+
+  export type InquiryUpdateWithWhereUniqueWithoutPropertyInput = {
+    where: InquiryWhereUniqueInput
+    data: XOR<InquiryUpdateWithoutPropertyInput, InquiryUncheckedUpdateWithoutPropertyInput>
+  }
+
+  export type InquiryUpdateManyWithWhereWithoutPropertyInput = {
+    where: InquiryScalarWhereInput
+    data: XOR<InquiryUpdateManyMutationInput, InquiryUncheckedUpdateManyWithoutPropertyInput>
+  }
+
   export type PropertyAmenityCreateWithoutAmenityInput = {
     id?: string
     property: PropertyCreateNestedOneWithoutAmenitiesInput
@@ -48491,6 +50704,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutAmenitiesInput = {
@@ -48545,6 +50759,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutAmenitiesInput = {
@@ -48638,6 +50853,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutAmenitiesInput = {
@@ -48692,6 +50908,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type AmenityUpsertWithoutPropertiesInput = {
@@ -48775,6 +50992,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutBookingsInput = {
@@ -48829,6 +51047,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutBookingsInput = {
@@ -48864,6 +51083,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutBookingsInput = {
@@ -48894,6 +51114,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutBookingsInput = {
@@ -49122,6 +51343,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutBookingsInput = {
@@ -49176,6 +51398,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type UserUpsertWithoutBookingsInput = {
@@ -49217,6 +51440,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBookingsInput = {
@@ -49247,6 +51471,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutBookingInput = {
@@ -49365,6 +51590,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutAvailabilityInput = {
@@ -49419,6 +51645,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutAvailabilityInput = {
@@ -49489,6 +51716,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutAvailabilityInput = {
@@ -49543,6 +51771,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateWithoutReviewsInput = {
@@ -49597,6 +51826,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutReviewsInput = {
@@ -49651,6 +51881,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutReviewsInput = {
@@ -49771,6 +52002,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutReviewsInput = {
@@ -49801,6 +52033,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutReviewsInput = {
@@ -49871,6 +52104,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutReviewsInput = {
@@ -49925,6 +52159,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type BookingUpsertWithoutReviewsInput = {
@@ -50057,6 +52292,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -50087,6 +52323,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type PropertyCreateWithoutMaintenanceInput = {
@@ -50141,6 +52378,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutMaintenanceInput = {
@@ -50195,6 +52433,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutMaintenanceInput = {
@@ -50350,6 +52589,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutMaintenanceInput = {
@@ -50404,6 +52644,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type BookingUpsertWithoutMaintenanceInput = {
@@ -50610,6 +52851,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutMessagesInput = {
@@ -50640,6 +52882,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutMessagesInput = {
@@ -50777,6 +53020,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMessagesInput = {
@@ -50807,6 +53051,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserCreateWithoutNotificationsInput = {
@@ -50837,6 +53082,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -50867,6 +53113,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -50913,6 +53160,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -50943,6 +53191,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type BookingCreateWithoutPaymentsInput = {
@@ -51082,6 +53331,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutPaymentsInput = {
@@ -51136,6 +53386,7 @@ export namespace Prisma {
     notes?: PropertyNoteUncheckedCreateNestedManyWithoutPropertyInput
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutPaymentsInput = {
@@ -51297,6 +53548,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutPaymentsInput = {
@@ -51351,6 +53603,7 @@ export namespace Prisma {
     notes?: PropertyNoteUncheckedUpdateManyWithoutPropertyNestedInput
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateWithoutRoomsInput = {
@@ -51405,6 +53658,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutRoomsInput = {
@@ -51459,6 +53713,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutRoomsInput = {
@@ -51494,6 +53749,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutRoomsInput = {
@@ -51524,6 +53780,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutRoomsInput = {
@@ -51666,6 +53923,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutRoomsInput = {
@@ -51720,6 +53978,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type UserUpsertWithoutRoomsInput = {
@@ -51761,6 +54020,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutRoomsInput = {
@@ -51791,6 +54051,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type RoomContentUpsertWithoutRoomInput = {
@@ -51898,6 +54159,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutPropertyGroupsInput = {
@@ -51928,6 +54190,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutPropertyGroupsInput = {
@@ -51987,6 +54250,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutPropertyGroupInput = {
@@ -52041,6 +54305,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutPropertyGroupInput = {
@@ -52091,6 +54356,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPropertyGroupsInput = {
@@ -52121,6 +54387,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type PropertyUpsertWithWhereUniqueWithoutPropertyGroupInput = {
@@ -52191,6 +54458,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutCleaningSchedulesInput = {
@@ -52245,6 +54513,7 @@ export namespace Prisma {
     notes?: PropertyNoteUncheckedCreateNestedManyWithoutPropertyInput
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutCleaningSchedulesInput = {
@@ -52280,6 +54549,7 @@ export namespace Prisma {
     auditLogs?: AuditLogCreateNestedManyWithoutUserInput
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutCleaningSchedulesInput = {
@@ -52310,6 +54580,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutCleaningSchedulesInput = {
@@ -52380,6 +54651,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutCleaningSchedulesInput = {
@@ -52434,6 +54706,7 @@ export namespace Prisma {
     notes?: PropertyNoteUncheckedUpdateManyWithoutPropertyNestedInput
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type UserUpsertWithoutCleaningSchedulesInput = {
@@ -52475,6 +54748,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCleaningSchedulesInput = {
@@ -52505,6 +54779,7 @@ export namespace Prisma {
     auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type PropertyCreateWithoutAnalyticsInput = {
@@ -52559,6 +54834,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutAnalyticsInput = {
@@ -52613,6 +54889,7 @@ export namespace Prisma {
     notes?: PropertyNoteUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutAnalyticsInput = {
@@ -52683,6 +54960,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutAnalyticsInput = {
@@ -52737,6 +55015,7 @@ export namespace Prisma {
     notes?: PropertyNoteUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyCreateWithoutNotesInput = {
@@ -52791,6 +55070,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
     propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
     payments?: PaymentCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyUncheckedCreateWithoutNotesInput = {
@@ -52845,6 +55125,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
     payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutPropertyInput
   }
 
   export type PropertyCreateOrConnectWithoutNotesInput = {
@@ -52915,6 +55196,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutNotesInput = {
@@ -52969,6 +55251,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type UserCreateWithoutAuditLogsInput = {
@@ -52999,6 +55282,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
     rooms?: RoomCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -53029,6 +55313,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
     rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
     cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+    inquiries?: InquiryUncheckedCreateNestedManyWithoutAssigneeInput
   }
 
   export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -53075,6 +55360,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUpdateManyWithoutAssigneeNestedInput
   }
 
   export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -53105,6 +55391,7 @@ export namespace Prisma {
     propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
     rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutAssigneeNestedInput
   }
 
   export type ContentMediaCreateWithoutContentInput = {
@@ -53378,6 +55665,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53399,6 +55689,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53434,6 +55727,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53455,6 +55751,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53474,6 +55773,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53495,6 +55797,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53530,6 +55835,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53551,6 +55859,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53561,6 +55872,382 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomContent?: RoomContentUncheckedUpdateOneWithoutRoomNestedInput
+  }
+
+  export type PropertyCreateWithoutInquiriesInput = {
+    id?: string
+    titleGr: string
+    titleEn: string
+    descriptionGr?: string | null
+    descriptionEn?: string | null
+    type: $Enums.PropertyType
+    status?: $Enums.PropertyStatus
+    address: string
+    city?: string
+    country?: string
+    latitude?: number | null
+    longitude?: number | null
+    postalCode?: string | null
+    maxGuests: number
+    bedrooms: number
+    bathrooms: number
+    area?: number | null
+    basePrice: number
+    currency?: string
+    cleaningFee?: number | null
+    serviceFeePercentage?: number | null
+    taxes?: number | null
+    taxRate?: number | null
+    minStay?: number
+    maxStay?: number | null
+    advanceBooking?: number
+    checkInTime?: string | null
+    checkOutTime?: string | null
+    cancellationPolicy?: $Enums.CancellationPolicy
+    houseRules?: string | null
+    petFriendly?: boolean
+    smokingAllowed?: boolean
+    partyAllowed?: boolean
+    hasDynamicRooms?: boolean
+    averageCleanlinessRating?: number | null
+    lastCleaningDate?: Date | string | null
+    images?: NullableJsonNullValueInput | InputJsonValue
+    videos?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    owner: UserCreateNestedOneWithoutPropertiesInput
+    bookings?: BookingCreateNestedManyWithoutPropertyInput
+    reviews?: ReviewCreateNestedManyWithoutPropertyInput
+    amenities?: PropertyAmenityCreateNestedManyWithoutPropertyInput
+    availability?: PropertyAvailabilityCreateNestedManyWithoutPropertyInput
+    maintenance?: MaintenanceRequestCreateNestedManyWithoutPropertyInput
+    rooms?: RoomCreateNestedManyWithoutPropertyInput
+    notes?: PropertyNoteCreateNestedManyWithoutPropertyInput
+    analytics?: PropertyAnalyticsCreateNestedManyWithoutPropertyInput
+    cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutPropertyInput
+    propertyGroup?: PropertyGroupCreateNestedOneWithoutPropertiesInput
+    payments?: PaymentCreateNestedManyWithoutPropertyInput
+  }
+
+  export type PropertyUncheckedCreateWithoutInquiriesInput = {
+    id?: string
+    titleGr: string
+    titleEn: string
+    descriptionGr?: string | null
+    descriptionEn?: string | null
+    type: $Enums.PropertyType
+    status?: $Enums.PropertyStatus
+    address: string
+    city?: string
+    country?: string
+    latitude?: number | null
+    longitude?: number | null
+    postalCode?: string | null
+    maxGuests: number
+    bedrooms: number
+    bathrooms: number
+    area?: number | null
+    basePrice: number
+    currency?: string
+    cleaningFee?: number | null
+    serviceFeePercentage?: number | null
+    taxes?: number | null
+    taxRate?: number | null
+    minStay?: number
+    maxStay?: number | null
+    advanceBooking?: number
+    checkInTime?: string | null
+    checkOutTime?: string | null
+    cancellationPolicy?: $Enums.CancellationPolicy
+    houseRules?: string | null
+    petFriendly?: boolean
+    smokingAllowed?: boolean
+    partyAllowed?: boolean
+    hasDynamicRooms?: boolean
+    averageCleanlinessRating?: number | null
+    lastCleaningDate?: Date | string | null
+    propertyGroupId?: string | null
+    images?: NullableJsonNullValueInput | InputJsonValue
+    videos?: NullableJsonNullValueInput | InputJsonValue
+    ownerId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    bookings?: BookingUncheckedCreateNestedManyWithoutPropertyInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutPropertyInput
+    amenities?: PropertyAmenityUncheckedCreateNestedManyWithoutPropertyInput
+    availability?: PropertyAvailabilityUncheckedCreateNestedManyWithoutPropertyInput
+    maintenance?: MaintenanceRequestUncheckedCreateNestedManyWithoutPropertyInput
+    rooms?: RoomUncheckedCreateNestedManyWithoutPropertyInput
+    notes?: PropertyNoteUncheckedCreateNestedManyWithoutPropertyInput
+    analytics?: PropertyAnalyticsUncheckedCreateNestedManyWithoutPropertyInput
+    cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutPropertyInput
+    payments?: PaymentUncheckedCreateNestedManyWithoutPropertyInput
+  }
+
+  export type PropertyCreateOrConnectWithoutInquiriesInput = {
+    where: PropertyWhereUniqueInput
+    create: XOR<PropertyCreateWithoutInquiriesInput, PropertyUncheckedCreateWithoutInquiriesInput>
+  }
+
+  export type UserCreateWithoutInquiriesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    phone?: string | null
+    password?: string | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    isActive?: boolean
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
+    mfaBackupCodes?: NullableJsonNullValueInput | InputJsonValue
+    emailVerified?: boolean
+    phoneVerified?: boolean
+    stripeAccountId?: string | null
+    stripeAccountStatus?: string | null
+    preferredCurrency?: string | null
+    preferredLanguage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    properties?: PropertyCreateNestedManyWithoutOwnerInput
+    bookings?: BookingCreateNestedManyWithoutGuestInput
+    reviews?: ReviewCreateNestedManyWithoutGuestInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    messages?: MessageCreateNestedManyWithoutSenderInput
+    auditLogs?: AuditLogCreateNestedManyWithoutUserInput
+    propertyGroups?: PropertyGroupCreateNestedManyWithoutOwnerInput
+    rooms?: RoomCreateNestedManyWithoutOwnerInput
+    cleaningSchedules?: CleaningScheduleCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserUncheckedCreateWithoutInquiriesInput = {
+    id?: string
+    email: string
+    name?: string | null
+    phone?: string | null
+    password?: string | null
+    role?: $Enums.UserRole
+    avatar?: string | null
+    isActive?: boolean
+    mfaEnabled?: boolean
+    mfaSecret?: string | null
+    mfaBackupCodes?: NullableJsonNullValueInput | InputJsonValue
+    emailVerified?: boolean
+    phoneVerified?: boolean
+    stripeAccountId?: string | null
+    stripeAccountStatus?: string | null
+    preferredCurrency?: string | null
+    preferredLanguage?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    properties?: PropertyUncheckedCreateNestedManyWithoutOwnerInput
+    bookings?: BookingUncheckedCreateNestedManyWithoutGuestInput
+    reviews?: ReviewUncheckedCreateNestedManyWithoutGuestInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    messages?: MessageUncheckedCreateNestedManyWithoutSenderInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutUserInput
+    propertyGroups?: PropertyGroupUncheckedCreateNestedManyWithoutOwnerInput
+    rooms?: RoomUncheckedCreateNestedManyWithoutOwnerInput
+    cleaningSchedules?: CleaningScheduleUncheckedCreateNestedManyWithoutOwnerInput
+  }
+
+  export type UserCreateOrConnectWithoutInquiriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutInquiriesInput, UserUncheckedCreateWithoutInquiriesInput>
+  }
+
+  export type PropertyUpsertWithoutInquiriesInput = {
+    update: XOR<PropertyUpdateWithoutInquiriesInput, PropertyUncheckedUpdateWithoutInquiriesInput>
+    create: XOR<PropertyCreateWithoutInquiriesInput, PropertyUncheckedCreateWithoutInquiriesInput>
+    where?: PropertyWhereInput
+  }
+
+  export type PropertyUpdateToOneWithWhereWithoutInquiriesInput = {
+    where?: PropertyWhereInput
+    data: XOR<PropertyUpdateWithoutInquiriesInput, PropertyUncheckedUpdateWithoutInquiriesInput>
+  }
+
+  export type PropertyUpdateWithoutInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleGr?: StringFieldUpdateOperationsInput | string
+    titleEn?: StringFieldUpdateOperationsInput | string
+    descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
+    status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
+    address?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    maxGuests?: IntFieldUpdateOperationsInput | number
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: IntFieldUpdateOperationsInput | number
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    basePrice?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    cleaningFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    serviceFeePercentage?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    minStay?: IntFieldUpdateOperationsInput | number
+    maxStay?: NullableIntFieldUpdateOperationsInput | number | null
+    advanceBooking?: IntFieldUpdateOperationsInput | number
+    checkInTime?: NullableStringFieldUpdateOperationsInput | string | null
+    checkOutTime?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationPolicy?: EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
+    houseRules?: NullableStringFieldUpdateOperationsInput | string | null
+    petFriendly?: BoolFieldUpdateOperationsInput | boolean
+    smokingAllowed?: BoolFieldUpdateOperationsInput | boolean
+    partyAllowed?: BoolFieldUpdateOperationsInput | boolean
+    hasDynamicRooms?: BoolFieldUpdateOperationsInput | boolean
+    averageCleanlinessRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastCleaningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    images?: NullableJsonNullValueInput | InputJsonValue
+    videos?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    owner?: UserUpdateOneRequiredWithoutPropertiesNestedInput
+    bookings?: BookingUpdateManyWithoutPropertyNestedInput
+    reviews?: ReviewUpdateManyWithoutPropertyNestedInput
+    amenities?: PropertyAmenityUpdateManyWithoutPropertyNestedInput
+    availability?: PropertyAvailabilityUpdateManyWithoutPropertyNestedInput
+    maintenance?: MaintenanceRequestUpdateManyWithoutPropertyNestedInput
+    rooms?: RoomUpdateManyWithoutPropertyNestedInput
+    notes?: PropertyNoteUpdateManyWithoutPropertyNestedInput
+    analytics?: PropertyAnalyticsUpdateManyWithoutPropertyNestedInput
+    cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
+    propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
+    payments?: PaymentUpdateManyWithoutPropertyNestedInput
+  }
+
+  export type PropertyUncheckedUpdateWithoutInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    titleGr?: StringFieldUpdateOperationsInput | string
+    titleEn?: StringFieldUpdateOperationsInput | string
+    descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
+    status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
+    address?: StringFieldUpdateOperationsInput | string
+    city?: StringFieldUpdateOperationsInput | string
+    country?: StringFieldUpdateOperationsInput | string
+    latitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitude?: NullableFloatFieldUpdateOperationsInput | number | null
+    postalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    maxGuests?: IntFieldUpdateOperationsInput | number
+    bedrooms?: IntFieldUpdateOperationsInput | number
+    bathrooms?: IntFieldUpdateOperationsInput | number
+    area?: NullableFloatFieldUpdateOperationsInput | number | null
+    basePrice?: FloatFieldUpdateOperationsInput | number
+    currency?: StringFieldUpdateOperationsInput | string
+    cleaningFee?: NullableFloatFieldUpdateOperationsInput | number | null
+    serviceFeePercentage?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxRate?: NullableFloatFieldUpdateOperationsInput | number | null
+    minStay?: IntFieldUpdateOperationsInput | number
+    maxStay?: NullableIntFieldUpdateOperationsInput | number | null
+    advanceBooking?: IntFieldUpdateOperationsInput | number
+    checkInTime?: NullableStringFieldUpdateOperationsInput | string | null
+    checkOutTime?: NullableStringFieldUpdateOperationsInput | string | null
+    cancellationPolicy?: EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
+    houseRules?: NullableStringFieldUpdateOperationsInput | string | null
+    petFriendly?: BoolFieldUpdateOperationsInput | boolean
+    smokingAllowed?: BoolFieldUpdateOperationsInput | boolean
+    partyAllowed?: BoolFieldUpdateOperationsInput | boolean
+    hasDynamicRooms?: BoolFieldUpdateOperationsInput | boolean
+    averageCleanlinessRating?: NullableFloatFieldUpdateOperationsInput | number | null
+    lastCleaningDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    propertyGroupId?: NullableStringFieldUpdateOperationsInput | string | null
+    images?: NullableJsonNullValueInput | InputJsonValue
+    videos?: NullableJsonNullValueInput | InputJsonValue
+    ownerId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    bookings?: BookingUncheckedUpdateManyWithoutPropertyNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutPropertyNestedInput
+    amenities?: PropertyAmenityUncheckedUpdateManyWithoutPropertyNestedInput
+    availability?: PropertyAvailabilityUncheckedUpdateManyWithoutPropertyNestedInput
+    maintenance?: MaintenanceRequestUncheckedUpdateManyWithoutPropertyNestedInput
+    rooms?: RoomUncheckedUpdateManyWithoutPropertyNestedInput
+    notes?: PropertyNoteUncheckedUpdateManyWithoutPropertyNestedInput
+    analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
+    cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
+    payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+  }
+
+  export type UserUpsertWithoutInquiriesInput = {
+    update: XOR<UserUpdateWithoutInquiriesInput, UserUncheckedUpdateWithoutInquiriesInput>
+    create: XOR<UserCreateWithoutInquiriesInput, UserUncheckedCreateWithoutInquiriesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutInquiriesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutInquiriesInput, UserUncheckedUpdateWithoutInquiriesInput>
+  }
+
+  export type UserUpdateWithoutInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    mfaBackupCodes?: NullableJsonNullValueInput | InputJsonValue
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    phoneVerified?: BoolFieldUpdateOperationsInput | boolean
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    properties?: PropertyUpdateManyWithoutOwnerNestedInput
+    bookings?: BookingUpdateManyWithoutGuestNestedInput
+    reviews?: ReviewUpdateManyWithoutGuestNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    messages?: MessageUpdateManyWithoutSenderNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutUserNestedInput
+    propertyGroups?: PropertyGroupUpdateManyWithoutOwnerNestedInput
+    rooms?: RoomUpdateManyWithoutOwnerNestedInput
+    cleaningSchedules?: CleaningScheduleUpdateManyWithoutOwnerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutInquiriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    mfaEnabled?: BoolFieldUpdateOperationsInput | boolean
+    mfaSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    mfaBackupCodes?: NullableJsonNullValueInput | InputJsonValue
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    phoneVerified?: BoolFieldUpdateOperationsInput | boolean
+    stripeAccountId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeAccountStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    preferredLanguage?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    properties?: PropertyUncheckedUpdateManyWithoutOwnerNestedInput
+    bookings?: BookingUncheckedUpdateManyWithoutGuestNestedInput
+    reviews?: ReviewUncheckedUpdateManyWithoutGuestNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    messages?: MessageUncheckedUpdateManyWithoutSenderNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutUserNestedInput
+    propertyGroups?: PropertyGroupUncheckedUpdateManyWithoutOwnerNestedInput
+    rooms?: RoomUncheckedUpdateManyWithoutOwnerNestedInput
+    cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutOwnerNestedInput
   }
 
   export type PropertyCreateManyOwnerInput = {
@@ -53710,6 +56397,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -53728,6 +56418,23 @@ export namespace Prisma {
     nextCleaning?: Date | string | null
     assignedCleaner?: string | null
     notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryCreateManyAssigneeInput = {
+    id?: string
+    propertyId: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -53784,6 +56491,7 @@ export namespace Prisma {
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     propertyGroup?: PropertyGroupUpdateOneWithoutPropertiesNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutOwnerInput = {
@@ -53838,6 +56546,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateManyWithoutOwnerInput = {
@@ -54186,6 +56895,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54207,6 +56919,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54227,6 +56942,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54269,6 +56987,57 @@ export namespace Prisma {
     nextCleaning?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     assignedCleaner?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    property?: PropertyUpdateOneRequiredWithoutInquiriesNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    propertyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutAssigneeInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    propertyId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -54362,6 +57131,9 @@ export namespace Prisma {
     nameEn?: string | null
     type: $Enums.RoomType
     capacity: number
+    maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54437,6 +57209,23 @@ export namespace Prisma {
     payoutStatus?: string | null
     payoutScheduledFor?: Date | string | null
     processedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InquiryCreateManyPropertyInput = {
+    id?: string
+    name: string
+    email: string
+    phone?: string | null
+    message: string
+    status?: $Enums.InquiryStatus
+    priority?: $Enums.InquiryPriority
+    respondedAt?: Date | string | null
+    respondedBy?: string | null
+    response?: string | null
+    adminNotes?: string | null
+    assignedTo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -54702,6 +57491,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54722,6 +57514,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54742,6 +57537,9 @@ export namespace Prisma {
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
+    maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -54953,6 +57751,57 @@ export namespace Prisma {
     payoutStatus?: NullableStringFieldUpdateOperationsInput | string | null
     payoutScheduledFor?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUpdateWithoutPropertyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    assignee?: UserUpdateOneWithoutInquiriesNestedInput
+  }
+
+  export type InquiryUncheckedUpdateWithoutPropertyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InquiryUncheckedUpdateManyWithoutPropertyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    message?: StringFieldUpdateOperationsInput | string
+    status?: EnumInquiryStatusFieldUpdateOperationsInput | $Enums.InquiryStatus
+    priority?: EnumInquiryPriorityFieldUpdateOperationsInput | $Enums.InquiryPriority
+    respondedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    respondedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    response?: NullableStringFieldUpdateOperationsInput | string | null
+    adminNotes?: NullableStringFieldUpdateOperationsInput | string | null
+    assignedTo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55365,6 +58214,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateWithoutPropertyGroupInput = {
@@ -55419,6 +58269,7 @@ export namespace Prisma {
     analytics?: PropertyAnalyticsUncheckedUpdateManyWithoutPropertyNestedInput
     cleaningSchedules?: CleaningScheduleUncheckedUpdateManyWithoutPropertyNestedInput
     payments?: PaymentUncheckedUpdateManyWithoutPropertyNestedInput
+    inquiries?: InquiryUncheckedUpdateManyWithoutPropertyNestedInput
   }
 
   export type PropertyUncheckedUpdateManyWithoutPropertyGroupInput = {

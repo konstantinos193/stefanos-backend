@@ -379,6 +379,9 @@ exports.Prisma.RoomScalarFieldEnum = {
   nameEn: 'nameEn',
   type: 'type',
   capacity: 'capacity',
+  maxAdults: 'maxAdults',
+  maxChildren: 'maxChildren',
+  maxInfants: 'maxInfants',
   basePrice: 'basePrice',
   isBookable: 'isBookable',
   amenities: 'amenities',
@@ -546,6 +549,24 @@ exports.Prisma.RoomAvailabilityRuleScalarFieldEnum = {
   reason: 'reason',
   priceOverride: 'priceOverride',
   minStayOverride: 'minStayOverride',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InquiryScalarFieldEnum = {
+  id: 'id',
+  propertyId: 'propertyId',
+  name: 'name',
+  email: 'email',
+  phone: 'phone',
+  message: 'message',
+  status: 'status',
+  priority: 'priority',
+  respondedAt: 'respondedAt',
+  respondedBy: 'respondedBy',
+  response: 'response',
+  adminNotes: 'adminNotes',
+  assignedTo: 'assignedTo',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -746,6 +767,21 @@ exports.SettingType = exports.$Enums.SettingType = {
   JSON: 'JSON'
 };
 
+exports.InquiryStatus = exports.$Enums.InquiryStatus = {
+  NEW: 'NEW',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESPONDED: 'RESPONDED',
+  CLOSED: 'CLOSED',
+  SPAM: 'SPAM'
+};
+
+exports.InquiryPriority = exports.$Enums.InquiryPriority = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Property: 'Property',
@@ -772,7 +808,8 @@ exports.Prisma.ModelName = {
   Media: 'Media',
   Setting: 'Setting',
   RoomContent: 'RoomContent',
-  RoomAvailabilityRule: 'RoomAvailabilityRule'
+  RoomAvailabilityRule: 'RoomAvailabilityRule',
+  Inquiry: 'Inquiry'
 };
 
 /**

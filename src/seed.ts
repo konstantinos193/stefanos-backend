@@ -25,7 +25,7 @@ async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 10);
 }
 
-type RoomTypeSeed = 'BEDROOM' | 'LIVING_ROOM' | 'STUDIO' | 'OTHER';
+type RoomTypeSeed = 'BEDROOM' | 'LIVING_ROOM' | 'STUDIO' | 'OTHER' | 'APARTMENT' | 'KITCHEN' | 'BATHROOM' | 'BALCONY' | 'TERRACE' | 'GARDEN';
 
 type IncantoRoomTemplate = {
   roomNumber: number;
@@ -47,113 +47,113 @@ type IncantoRoomSeed = IncantoRoomTemplate & {
 const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
   1: {
     roomNumber: 1,
-    nameEn: 'Deluxe Room - Ground Floor No1',
-    nameGr: 'Deluxe Room - Ground Floor No1',
-    descriptionEn: 'Elegant comfort with Mediterranean views and modern amenities.',
-    descriptionGr: 'Elegant comfort with Mediterranean views and modern amenities.',
-    type: 'BEDROOM',
-    capacity: 2,
-    basePrice: 150,
-    amenities: ['Sea View', 'King Bed', 'Mini Bar', 'Workspace', 'Free WiFi'],
+    nameEn: 'Apartment 1 - Ground Floor',
+    nameGr: 'Διαμέρισμα 1 - Ισόγειο',
+    descriptionEn: 'Cozy ground floor apartment with modern amenities and comfortable living space.',
+    descriptionGr: 'Άνετο διαμέρισμα ισογείου με σύγχρονες παροχές και άνετο χώρο διαβίωσης.',
+    type: 'APARTMENT' as const,
+    capacity: 4,
+    basePrice: 120,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Balcony']
   },
   2: {
     roomNumber: 2,
-    nameEn: 'Garden Room - Ground Floor No2',
-    nameGr: 'Garden Room - Ground Floor No2',
-    descriptionEn: 'Cozy ground-floor room overlooking the garden.',
-    descriptionGr: 'Cozy ground-floor room overlooking the garden.',
-    type: 'BEDROOM',
-    capacity: 2,
-    basePrice: 120,
-    amenities: ['Garden View', 'Queen Bed', 'Balcony', 'Coffee Station', 'Free WiFi'],
+    nameEn: 'Apartment 2 - Ground Floor',
+    nameGr: 'Διαμέρισμα 2 - Ισόγειο',
+    descriptionEn: 'Comfortable ground floor apartment with garden access and modern amenities.',
+    descriptionGr: 'Άνετο διαμέρισμα ισογείου με πρόσβαση στον κήπο και σύγχρονες παροχές.',
+    type: 'APARTMENT' as const,
+    capacity: 4,
+    basePrice: 130,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Garden View']
   },
   3: {
     roomNumber: 3,
-    nameEn: 'Premium Room - First Floor No3',
-    nameGr: 'Premium Room - First Floor No3',
-    descriptionEn: 'Bright first-floor room with refined interiors and sea breeze.',
-    descriptionGr: 'Bright first-floor room with refined interiors and sea breeze.',
-    type: 'BEDROOM',
-    capacity: 2,
-    basePrice: 180,
-    amenities: ['Sea View', 'King Bed', 'Smart TV', 'Coffee Machine', 'Free WiFi'],
+    nameEn: 'Apartment 3 - First Floor',
+    nameGr: 'Διαμέρισμα 3 - Πρώτος Όροφος',
+    descriptionEn: 'Bright first-floor apartment with sea views and modern decor.',
+    descriptionGr: 'Φωτεινό διαμέρισμα πρώτου ορόφου με θέα στη θάλασσα και μοντέρνα διακόσμηση.',
+    type: 'APARTMENT' as const,
+    capacity: 3,
+    basePrice: 150,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Sea View']
   },
   4: {
     roomNumber: 4,
-    nameEn: 'Superior Room - First Floor No4',
-    nameGr: 'Superior Room - First Floor No4',
-    descriptionEn: 'Spacious superior room with stylish decor and premium comfort.',
-    descriptionGr: 'Spacious superior room with stylish decor and premium comfort.',
-    type: 'BEDROOM',
-    capacity: 3,
-    basePrice: 210,
-    amenities: ['Sea View', 'King Bed', 'Sofa Bed', 'Mini Bar', 'Free WiFi'],
+    nameEn: 'Apartment 4 - First Floor',
+    nameGr: 'Διαμέρισμα 4 - Πρώτος Όροφος',
+    descriptionEn: 'Spacious first-floor apartment with stylish decor and premium comfort.',
+    descriptionGr: 'Ευρύχωρο διαμέρισμα πρώτου ορόφου με κομψή διακόσμηση και premium άνεση.',
+    type: 'APARTMENT' as const,
+    capacity: 4,
+    basePrice: 170,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Balcony']
   },
   5: {
     roomNumber: 5,
-    nameEn: 'Executive Suite - First Floor No5',
-    nameGr: 'Executive Suite - First Floor No5',
-    descriptionEn: 'Spacious suite with separate living area and panoramic views.',
-    descriptionGr: 'Spacious suite with separate living area and panoramic views.',
-    type: 'STUDIO',
-    capacity: 3,
-    basePrice: 250,
-    amenities: ['Panoramic View', 'Living Area', 'Jacuzzi', 'Premium Amenities', 'Free WiFi'],
+    nameEn: 'Apartment 5 - First Floor',
+    nameGr: 'Διαμέρισμα 5 - Πρώτος Όροφος',
+    descriptionEn: 'Spacious apartment with separate living area and panoramic views.',
+    descriptionGr: 'Ευρύχωρο διαμέρισμα με ξεχωριστό χώρο καθιστικού και πανοραμική θέα.',
+    type: 'APARTMENT' as const,
+    capacity: 4,
+    basePrice: 200,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Living Area']
   },
   6: {
     roomNumber: 6,
-    nameEn: 'Panorama Room - Second Floor No6',
-    nameGr: 'Panorama Room - Second Floor No6',
-    descriptionEn: 'Second-floor room with expansive views and contemporary style.',
-    descriptionGr: 'Second-floor room with expansive views and contemporary style.',
-    type: 'BEDROOM',
+    nameEn: 'Apartment 6 - Second Floor',
+    nameGr: 'Διαμέρισμα 6 - Δεύτερος Όροφος',
+    descriptionEn: 'Second-floor apartment with expansive views and contemporary style.',
+    descriptionGr: 'Διαμέρισμα δεύτερου ορόφου με εκτεταμένη θέα και σύγχρονο στυλ.',
+    type: 'APARTMENT' as const,
     capacity: 3,
-    basePrice: 240,
-    amenities: ['Panoramic View', 'King Bed', 'Smart TV', 'Mini Bar', 'Free WiFi'],
+    basePrice: 180,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Panoramic View']
   },
   7: {
     roomNumber: 7,
-    nameEn: 'Family Suite - Second Floor No7',
-    nameGr: 'Family Suite - Second Floor No7',
-    descriptionEn: 'Ideal family suite with generous space and flexible sleeping setup.',
-    descriptionGr: 'Ideal family suite with generous space and flexible sleeping setup.',
-    type: 'STUDIO',
+    nameEn: 'Apartment 7 - Second Floor',
+    nameGr: 'Διαμέρισμα 7 - Δεύτερος Όροφος',
+    descriptionEn: 'Ideal family apartment with generous space and flexible sleeping setup.',
+    descriptionGr: 'Ιδανικό οικογενειακό διαμέρισμα με γενναιόδωρο χώρο και ευέλικτη διαμόρφωση ύπνου.',
+    type: 'APARTMENT' as const,
     capacity: 5,
-    basePrice: 320,
-    amenities: ['Sea View', '2 Bedrooms', 'Kitchenette', 'Kids Area', 'Free WiFi'],
+    basePrice: 220,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', '2 Bedrooms']
   },
   8: {
     roomNumber: 8,
-    nameEn: 'Ocean Suite - Second Floor No8',
-    nameGr: 'Ocean Suite - Second Floor No8',
-    descriptionEn: 'Premium suite with ocean-facing views and elevated comfort.',
-    descriptionGr: 'Premium suite with ocean-facing views and elevated comfort.',
-    type: 'STUDIO',
+    nameEn: 'Apartment 8 - Second Floor',
+    nameGr: 'Διαμέρισμα 8 - Δεύτερος Όροφος',
+    descriptionEn: 'Premium apartment with ocean-facing views and elevated comfort.',
+    descriptionGr: 'Premium διαμέρισμα με θέα στον ωκεανό και ανεlevated άνεση.',
+    type: 'APARTMENT' as const,
     capacity: 4,
-    basePrice: 340,
-    amenities: ['Ocean View', 'King Bed', 'Lounge Area', 'Coffee Station', 'Free WiFi'],
+    basePrice: 240,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Ocean View']
   },
   9: {
     roomNumber: 9,
-    nameEn: 'Honeymoon Suite - Third Floor No9',
-    nameGr: 'Honeymoon Suite - Third Floor No9',
-    descriptionEn: 'Romantic suite designed for unforgettable stays.',
-    descriptionGr: 'Romantic suite designed for unforgettable stays.',
-    type: 'STUDIO',
+    nameEn: 'Apartment 9 - Third Floor',
+    nameGr: 'Διαμέρισμα 9 - Τρίτος Όροφος',
+    descriptionEn: 'Romantic apartment designed for unforgettable stays.',
+    descriptionGr: 'Ρομαντικό διαμέρισμα σχεδιασμένο για αξέχαστες διαμονές.',
+    type: 'APARTMENT' as const,
     capacity: 2,
-    basePrice: 380,
-    amenities: ['Ocean View', 'Private Jacuzzi', 'Champagne Bar', 'Romantic Decor', 'Free WiFi'],
+    basePrice: 260,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Ocean View']
   },
   10: {
     roomNumber: 10,
-    nameEn: 'Presidential Suite - Third Floor No10',
-    nameGr: 'Presidential Suite - Third Floor No10',
-    descriptionEn: 'Signature top-floor suite with the highest level of luxury.',
-    descriptionGr: 'Signature top-floor suite with the highest level of luxury.',
-    type: 'STUDIO',
+    nameEn: 'Apartment 10 - Third Floor',
+    nameGr: 'Διαμέρισμα 10 - Τρίτος Όροφος',
+    descriptionEn: 'Signature top-floor apartment with the highest level of luxury.',
+    descriptionGr: 'Διαμέρισμα τελευταίου ορόφου με το υψηλότερο επίπεδο πολυτέλειας.',
+    type: 'APARTMENT' as const,
     capacity: 4,
-    basePrice: 450,
-    amenities: ['Ocean View', '2 Bedrooms', 'Private Terrace', 'Butler Service', 'Free WiFi'],
+    basePrice: 300,
+    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', '2 Bedrooms']
   },
 };
 
@@ -296,20 +296,21 @@ async function main() {
   // Create amenities
   console.log('📦 Creating amenities...');
   const amenityData = [
-    { nameGr: 'WiFi', nameEn: 'WiFi', icon: 'wifi', category: 'internet' },
-    { nameGr: 'Πάρκινγκ', nameEn: 'Parking', icon: 'car', category: 'transportation' },
-    { nameGr: 'Πισίνα', nameEn: 'Pool', icon: 'swimming-pool', category: 'recreation' },
+    { nameGr: 'WiFi', nameEn: 'WiFi', icon: 'wifi', category: 'essentials' },
+    { nameGr: 'Δωρεάν Πάρκινγκ', nameEn: 'Free Parking', icon: 'parking', category: 'parking' },
+    { nameGr: 'Πισίνα', nameEn: 'Pool', icon: 'pool', category: 'recreation' },
     { nameGr: 'Γυμναστήριο', nameEn: 'Gym', icon: 'dumbbell', category: 'recreation' },
-    { nameGr: 'Κλιματισμός', nameEn: 'Air Conditioning', icon: 'snowflake', category: 'comfort' },
-    { nameGr: 'Κουζίνα', nameEn: 'Kitchen', icon: 'utensils', category: 'comfort' },
-    { nameGr: 'Μπαλκόνι', nameEn: 'Balcony', icon: 'home', category: 'outdoor' },
+    { nameGr: 'Δωρεάν Κλιματισμός', nameEn: 'Free Air Conditioning', icon: 'snowflake', category: 'climate' },
+    { nameGr: 'Κουζίνα', nameEn: 'Kitchen', icon: 'kitchen', category: 'kitchen' },
+    { nameGr: 'Μπαλκόνι', nameEn: 'Balcony', icon: 'balcony', category: 'view' },
     { nameGr: 'Ασανσέρ', nameEn: 'Elevator', icon: 'arrow-up', category: 'accessibility' },
     { nameGr: 'Θέα στη θάλασσα', nameEn: 'Sea View', icon: 'water', category: 'view' },
     { nameGr: 'Πλυντήριο', nameEn: 'Washing Machine', icon: 'washing-machine', category: 'comfort' },
-    { nameGr: 'Τηλεόραση', nameEn: 'TV', icon: 'tv', category: 'entertainment' },
+    { nameGr: 'Δωρεάν Τηλεοπτικά Κανάλια', nameEn: 'Free TV Channels', icon: 'tv', category: 'entertainment' },
     { nameGr: 'Προσβάσιμο για ΑΜΕΑ', nameEn: 'Wheelchair Accessible', icon: 'wheelchair', category: 'accessibility' },
     { nameGr: 'Θέρμανση', nameEn: 'Heating', icon: 'thermometer', category: 'comfort' },
-    { nameGr: 'Spa', nameEn: 'Spa', icon: 'heart', category: 'wellness' }
+    { nameGr: 'Spa', nameEn: 'Spa', icon: 'heart', category: 'wellness' },
+    { nameGr: 'Εστιατόριο', nameEn: 'Restaurant', icon: 'utensils', category: 'kitchen' }
   ];
 
   // Create amenities sequentially to avoid transaction issues
@@ -463,13 +464,13 @@ async function main() {
   // Create properties
   console.log('🏠 Creating properties...');
   const propertyData = [
-    // Incanto Hotel - Preveza
+    // Incanto Apartments - Preveza ONLY
     {
-      titleGr: 'L\'Incanto Hotel',
-      titleEn: 'L\'Incanto Hotel',
-      descriptionGr: 'Αποκλειστικό ξενοδοχείο στην Πρέβεζα με πανοραμική θέα στο Ιόνιο Πέλαγος. Πολυτελής διαμονή με εξαιρετικές παροχές.',
-      descriptionEn: 'Exclusive hotel in Preveza with panoramic views of the Ionian Sea. Luxury accommodation with excellent amenities.',
-      type: 'LUXURY' as const,
+      titleGr: 'L\'Incanto Apartments',
+      titleEn: 'L\'Incanto Apartments',
+      descriptionGr: 'Αποκλειστικά συγκροτήματα διαμερισμάτων στην Πρέβεζα με πανοραμική θέα στο Ιόνιο Πέλαγος. Πολυτελείς διαμονή με εξαιρετικές παροχές.',
+      descriptionEn: 'Exclusive apartment complexes in Preveza with panoramic views of the Ionian Sea. Luxury accommodation with excellent amenities.',
+      type: 'APARTMENT' as const,
       address: 'Ionian Coast',
       city: 'Preveza',
       country: 'Greece',
@@ -493,370 +494,12 @@ async function main() {
       smokingAllowed: false,
       partyAllowed: false,
       images: [
-        'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800',
-        'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800',
-        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800'
+        'http://licanto.vercel.app/images/apartment1.jpg',
+        'http://licanto.vercel.app/images/apartment2.jpg',
+        'http://licanto.vercel.app/images/apartment3.jpg'
       ],
       ownerId: owners[0].id,
-      amenityIds: [0, 1, 2, 3, 4, 8, 9, 10, 11] // wifi, parking, ac, heating, kitchen, sea view, pool, tv, spa
-    },
-    // Athens Properties
-    {
-      titleGr: 'Μοντέρνο Διαμέρισμα στο Κέντρο της Αθήνας',
-      titleEn: 'Modern Apartment in Athens Center',
-      descriptionGr: 'Άνετο και φωτεινό διαμέρισμα 2 υπνοδωματίων στο ιστορικό κέντρο της Αθήνας, κοντά στο Σύνταγμα.',
-      descriptionEn: 'Comfortable and bright 2-bedroom apartment in the historic center of Athens, near Syntagma Square.',
-      type: 'APARTMENT' as const,
-      address: 'Ermou Street 45',
-      city: 'Athens',
-      country: 'Greece',
-      latitude: 37.9755,
-      longitude: 23.7348,
-      maxGuests: 4,
-      bedrooms: 2,
-      bathrooms: 1,
-      area: 75.5,
-      basePrice: 120,
-      cleaningFee: 25,
-      serviceFee: 15,
-      taxes: 8,
-      minStay: 2,
-      maxStay: 30,
-      checkInTime: '15:00',
-      checkOutTime: '11:00',
-      cancellationPolicy: 'FLEXIBLE' as const,
-      houseRules: 'No smoking, no parties, pets allowed',
-      petFriendly: true,
-      smokingAllowed: false,
-      partyAllowed: false,
-      images: [
-        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
-        'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',
-        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'
-      ],
-      ownerId: owners[0].id,
-      amenityIds: [0, 2, 4, 5, 6, 7, 10] // wifi, ac, kitchen, balcony, elevator, washing machine, tv
-    },
-    {
-      titleGr: 'Πολυτελές Studio με Θέα στην Ακρόπολη',
-      titleEn: 'Luxury Studio with Acropolis View',
-      descriptionGr: 'Εξαιρετικό studio με πανοραμική θέα στην Ακρόπολη, ιδανικό για ζευγάρια.',
-      descriptionEn: 'Excellent studio with panoramic view of the Acropolis, perfect for couples.',
-      type: 'ROOM' as const,
-      address: 'Plaka District, Adrianou Street 12',
-      city: 'Athens',
-      country: 'Greece',
-      latitude: 37.9715,
-      longitude: 23.7268,
-      maxGuests: 2,
-      bedrooms: 1,
-      bathrooms: 1,
-      area: 45.0,
-      basePrice: 95,
-      cleaningFee: 20,
-      serviceFee: 12,
-      taxes: 6,
-      minStay: 1,
-      maxStay: 14,
-      checkInTime: '14:00',
-      checkOutTime: '11:00',
-      images: [
-        'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800',
-        'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800'
-      ],
-      ownerId: owners[0].id,
-      amenityIds: [0, 4, 5, 6, 8, 10] // wifi, ac, kitchen, balcony, sea view, tv
-    },
-    {
-      titleGr: 'Σπίτι 3 Υπνοδωματίων στο Κουκάκι',
-      titleEn: '3-Bedroom House in Koukaki',
-      descriptionGr: 'Άνετο σπίτι 3 υπνοδωματίων στην περιοχή Κουκάκι, κοντά στα μουσεία.',
-      descriptionEn: 'Comfortable 3-bedroom house in Koukaki area, near museums.',
-      type: 'HOUSE' as const,
-      address: 'Veikou Street 78',
-      city: 'Athens',
-      country: 'Greece',
-      latitude: 37.9680,
-      longitude: 23.7280,
-      maxGuests: 6,
-      bedrooms: 3,
-      bathrooms: 2,
-      area: 120.0,
-      basePrice: 180,
-      cleaningFee: 35,
-      serviceFee: 20,
-      taxes: 12,
-      minStay: 3,
-      maxStay: 30,
-      images: [
-        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'
-      ],
-      ownerId: owners[0].id,
-      amenityIds: [0, 1, 4, 5, 6, 7, 9, 10] // wifi, parking, ac, kitchen, balcony, elevator, washing machine, tv
-    },
-    // Mykonos Properties
-    {
-      titleGr: 'Βίλα με Πισίνα στη Μύκονο',
-      titleEn: 'Villa with Pool in Mykonos',
-      descriptionGr: 'Απίστευτη βίλα 4 υπνοδωματίων με ιδιωτική πισίνα και θέα στη θάλασσα.',
-      descriptionEn: 'Incredible 4-bedroom villa with private pool and sea view.',
-      type: 'LUXURY' as const,
-      address: 'Paradise Beach Road',
-      city: 'Mykonos',
-      country: 'Greece',
-      latitude: 37.4467,
-      longitude: 25.3289,
-      maxGuests: 8,
-      bedrooms: 4,
-      bathrooms: 3,
-      area: 250.0,
-      basePrice: 450,
-      cleaningFee: 80,
-      serviceFee: 50,
-      taxes: 30,
-      minStay: 5,
-      maxStay: 14,
-      checkInTime: '16:00',
-      checkOutTime: '10:00',
-      partyAllowed: true,
-      images: [
-        'https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e08?w=800',
-        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
-        'https://images.unsplash.com/photo-1600607687644-c717919b84b2?w=800'
-      ],
-      ownerId: owners[1].id,
-      amenityIds: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10] // wifi, parking, pool, gym, ac, kitchen, balcony, sea view, washing machine, tv
-    },
-    {
-      titleGr: 'Studio Κοντά στην Παραλία',
-      titleEn: 'Studio Near the Beach',
-      descriptionGr: 'Άνετο studio μόλις 50 μέτρα από την παραλία, ιδανικό για διακοπές.',
-      descriptionEn: 'Comfortable studio just 50 meters from the beach, perfect for vacation.',
-      type: 'ROOM' as const,
-      address: 'Ornos Beach',
-      city: 'Mykonos',
-      country: 'Greece',
-      latitude: 37.4300,
-      longitude: 25.3200,
-      maxGuests: 2,
-      bedrooms: 1,
-      bathrooms: 1,
-      area: 35.0,
-      basePrice: 150,
-      cleaningFee: 25,
-      serviceFee: 15,
-      taxes: 9,
-      minStay: 3,
-      maxStay: 14,
-      images: [
-        'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800',
-        'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'
-      ],
-      ownerId: owners[1].id,
-      amenityIds: [0, 4, 5, 6, 8] // wifi, ac, kitchen, balcony, sea view
-    },
-    // Santorini Properties
-    {
-      titleGr: 'Σπήλαιο με Καλντερίμι Views',
-      titleEn: 'Cave House with Caldera Views',
-      descriptionGr: 'Αυθεντικό σπήλαιο με εκπληκτική θέα στο καλντερίμι, στο Οία.',
-      descriptionEn: 'Authentic cave house with stunning caldera views in Oia.',
-      type: 'LUXURY' as const,
-      address: 'Oia Village',
-      city: 'Santorini',
-      country: 'Greece',
-      latitude: 36.4619,
-      longitude: 25.3753,
-      maxGuests: 4,
-      bedrooms: 2,
-      bathrooms: 1,
-      area: 90.0,
-      basePrice: 380,
-      cleaningFee: 60,
-      serviceFee: 40,
-      taxes: 25,
-      minStay: 3,
-      maxStay: 10,
-      images: [
-        'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800',
-        'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800',
-        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800'
-      ],
-      ownerId: owners[1].id,
-      amenityIds: [0, 4, 5, 6, 8, 10] // wifi, ac, kitchen, balcony, sea view, tv
-    },
-    {
-      titleGr: 'Πολυτελές Διαμέρισμα στη Φιρά',
-      titleEn: 'Luxury Apartment in Fira',
-      descriptionGr: 'Πολυτελές διαμέρισμα με θέα στο ηφαίστειο, στο κέντρο της Φιράς.',
-      descriptionEn: 'Luxury apartment with volcano view in the center of Fira.',
-      type: 'APARTMENT' as const,
-      address: 'Fira Main Street 25',
-      city: 'Santorini',
-      country: 'Greece',
-      latitude: 36.4166,
-      longitude: 25.4322,
-      maxGuests: 4,
-      bedrooms: 2,
-      bathrooms: 2,
-      area: 110.0,
-      basePrice: 320,
-      cleaningFee: 50,
-      serviceFee: 35,
-      taxes: 22,
-      minStay: 2,
-      maxStay: 10,
-      images: [
-        'https://images.unsplash.com/photo-1600607687644-c717919b84b2?w=800',
-        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800'
-      ],
-      ownerId: owners[1].id,
-      amenityIds: [0, 1, 4, 5, 6, 8, 9, 10] // wifi, parking, ac, kitchen, balcony, sea view, washing machine, tv
-    },
-    // Thessaloniki Properties
-    {
-      titleGr: 'Διαμέρισμα στο Λευκό Πύργο',
-      titleEn: 'Apartment Near White Tower',
-      descriptionGr: 'Άνετο διαμέρισμα 2 υπνοδωματίων κοντά στον Λευκό Πύργο.',
-      descriptionEn: 'Comfortable 2-bedroom apartment near the White Tower.',
-      type: 'APARTMENT' as const,
-      address: 'Tsimiski Street 45',
-      city: 'Thessaloniki',
-      country: 'Greece',
-      latitude: 40.6401,
-      longitude: 22.9444,
-      maxGuests: 4,
-      bedrooms: 2,
-      bathrooms: 1,
-      area: 80.0,
-      basePrice: 85,
-      cleaningFee: 20,
-      serviceFee: 12,
-      taxes: 6,
-      minStay: 2,
-      maxStay: 30,
-      images: [
-        'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
-        'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800'
-      ],
-      ownerId: owners[2].id,
-      amenityIds: [0, 1, 4, 5, 7, 9, 10] // wifi, parking, ac, kitchen, elevator, washing machine, tv
-    },
-    {
-      titleGr: 'Σπίτι 3 Υπνοδωματίων στο Κέντρο',
-      titleEn: '3-Bedroom House in Center',
-      descriptionGr: 'Σπίτι 3 υπνοδωματίων με αυλή, ιδανικό για οικογένειες.',
-      descriptionEn: '3-bedroom house with yard, perfect for families.',
-      type: 'HOUSE' as const,
-      address: 'Egnatia Street 120',
-      city: 'Thessaloniki',
-      country: 'Greece',
-      latitude: 40.6328,
-      longitude: 22.9497,
-      maxGuests: 6,
-      bedrooms: 3,
-      bathrooms: 2,
-      area: 140.0,
-      basePrice: 140,
-      cleaningFee: 30,
-      serviceFee: 18,
-      taxes: 10,
-      minStay: 3,
-      maxStay: 30,
-      images: [
-        'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
-        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'
-      ],
-      ownerId: owners[2].id,
-      amenityIds: [0, 1, 4, 5, 6, 9, 10] // wifi, parking, ac, kitchen, balcony, washing machine, tv
-    },
-    // Crete Properties
-    {
-      titleGr: 'Βίλα με Θέα στη Θάλασσα',
-      titleEn: 'Villa with Sea View',
-      descriptionGr: 'Εντυπωσιακή βίλα 5 υπνοδωματίων με ιδιωτική πισίνα και θέα στη θάλασσα.',
-      descriptionEn: 'Impressive 5-bedroom villa with private pool and sea view.',
-      type: 'LUXURY' as const,
-      address: 'Elounda Beach',
-      city: 'Crete',
-      country: 'Greece',
-      latitude: 35.2401,
-      longitude: 25.7214,
-      maxGuests: 10,
-      bedrooms: 5,
-      bathrooms: 4,
-      area: 350.0,
-      basePrice: 550,
-      cleaningFee: 100,
-      serviceFee: 60,
-      taxes: 40,
-      minStay: 7,
-      maxStay: 21,
-      images: [
-        'https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e08?w=800',
-        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
-        'https://images.unsplash.com/photo-1600607687644-c717919b84b2?w=800'
-      ],
-      ownerId: owners[2].id,
-      amenityIds: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10] // wifi, parking, pool, gym, ac, kitchen, balcony, sea view, washing machine, tv
-    },
-    {
-      titleGr: 'Studio στη Χανιά',
-      titleEn: 'Studio in Chania',
-      descriptionGr: 'Άνετο studio στην παλιά πόλη της Χανιάς, κοντά στο λιμάνι.',
-      descriptionEn: 'Comfortable studio in the old town of Chania, near the harbor.',
-      type: 'ROOM' as const,
-      address: 'Old Harbor, Chania',
-      city: 'Crete',
-      country: 'Greece',
-      latitude: 35.5138,
-      longitude: 24.0180,
-      maxGuests: 2,
-      bedrooms: 1,
-      bathrooms: 1,
-      area: 40.0,
-      basePrice: 75,
-      cleaningFee: 15,
-      serviceFee: 10,
-      taxes: 5,
-      minStay: 2,
-      maxStay: 14,
-      images: [
-        'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800',
-        'https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800'
-      ],
-      ownerId: owners[2].id,
-      amenityIds: [0, 4, 5, 6, 8] // wifi, ac, kitchen, balcony, sea view
-    },
-    // Commercial Property
-    {
-      titleGr: 'Επαγγελματικός Χώρος στο Κέντρο',
-      titleEn: 'Commercial Space in Center',
-      descriptionGr: 'Επαγγελματικός χώρος 100 τ.μ. ιδανικός για γραφείο ή κατάστημα.',
-      descriptionEn: '100 sqm commercial space perfect for office or store.',
-      type: 'COMMERCIAL' as const,
-      address: 'Stadiou Street 50',
-      city: 'Athens',
-      country: 'Greece',
-      latitude: 37.9785,
-      longitude: 23.7340,
-      maxGuests: 20,
-      bedrooms: 0,
-      bathrooms: 2,
-      area: 100.0,
-      basePrice: 2500,
-      cleaningFee: 0,
-      serviceFee: 0,
-      taxes: 0,
-      minStay: 1,
-      maxStay: 365,
-      images: [
-        'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800',
-        'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800'
-      ],
-      ownerId: owners[0].id,
-      amenityIds: [0, 1, 4, 7] // wifi, parking, ac, elevator
+      amenityIds: [0, 1, 10, 5] // wifi (0), free parking (1), free tv channels (10), free air conditioning (5)
     }
   ];
 
@@ -865,7 +508,7 @@ async function main() {
   const properties = [];
   for (let i = 0; i < propertyData.length; i++) {
     const prop = propertyData[i];
-    const { amenityIds, serviceFee, ownerId, ...propertyInfo } = prop;
+    const { amenityIds, serviceFeePercentage, ownerId, ...propertyInfo } = prop;
     
     try {
       // Create property first (without nested creates to avoid transactions)
@@ -919,7 +562,7 @@ async function main() {
   // Create Incanto rooms from real media folders in incanto-hotel/public
   console.log('Creating Incanto rooms from public assets...');
   const seededRooms = [];
-  const incantoProperty = properties.find((property) => property.titleEn === "L'Incanto Hotel");
+  const incantoProperty = properties.find((property) => property.titleEn === "L'Incanto Apartments");
 
   if (incantoProperty) {
     const roomSeeds = buildIncantoRoomSeedsFromPublic();
@@ -1052,43 +695,76 @@ async function main() {
   // Create reviews
   console.log('⭐ Creating reviews...');
   const completedBookings = bookings.filter(b => b.status === 'COMPLETED');
-  for (const booking of completedBookings.slice(0, 5)) {
+  
+  // More realistic review data with specific details about Incanto Apartments
+  const reviewTemplates = [
+    {
+      titles: ['Absolutely Perfect Stay!', 'Amazing Incanto Experience', 'Beyond Expectations', 'Wonderful Apartment'],
+      comments: [
+        'L\'Incanto Apartments exceeded all our expectations. The apartment was spotlessly clean, beautifully decorated, and had everything we needed for a perfect stay in Preveza. The sea views were breathtaking!',
+        'Perfect location in Preveza with stunning Ionian Sea views. The apartment was modern, well-equipped, and the host was incredibly responsive. Would definitely stay here again!',
+        'We had an amazing time at L\'Incanto. The property was exactly as described - clean, comfortable, and with premium amenities. The balcony views of the sea were spectacular!',
+        'Beautiful apartment complex with excellent facilities. Our room was spacious, the kitchen was fully equipped, and the location was perfect for exploring Preveza. Highly recommended!'
+      ],
+      ratings: [5, 5, 4, 5]
+    },
+    {
+      titles: ['Great Value for Money', 'Comfortable and Clean', 'Good Location', 'Pleasant Stay'],
+      comments: [
+        'Very comfortable apartment with all necessary amenities. Good value for the price and located in a quiet area of Preveza. Would recommend for families.',
+        'Clean and well-maintained property. The apartment had everything we needed for our stay. The host was helpful and check-in was smooth.',
+        'Nice apartment complex with good facilities. The room was comfortable and the location was convenient for visiting local attractions in Preveza.',
+        'Pleasant stay at L\'Incanto Apartments. The property was clean and well-equipped. Good value for money and the staff were friendly.'
+      ],
+      ratings: [4, 4, 4, 3]
+    },
+    {
+      titles: ['Luxury Experience', 'Premium Stay', 'Five Star Service', 'Exceptional'],
+      comments: [
+        'This is a premium property that delivers on luxury. From the high-end appliances to the comfortable beds, everything was top quality. The sea views from our apartment were absolutely stunning.',
+        'Exceptional experience at L\'Incanto. The apartment was spacious, elegantly furnished, and had premium amenities throughout. The host attention to detail was impressive.',
+        'Five-star stay in every aspect. The property was immaculate, the facilities were excellent, and the location in Preveza was perfect. Worth every penny!',
+        'Luxury accommodation with spectacular views. The apartment was beautifully designed and had everything we needed for a comfortable stay. Highly recommend for a special occasion.'
+      ],
+      ratings: [5, 5, 5, 5]
+    }
+  ];
+
+  let reviewCount = 0;
+  for (const booking of completedBookings) {
     const property = properties.find(p => p.id === booking.propertyId);
     if (!property) continue;
 
-    const ratings = [4, 4, 5, 5, 5]; // Mostly positive reviews
-    const rating = ratings[Math.floor(Math.random() * ratings.length)];
+    // Select a random template based on property type and create realistic review
+    const templateIndex = property.titleEn.includes("Incanto") ? 
+      Math.floor(Math.random() * reviewTemplates.length) : 0;
+    const template = reviewTemplates[templateIndex];
     
-    const reviewTitles = [
-      'Great stay!',
-      'Amazing property',
-      'Perfect location',
-      'Highly recommended',
-      'Wonderful experience'
-    ];
-    
-    const reviewComments = [
-      'We had a wonderful time. The property was exactly as described.',
-      'Perfect location and very clean. Would definitely stay again!',
-      'Amazing views and great amenities. The host was very responsive.',
-      'Beautiful property in a great location. Highly recommend!',
-      'Exceeded our expectations. Everything was perfect!'
-    ];
+    const titleIndex = Math.floor(Math.random() * template.titles.length);
+    const commentIndex = Math.floor(Math.random() * template.comments.length);
+    const ratingIndex = Math.floor(Math.random() * template.ratings.length);
 
     await prisma.review.create({
       data: {
         propertyId: booking.propertyId,
         bookingId: booking.id,
         guestId: booking.guestId,
-        rating: rating,
-        title: reviewTitles[Math.floor(Math.random() * reviewTitles.length)],
-        comment: reviewComments[Math.floor(Math.random() * reviewComments.length)],
-        isPublic: true
+        rating: template.ratings[ratingIndex],
+        cleanlinessRating: Math.min(5, template.ratings[ratingIndex] + Math.floor(Math.random() * 2) - 1),
+        accuracyRating: Math.min(5, template.ratings[ratingIndex] + Math.floor(Math.random() * 2) - 1),
+        communicationRating: Math.min(5, template.ratings[ratingIndex] + Math.floor(Math.random() * 2) - 1),
+        locationRating: Math.min(5, template.ratings[ratingIndex] + Math.floor(Math.random() * 2) - 1),
+        valueRating: Math.min(5, template.ratings[ratingIndex] + Math.floor(Math.random() * 2) - 1),
+        title: template.titles[titleIndex],
+        comment: template.comments[commentIndex],
+        isPublic: true,
+        createdAt: new Date(booking.checkOut.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000) // Review created 0-7 days after checkout
       }
     });
+    reviewCount++;
   }
 
-  console.log(`✅ Created ${completedBookings.length} reviews`);
+  console.log(`✅ Created ${reviewCount} realistic reviews`);
 
   // Create services
   console.log('🛠️ Creating services...');

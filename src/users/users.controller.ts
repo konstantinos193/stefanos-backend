@@ -6,6 +6,7 @@ import { PaginationDto } from '../common/dto/pagination.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 
 @ApiTags('Users')
 @Controller('users')
@@ -20,6 +21,13 @@ export class UsersController {
   @ApiResponse({ status: 200 })
   findAll(@Query() query: PaginationDto) {
     return this.usersService.findAll(query);
+  }
+
+  @Get('me')
+  @ApiOperation({ summary: 'Get current user' })
+  @ApiResponse({ status: 200 })
+  getCurrentUser(@CurrentUser() userId: string) {
+    return this.usersService.findOne(userId);
   }
 
   @Get(':id')

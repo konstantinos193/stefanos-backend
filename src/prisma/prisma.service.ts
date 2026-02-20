@@ -90,6 +90,7 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   get setting() { return this.getClient().setting; }
   get roomContent() { return this.getClient().roomContent; }
   get roomAvailabilityRule() { return this.getClient().roomAvailabilityRule; }
+  get inquiry() { return this.getClient().inquiry; }
 
   // Delegate PrismaClient methods
   $connect() { return this.getClient().$connect(); }

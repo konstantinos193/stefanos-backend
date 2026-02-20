@@ -9,6 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
@@ -22,6 +23,13 @@ import { Public } from '../common/decorators/public.decorator';
 @UseGuards(JwtAuthGuard)
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
+
+  @Get()
+  @Roles('ADMIN', 'MANAGER', 'PROPERTY_OWNER')
+  @ApiOperation({ summary: 'Get all rooms (authenticated)' })
+  findAllAuth() {
+    return this.roomsService.findAllPublic();
+  }
 
   @Public()
   @Get('public/all')
@@ -53,6 +61,13 @@ export class RoomsController {
   @Get('public/:id')
   findOnePublic(@Param('id') id: string) {
     return this.roomsService.findOnePublic(id);
+  }
+
+  @Get('dashboard-stats')
+  @Roles('PROPERTY_OWNER', 'ADMIN')
+  @UseGuards(RolesGuard)
+  getDashboardStats() {
+    return this.roomsService.getDashboardStats();
   }
 
   @Get('bookable')

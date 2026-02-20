@@ -21,6 +21,8 @@ import { MediaModule } from './media/media.module';
 import { SettingsModule } from './settings/settings.module';
 import { ExternalBookingsModule } from './external-bookings/external-bookings.module';
 import { LogsModule } from './logs/logs.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { InquiriesModule } from './inquiries/inquiries.module';
 import { AppController } from './app.controller';
 
 @Module({
@@ -50,6 +52,8 @@ import { AppController } from './app.controller';
     SettingsModule,
     ExternalBookingsModule,
     LogsModule,
+    NotificationsModule,
+    InquiriesModule,
   ],
   controllers: [AppController],
   providers: [],

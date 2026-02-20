@@ -105,6 +105,7 @@ export enum RoomType {
   TERRACE = 'TERRACE',
   GARDEN = 'GARDEN',
   OTHER = 'OTHER',
+  APARTMENT = 'APARTMENT',
 }
 
 export enum CleaningFrequency {

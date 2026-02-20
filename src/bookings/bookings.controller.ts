@@ -48,8 +48,8 @@ export class BookingsController {
   @Post()
   @ApiOperation({ summary: 'Create booking' })
   @ApiResponse({ status: 201 })
-  create(@Body() createBookingDto: CreateBookingDto, @CurrentUser() user: any) {
-    return this.bookingsService.create(createBookingDto, user.userId);
+  create(@Body() createBookingDto: CreateBookingDto, @CurrentUser() userId: string) {
+    return this.bookingsService.create(createBookingDto, userId);
   }
 
   @Patch(':id')
@@ -65,9 +65,9 @@ export class BookingsController {
   cancel(
     @Param('id') id: string,
     @Body() cancelBookingDto: CancelBookingDto,
-    @CurrentUser() user: any,
+    @CurrentUser() userId: string,
   ) {
-    return this.bookingsService.cancel(id, cancelBookingDto, user.userId || user.id);
+    return this.bookingsService.cancel(id, cancelBookingDto, userId);
   }
 }
 

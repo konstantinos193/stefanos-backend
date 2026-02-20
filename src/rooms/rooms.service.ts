@@ -414,6 +414,190 @@ export class RoomsService {
     return { dates, totalRooms };
   }
 
+  async getDashboardStats() {
+    const now = new Date();
+    const thirtyDaysFromNow = new Date(now);
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+
+    // Get all rooms (not just bookable) for full management view
+    const rooms = await this.prisma.room.findMany({
+      include: {
+        property: {
+          select: {
+            id: true,
+            titleGr: true,
+            titleEn: true,
+            cleaningFee: true,
+            lastCleaningDate: true,
+          },
+        },
+      },
+      orderBy: [{ isBookable: 'desc' }, { name: 'asc' }],
+    });
+
+    if (rooms.length === 0) {
+      return {
+        success: true,
+        data: {
+          stats: {
+            totalRooms: 0,
+            bookableRooms: 0,
+            unavailableRooms: 0,
+            averagePrice: 0,
+            totalUpcomingBookings: 0,
+            occupancyRate: 0,
+            totalRevenue: 0,
+          },
+          rooms: [],
+        },
+      };
+    }
+
+    const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
+
+    // Fetch upcoming bookings for all rooms (next 30 days)
+    const upcomingBookings = await this.prisma.booking.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+        status: { in: ['CONFIRMED', 'CHECKED_IN', 'PENDING'] },
+        checkOut: { gte: now },
+        checkIn: { lte: thirtyDaysFromNow },
+      },
+      select: {
+        id: true,
+        propertyId: true,
+        roomId: true,
+        roomName: true,
+        checkIn: true,
+        checkOut: true,
+        guestName: true,
+        guests: true,
+        totalPrice: true,
+        status: true,
+      },
+      orderBy: { checkIn: 'asc' },
+    });
+
+    // Fetch all completed bookings for revenue
+    const completedBookings = await this.prisma.booking.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+        status: { in: ['CONFIRMED', 'CHECKED_IN', 'COMPLETED'] },
+      },
+      select: {
+        roomId: true,
+        totalPrice: true,
+      },
+    });
+
+    // Fetch cleaning schedules
+    const cleaningSchedules = await this.prisma.cleaningSchedule.findMany({
+      where: {
+        propertyId: { in: propertyIds },
+      },
+      select: {
+        propertyId: true,
+        lastCleaned: true,
+        nextCleaning: true,
+        frequency: true,
+      },
+      orderBy: { lastCleaned: 'desc' },
+    });
+
+    // Build per-room data
+    const bookingsByRoom = new Map<string, typeof upcomingBookings>();
+    const bookingsByProperty = new Map<string, typeof upcomingBookings>();
+    for (const booking of upcomingBookings) {
+      const key = booking.roomId || booking.propertyId;
+      if (booking.roomId) {
+        if (!bookingsByRoom.has(booking.roomId)) bookingsByRoom.set(booking.roomId, []);
+        bookingsByRoom.get(booking.roomId)!.push(booking);
+      }
+      if (!bookingsByProperty.has(booking.propertyId)) bookingsByProperty.set(booking.propertyId, []);
+      bookingsByProperty.get(booking.propertyId)!.push(booking);
+    }
+
+    const revenueByRoom = new Map<string, number>();
+    for (const b of completedBookings) {
+      if (b.roomId) {
+        revenueByRoom.set(b.roomId, (revenueByRoom.get(b.roomId) || 0) + b.totalPrice);
+      }
+    }
+
+    const cleaningByProperty = new Map<string, (typeof cleaningSchedules)[0]>();
+    for (const cs of cleaningSchedules) {
+      if (!cleaningByProperty.has(cs.propertyId)) {
+        cleaningByProperty.set(cs.propertyId, cs);
+      }
+    }
+
+    // Check which rooms are currently occupied
+    const activeBookings = upcomingBookings.filter(
+      (b) =>
+        (b.status === 'CONFIRMED' || b.status === 'CHECKED_IN') &&
+        new Date(b.checkIn) <= now &&
+        new Date(b.checkOut) >= now,
+    );
+    const occupiedRoomIds = new Set(activeBookings.map((b) => b.roomId).filter(Boolean));
+    const occupiedPropertyIds = new Set(activeBookings.map((b) => b.propertyId));
+
+    const bookableRooms = rooms.filter((r) => r.isBookable);
+    const totalRevenue = Array.from(revenueByRoom.values()).reduce((sum, v) => sum + v, 0);
+    const avgPrice = bookableRooms.length > 0
+      ? bookableRooms.reduce((sum, r) => sum + r.basePrice, 0) / bookableRooms.length
+      : 0;
+
+    const occupiedCount = bookableRooms.filter(
+      (r) => occupiedRoomIds.has(r.id) || occupiedPropertyIds.has(r.propertyId),
+    ).length;
+    const occupancyRate = bookableRooms.length > 0
+      ? Math.round((occupiedCount / bookableRooms.length) * 100)
+      : 0;
+
+    const enrichedRooms = rooms.map((room) => {
+      const roomBookings = bookingsByRoom.get(room.id) || bookingsByProperty.get(room.propertyId) || [];
+      const cleaning = cleaningByProperty.get(room.propertyId);
+      const isOccupied = occupiedRoomIds.has(room.id) || occupiedPropertyIds.has(room.propertyId);
+      const nextBooking = roomBookings.find((b) => new Date(b.checkIn) > now);
+      const revenue = revenueByRoom.get(room.id) || 0;
+
+      return {
+        ...room,
+        upcomingBookingsCount: roomBookings.length,
+        nextBooking: nextBooking
+          ? {
+              id: nextBooking.id,
+              checkIn: nextBooking.checkIn,
+              checkOut: nextBooking.checkOut,
+              guestName: nextBooking.guestName,
+              guests: nextBooking.guests,
+            }
+          : null,
+        isOccupied,
+        lastCleaned: cleaning?.lastCleaned || null,
+        nextCleaning: cleaning?.nextCleaning || null,
+        cleaningFrequency: cleaning?.frequency || null,
+        totalRevenue: revenue,
+      };
+    });
+
+    return {
+      success: true,
+      data: {
+        stats: {
+          totalRooms: rooms.length,
+          bookableRooms: bookableRooms.length,
+          unavailableRooms: rooms.length - bookableRooms.length,
+          averagePrice: Math.round(avgPrice * 100) / 100,
+          totalUpcomingBookings: upcomingBookings.length,
+          occupancyRate,
+          totalRevenue: Math.round(totalRevenue * 100) / 100,
+        },
+        rooms: enrichedRooms,
+      },
+    };
+  }
+
   private async calculatePropertyAvailability(propertyId: string, startDate: Date, endDate: Date) {
     const [availability, bookings] = await Promise.all([
       this.prisma.propertyAvailability.findMany({
