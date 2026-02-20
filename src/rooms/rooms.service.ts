@@ -226,7 +226,7 @@ export class RoomsService {
     return room;
   }
 
-  async update(id: string, updateRoomDto: UpdateRoomDto, userId: string) {
+  async update(id: string, updateRoomDto: UpdateRoomDto, userId: string, userRole?: string) {
     const room = await this.prisma.room.findUnique({
       where: { id },
     });
@@ -235,7 +235,8 @@ export class RoomsService {
       throw new NotFoundException('Room not found');
     }
 
-    if (room.ownerId !== userId) {
+    // Admin users can update any room
+    if (userRole !== 'ADMIN' && room.ownerId !== userId) {
       throw new ForbiddenException('You can only update your own rooms');
     }
 
@@ -245,7 +246,7 @@ export class RoomsService {
     });
   }
 
-  async remove(id: string, userId: string) {
+  async remove(id: string, userId: string, userRole?: string) {
     const room = await this.prisma.room.findUnique({
       where: { id },
     });
@@ -254,7 +255,8 @@ export class RoomsService {
       throw new NotFoundException('Room not found');
     }
 
-    if (room.ownerId !== userId) {
+    // Admin users can delete any room
+    if (userRole !== 'ADMIN' && room.ownerId !== userId) {
       throw new ForbiddenException('You can only delete your own rooms');
     }
 

@@ -96,16 +96,16 @@ export class RoomsController {
   update(
     @Param('id') id: string,
     @Body() updateRoomDto: UpdateRoomDto,
-    @CurrentUser() userId: string,
+    @CurrentUser() user: any,
   ) {
-    return this.roomsService.update(id, updateRoomDto, userId);
+    return this.roomsService.update(id, updateRoomDto, user.userId || user.id, user.role);
   }
 
   @Delete(':id')
   @Roles('PROPERTY_OWNER', 'ADMIN')
   @UseGuards(RolesGuard)
-  remove(@Param('id') id: string, @CurrentUser() userId: string) {
-    return this.roomsService.remove(id, userId);
+  remove(@Param('id') id: string, @CurrentUser() user: any) {
+    return this.roomsService.remove(id, user.userId || user.id, user.role);
   }
 
   @Public()
