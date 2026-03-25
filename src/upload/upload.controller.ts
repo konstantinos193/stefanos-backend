@@ -12,6 +12,18 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
 
+interface UploadedFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  destination: string;
+  filename: string;
+  path: string;
+  buffer: Buffer;
+}
+
 @Controller('upload')
 @UseGuards(JwtAuthGuard)
 export class UploadController {
@@ -26,7 +38,7 @@ export class UploadController {
     },
   }))
   async uploadRoomImage(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: UploadedFile,
     @Body('folder') folder?: string,
   ) {
     const imageUrl = await this.uploadService.uploadImage(file, folder || 'rooms');

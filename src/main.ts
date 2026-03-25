@@ -93,6 +93,9 @@ async function bootstrap() {
   // Global prefix
   app.setGlobalPrefix('api');
 
+  // Serve static files from public directory
+  app.use(express.static('public'));
+
   // Global exception filter
   app.useGlobalFilters(new AllExceptionsFilter());
 

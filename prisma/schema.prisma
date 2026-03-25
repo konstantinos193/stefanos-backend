@@ -533,6 +533,8 @@ model Room {
   type        RoomType
   capacity    Int
   maxAdults   Int?    // Optional field for adult capacity breakdown
+  maxChildren Int?    // Optional field for children capacity breakdown (ages 2-12)
+  maxInfants  Int?    // Optional field for infant capacity breakdown (under 2)
   basePrice   Float
   isBookable  Boolean  @default(true)
   amenities   Json? // Array of amenity IDs

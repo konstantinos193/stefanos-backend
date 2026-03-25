@@ -6,6 +6,18 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UploadService } from '../upload/upload.service';
 import { MediaCategory } from '../database/types';
 
+interface UploadedFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  destination: string;
+  filename: string;
+  path: string;
+  buffer: Buffer;
+}
+
 @Injectable()
 export class MediaService {
   constructor(
@@ -13,7 +25,7 @@ export class MediaService {
     private uploadService: UploadService
   ) {}
 
-  async upload(file: Express.Multer.File, category: MediaCategory = MediaCategory.GENERAL, altTextGr?: string, altTextEn?: string) {
+  async upload(file: UploadedFile, category: MediaCategory = MediaCategory.GENERAL, altTextGr?: string, altTextEn?: string) {
     // Upload to Cloudinary
     const url = await this.uploadService.uploadImage(file, category.toLowerCase());
 

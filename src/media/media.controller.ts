@@ -17,6 +17,18 @@ import { RolesGuard } from '../common/guards/roles.guard';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole, MediaCategory } from '../database/types';
 
+interface UploadedFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  destination: string;
+  filename: string;
+  path: string;
+  buffer: Buffer;
+}
+
 @Controller('media')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class MediaController {
@@ -26,7 +38,7 @@ export class MediaController {
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   @UseInterceptors(FileInterceptor('file'))
   async upload(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file: UploadedFile,
     @Query('category') category?: MediaCategory,
     @Body('altTextGr') altTextGr?: string,
     @Body('altTextEn') altTextEn?: string

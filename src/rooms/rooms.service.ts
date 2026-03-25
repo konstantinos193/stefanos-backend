@@ -117,7 +117,7 @@ export class RoomsService {
           },
         },
       },
-      orderBy: { basePrice: 'asc' },
+      orderBy: { name: 'asc' },
     });
   }
 
@@ -146,17 +146,17 @@ export class RoomsService {
           },
         },
       },
-      orderBy: { basePrice: 'asc' },
+      orderBy: { name: 'asc' },
     });
 
     const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
 
-    const [availabilityRecords, conflictingBookings] = await Promise.all([
+    const [blockedRecords, conflictingBookings] = await Promise.all([
       this.prisma.propertyAvailability.findMany({
         where: {
           propertyId: { in: propertyIds },
           date: { gte: startDate, lte: endDate },
-          available: true,
+          available: false,
         },
         select: { propertyId: true },
       }),
@@ -171,11 +171,11 @@ export class RoomsService {
       }),
     ]);
 
-    const availablePropertyIds = new Set(availabilityRecords.map((r) => r.propertyId));
+    const blockedPropertyIds = new Set(blockedRecords.map((r) => r.propertyId));
     const bookedPropertyIds = new Set(conflictingBookings.map((b) => b.propertyId));
 
     return rooms.filter(
-      (room) => availablePropertyIds.has(room.propertyId) && !bookedPropertyIds.has(room.propertyId),
+      (room) => !blockedPropertyIds.has(room.propertyId) && !bookedPropertyIds.has(room.propertyId),
     );
   }
 

@@ -120,7 +120,7 @@ export class PaymentsService {
           })
           .catch(() => undefined);
       }
-      throw new BadRequestException(`Checkout session creation failed: ${error.message}`);
+      throw new BadRequestException(`Checkout session creation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -184,7 +184,7 @@ export class PaymentsService {
 
       return this.mapToResponseDto(payment);
     } catch (error) {
-      throw new BadRequestException(`Payment processing failed: ${error.message}`);
+      throw new BadRequestException(`Payment processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -251,7 +251,7 @@ export class PaymentsService {
 
       return this.mapToResponseDto(payment);
     } catch (error) {
-      throw new BadRequestException(`Payment confirmation failed: ${error.message}`);
+      throw new BadRequestException(`Payment confirmation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -330,7 +330,7 @@ export class PaymentsService {
 
       return this.mapToResponseDto(updatedPayment);
     } catch (error) {
-      throw new BadRequestException(`Refund processing failed: ${error.message}`);
+      throw new BadRequestException(`Refund processing failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
@@ -346,7 +346,7 @@ export class PaymentsService {
     try {
       event = this.stripe.webhooks.constructEvent(payload, signature, webhookSecret);
     } catch (error) {
-      throw new BadRequestException(`Webhook signature verification failed: ${error.message}`);
+      throw new BadRequestException(`Webhook signature verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 
     // Handle different event types
@@ -525,7 +525,7 @@ export class PaymentsService {
 
       return { status: payment.status, bookingId: payment.bookingId };
     } catch (error) {
-      throw new BadRequestException(`Session confirmation failed: ${error.message}`);
+      throw new BadRequestException(`Session confirmation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 

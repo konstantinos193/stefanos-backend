@@ -2,6 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
 
+interface UploadedFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  destination: string;
+  filename: string;
+  path: string;
+  buffer: Buffer;
+}
+
 @Injectable()
 export class UploadService {
   constructor() {
@@ -12,7 +24,7 @@ export class UploadService {
     });
   }
 
-  async uploadImage(file: Express.Multer.File, folder: string = 'rooms'): Promise<string> {
+  async uploadImage(file: UploadedFile, folder: string = 'rooms'): Promise<string> {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {

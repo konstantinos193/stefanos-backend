@@ -514,7 +514,9 @@ export const InquiryPriority: typeof $Enums.InquiryPriority
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Users
  * const users = await prisma.user.findMany()
  * ```
@@ -535,7 +537,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Users
    * const users = await prisma.user.findMany()
    * ```
@@ -944,8 +948,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.4.1
-   * Query Engine version: 55ae170b1ced7fc6ed07a15f110549408c501bb3
+   * Prisma Client JS version: 7.5.0
+   * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
    */
   export type PrismaVersion = {
     client: string
@@ -5082,6 +5086,11 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
@@ -6987,6 +6996,11 @@ export namespace Prisma {
      * Skip the first `n` Properties.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Properties.
+     */
     distinct?: PropertyScalarFieldEnum | PropertyScalarFieldEnum[]
   }
 
@@ -8335,6 +8349,11 @@ export namespace Prisma {
      * Skip the first `n` Amenities.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Amenities.
+     */
     distinct?: AmenityScalarFieldEnum | AmenityScalarFieldEnum[]
   }
 
@@ -9389,6 +9408,11 @@ export namespace Prisma {
      * Skip the first `n` PropertyAmenities.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PropertyAmenities.
+     */
     distinct?: PropertyAmenityScalarFieldEnum | PropertyAmenityScalarFieldEnum[]
   }
 
@@ -10918,6 +10942,11 @@ export namespace Prisma {
      * Skip the first `n` Bookings.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Bookings.
+     */
     distinct?: BookingScalarFieldEnum | BookingScalarFieldEnum[]
   }
 
@@ -12147,6 +12176,11 @@ export namespace Prisma {
      * Skip the first `n` PropertyAvailabilities.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PropertyAvailabilities.
+     */
     distinct?: PropertyAvailabilityScalarFieldEnum | PropertyAvailabilityScalarFieldEnum[]
   }
 
@@ -13416,6 +13450,11 @@ export namespace Prisma {
      * Skip the first `n` Reviews.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Reviews.
+     */
     distinct?: ReviewScalarFieldEnum | ReviewScalarFieldEnum[]
   }
 
@@ -14558,6 +14597,11 @@ export namespace Prisma {
      * Skip the first `n` MaintenanceRequests.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MaintenanceRequests.
+     */
     distinct?: MaintenanceRequestScalarFieldEnum | MaintenanceRequestScalarFieldEnum[]
   }
 
@@ -15667,6 +15711,11 @@ export namespace Prisma {
      * Skip the first `n` Messages.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Messages.
+     */
     distinct?: MessageScalarFieldEnum | MessageScalarFieldEnum[]
   }
 
@@ -16758,6 +16807,11 @@ export namespace Prisma {
      * Skip the first `n` Notifications.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notifications.
+     */
     distinct?: NotificationScalarFieldEnum | NotificationScalarFieldEnum[]
   }
 
@@ -17943,6 +17997,11 @@ export namespace Prisma {
      * Skip the first `n` Editions.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Editions.
+     */
     distinct?: EditionScalarFieldEnum | EditionScalarFieldEnum[]
   }
 
@@ -19023,6 +19082,11 @@ export namespace Prisma {
      * Skip the first `n` Services.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Services.
+     */
     distinct?: ServiceScalarFieldEnum | ServiceScalarFieldEnum[]
   }
 
@@ -20137,6 +20201,11 @@ export namespace Prisma {
      * Skip the first `n` KnowledgeArticles.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of KnowledgeArticles.
+     */
     distinct?: KnowledgeArticleScalarFieldEnum | KnowledgeArticleScalarFieldEnum[]
   }
 
@@ -21393,6 +21462,11 @@ export namespace Prisma {
      * Skip the first `n` Payments.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payments.
+     */
     distinct?: PaymentScalarFieldEnum | PaymentScalarFieldEnum[]
   }
 
@@ -21624,12 +21698,16 @@ export namespace Prisma {
   export type RoomAvgAggregateOutputType = {
     capacity: number | null
     maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
   }
 
   export type RoomSumAggregateOutputType = {
     capacity: number | null
     maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
   }
 
@@ -21642,6 +21720,8 @@ export namespace Prisma {
     type: $Enums.RoomType | null
     capacity: number | null
     maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
     isBookable: boolean | null
     descriptionGr: string | null
@@ -21660,6 +21740,8 @@ export namespace Prisma {
     type: $Enums.RoomType | null
     capacity: number | null
     maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number | null
     isBookable: boolean | null
     descriptionGr: string | null
@@ -21678,6 +21760,8 @@ export namespace Prisma {
     type: number
     capacity: number
     maxAdults: number
+    maxChildren: number
+    maxInfants: number
     basePrice: number
     isBookable: number
     amenities: number
@@ -21694,12 +21778,16 @@ export namespace Prisma {
   export type RoomAvgAggregateInputType = {
     capacity?: true
     maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
   }
 
   export type RoomSumAggregateInputType = {
     capacity?: true
     maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
   }
 
@@ -21712,6 +21800,8 @@ export namespace Prisma {
     type?: true
     capacity?: true
     maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
     isBookable?: true
     descriptionGr?: true
@@ -21730,6 +21820,8 @@ export namespace Prisma {
     type?: true
     capacity?: true
     maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
     isBookable?: true
     descriptionGr?: true
@@ -21748,6 +21840,8 @@ export namespace Prisma {
     type?: true
     capacity?: true
     maxAdults?: true
+    maxChildren?: true
+    maxInfants?: true
     basePrice?: true
     isBookable?: true
     amenities?: true
@@ -21855,6 +21949,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults: number | null
+    maxChildren: number | null
+    maxInfants: number | null
     basePrice: number
     isBookable: boolean
     amenities: JsonValue | null
@@ -21894,6 +21990,8 @@ export namespace Prisma {
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21919,6 +22017,8 @@ export namespace Prisma {
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21941,6 +22041,8 @@ export namespace Prisma {
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21963,6 +22065,8 @@ export namespace Prisma {
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
+    maxChildren?: boolean
+    maxInfants?: boolean
     basePrice?: boolean
     isBookable?: boolean
     amenities?: boolean
@@ -21974,7 +22078,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "nameGr" | "nameEn" | "type" | "capacity" | "maxAdults" | "basePrice" | "isBookable" | "amenities" | "images" | "descriptionGr" | "descriptionEn" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
+  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "nameGr" | "nameEn" | "type" | "capacity" | "maxAdults" | "maxChildren" | "maxInfants" | "basePrice" | "isBookable" | "amenities" | "images" | "descriptionGr" | "descriptionEn" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     owner?: boolean | UserDefaultArgs<ExtArgs>
@@ -22008,6 +22112,8 @@ export namespace Prisma {
       type: $Enums.RoomType
       capacity: number
       maxAdults: number | null
+      maxChildren: number | null
+      maxInfants: number | null
       basePrice: number
       isBookable: boolean
       amenities: Prisma.JsonValue | null
@@ -22452,6 +22558,8 @@ export namespace Prisma {
     readonly type: FieldRef<"Room", 'RoomType'>
     readonly capacity: FieldRef<"Room", 'Int'>
     readonly maxAdults: FieldRef<"Room", 'Int'>
+    readonly maxChildren: FieldRef<"Room", 'Int'>
+    readonly maxInfants: FieldRef<"Room", 'Int'>
     readonly basePrice: FieldRef<"Room", 'Float'>
     readonly isBookable: FieldRef<"Room", 'Boolean'>
     readonly amenities: FieldRef<"Room", 'Json'>
@@ -22657,6 +22765,11 @@ export namespace Prisma {
      * Skip the first `n` Rooms.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Rooms.
+     */
     distinct?: RoomScalarFieldEnum | RoomScalarFieldEnum[]
   }
 
@@ -23801,6 +23914,11 @@ export namespace Prisma {
      * Skip the first `n` PropertyGroups.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PropertyGroups.
+     */
     distinct?: PropertyGroupScalarFieldEnum | PropertyGroupScalarFieldEnum[]
   }
 
@@ -24954,6 +25072,11 @@ export namespace Prisma {
      * Skip the first `n` CleaningSchedules.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CleaningSchedules.
+     */
     distinct?: CleaningScheduleScalarFieldEnum | CleaningScheduleScalarFieldEnum[]
   }
 
@@ -26321,6 +26444,11 @@ export namespace Prisma {
      * Skip the first `n` PropertyAnalytics.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PropertyAnalytics.
+     */
     distinct?: PropertyAnalyticsScalarFieldEnum | PropertyAnalyticsScalarFieldEnum[]
   }
 
@@ -27429,6 +27557,11 @@ export namespace Prisma {
      * Skip the first `n` PropertyNotes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PropertyNotes.
+     */
     distinct?: PropertyNoteScalarFieldEnum | PropertyNoteScalarFieldEnum[]
   }
 
@@ -28542,6 +28675,11 @@ export namespace Prisma {
      * Skip the first `n` AuditLogs.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AuditLogs.
+     */
     distinct?: AuditLogScalarFieldEnum | AuditLogScalarFieldEnum[]
   }
 
@@ -29776,6 +29914,11 @@ export namespace Prisma {
      * Skip the first `n` Contents.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Contents.
+     */
     distinct?: ContentScalarFieldEnum | ContentScalarFieldEnum[]
   }
 
@@ -30877,6 +31020,11 @@ export namespace Prisma {
      * Skip the first `n` ContentMedias.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ContentMedias.
+     */
     distinct?: ContentMediaScalarFieldEnum | ContentMediaScalarFieldEnum[]
   }
 
@@ -32088,6 +32236,11 @@ export namespace Prisma {
      * Skip the first `n` Media.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Media.
+     */
     distinct?: MediaScalarFieldEnum | MediaScalarFieldEnum[]
   }
 
@@ -33164,6 +33317,11 @@ export namespace Prisma {
      * Skip the first `n` Settings.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Settings.
+     */
     distinct?: SettingScalarFieldEnum | SettingScalarFieldEnum[]
   }
 
@@ -34310,6 +34468,11 @@ export namespace Prisma {
      * Skip the first `n` RoomContents.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoomContents.
+     */
     distinct?: RoomContentScalarFieldEnum | RoomContentScalarFieldEnum[]
   }
 
@@ -35469,6 +35632,11 @@ export namespace Prisma {
      * Skip the first `n` RoomAvailabilityRules.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RoomAvailabilityRules.
+     */
     distinct?: RoomAvailabilityRuleScalarFieldEnum | RoomAvailabilityRuleScalarFieldEnum[]
   }
 
@@ -36663,6 +36831,11 @@ export namespace Prisma {
      * Skip the first `n` Inquiries.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Inquiries.
+     */
     distinct?: InquiryScalarFieldEnum | InquiryScalarFieldEnum[]
   }
 
@@ -37214,6 +37387,8 @@ export namespace Prisma {
     type: 'type',
     capacity: 'capacity',
     maxAdults: 'maxAdults',
+    maxChildren: 'maxChildren',
+    maxInfants: 'maxInfants',
     basePrice: 'basePrice',
     isBookable: 'isBookable',
     amenities: 'amenities',
@@ -39290,6 +39465,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
     maxAdults?: IntNullableFilter<"Room"> | number | null
+    maxChildren?: IntNullableFilter<"Room"> | number | null
+    maxInfants?: IntNullableFilter<"Room"> | number | null
     basePrice?: FloatFilter<"Room"> | number
     isBookable?: BoolFilter<"Room"> | boolean
     amenities?: JsonNullableFilter<"Room">
@@ -39314,6 +39491,8 @@ export namespace Prisma {
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrderInput | SortOrder
+    maxChildren?: SortOrderInput | SortOrder
+    maxInfants?: SortOrderInput | SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     amenities?: SortOrderInput | SortOrder
@@ -39341,6 +39520,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
     maxAdults?: IntNullableFilter<"Room"> | number | null
+    maxChildren?: IntNullableFilter<"Room"> | number | null
+    maxInfants?: IntNullableFilter<"Room"> | number | null
     basePrice?: FloatFilter<"Room"> | number
     isBookable?: BoolFilter<"Room"> | boolean
     amenities?: JsonNullableFilter<"Room">
@@ -39365,6 +39546,8 @@ export namespace Prisma {
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrderInput | SortOrder
+    maxChildren?: SortOrderInput | SortOrder
+    maxInfants?: SortOrderInput | SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     amenities?: SortOrderInput | SortOrder
@@ -39393,6 +39576,8 @@ export namespace Prisma {
     type?: EnumRoomTypeWithAggregatesFilter<"Room"> | $Enums.RoomType
     capacity?: IntWithAggregatesFilter<"Room"> | number
     maxAdults?: IntNullableWithAggregatesFilter<"Room"> | number | null
+    maxChildren?: IntNullableWithAggregatesFilter<"Room"> | number | null
+    maxInfants?: IntNullableWithAggregatesFilter<"Room"> | number | null
     basePrice?: FloatWithAggregatesFilter<"Room"> | number
     isBookable?: BoolWithAggregatesFilter<"Room"> | boolean
     amenities?: JsonNullableWithAggregatesFilter<"Room">
@@ -42369,6 +42554,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42392,6 +42579,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42413,6 +42602,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42436,6 +42627,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42458,6 +42651,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42477,6 +42672,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -42496,6 +42693,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -45353,6 +45552,8 @@ export namespace Prisma {
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     amenities?: SortOrder
@@ -45367,6 +45568,8 @@ export namespace Prisma {
   export type RoomAvgOrderByAggregateInput = {
     capacity?: SortOrder
     maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
   }
 
@@ -45379,6 +45582,8 @@ export namespace Prisma {
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     descriptionGr?: SortOrder
@@ -45397,6 +45602,8 @@ export namespace Prisma {
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
     isBookable?: SortOrder
     descriptionGr?: SortOrder
@@ -45409,6 +45616,8 @@ export namespace Prisma {
   export type RoomSumOrderByAggregateInput = {
     capacity?: SortOrder
     maxAdults?: SortOrder
+    maxChildren?: SortOrder
+    maxInfants?: SortOrder
     basePrice?: SortOrder
   }
 
@@ -49077,6 +49286,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -49099,6 +49310,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -49503,6 +49716,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
     maxAdults?: IntNullableFilter<"Room"> | number | null
+    maxChildren?: IntNullableFilter<"Room"> | number | null
+    maxInfants?: IntNullableFilter<"Room"> | number | null
     basePrice?: FloatFilter<"Room"> | number
     isBookable?: BoolFilter<"Room"> | boolean
     amenities?: JsonNullableFilter<"Room">
@@ -49875,6 +50090,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -49896,6 +50113,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55599,6 +55818,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55621,6 +55842,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55657,6 +55880,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55679,6 +55904,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55699,6 +55926,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55721,6 +55950,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55757,6 +55988,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -55779,6 +56012,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -56315,6 +56550,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -56811,6 +57048,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -56833,6 +57072,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -56854,6 +57095,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -57041,6 +57284,8 @@ export namespace Prisma {
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
+    maxChildren?: number | null
+    maxInfants?: number | null
     basePrice: number
     isBookable?: boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -57399,6 +57644,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -57420,6 +57667,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
@@ -57441,6 +57690,8 @@ export namespace Prisma {
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
+    maxChildren?: NullableIntFieldUpdateOperationsInput | number | null
+    maxInfants?: NullableIntFieldUpdateOperationsInput | number | null
     basePrice?: FloatFieldUpdateOperationsInput | number
     isBookable?: BoolFieldUpdateOperationsInput | boolean
     amenities?: NullableJsonNullValueInput | InputJsonValue
