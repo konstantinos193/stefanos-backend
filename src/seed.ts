@@ -27,6 +27,8 @@ async function hashPassword(password: string): Promise<string> {
 
 type RoomTypeSeed = 'BEDROOM' | 'LIVING_ROOM' | 'STUDIO' | 'OTHER' | 'APARTMENT' | 'KITCHEN' | 'BATHROOM' | 'BALCONY' | 'TERRACE' | 'GARDEN';
 
+type AmenityBilingual = { en: string; el: string };
+
 type IncantoRoomTemplate = {
   roomNumber: number;
   nameEn: string;
@@ -36,13 +38,41 @@ type IncantoRoomTemplate = {
   type: RoomTypeSeed;
   capacity: number;
   basePrice: number;
-  amenities: string[];
+  amenities: AmenityBilingual[];
 };
 
 type IncantoRoomSeed = IncantoRoomTemplate & {
   folderName: string;
   images: string[];
 };
+
+// Base amenities for all rooms (bilingual format)
+const BASE_AMENITIES = [
+  { en: 'WiFi', el: 'WiFi' },
+  { en: 'Free Parking', el: 'Δωρεάν Πάρκινγκ' },
+  { en: 'Kitchen', el: 'Κουζίνα' },
+  { en: 'Air Conditioning', el: 'Κλιματισμός' },
+  { en: 'Dining Area', el: 'Χώρος Τραπεζαρίας' },
+];
+
+// Room-specific extra amenities (bilingual format)
+const ROOM_AMENITIES = {
+  1: [{ en: 'Balcony', el: 'Μπαλκόνι' }],
+  2: [{ en: 'Garden View', el: 'Θέα στον Κήπο' }, { en: 'Pet Friendly', el: 'Κατοικίδια Επιτρέπονται' }],
+  3: [{ en: 'Sea View', el: 'Θέα στη Θάλασσα' }],
+  4: [{ en: 'Balcony', el: 'Μπαλκόνι' }],
+  5: [{ en: 'Living Area', el: 'Χώρος Καθιστικού' }],
+  6: [{ en: 'Panoramic View', el: 'Πανοραμική Θέα' }],
+  7: [{ en: '2 Bedrooms', el: '2 Υπνοδωμάτια' }],
+  8: [{ en: 'Sea View', el: 'Θέα στη Θάλασσα' }],
+  9: [{ en: 'Sea View', el: 'Θέα στη Θάλασσα' }],
+  10: [{ en: '2 Bedrooms', el: '2 Υπνοδωμάτια' }],
+};
+
+// Helper function to get amenities for a room
+function getRoomAmenities(roomNumber: number) {
+  return [...BASE_AMENITIES, ...(ROOM_AMENITIES[roomNumber] || [])];
+}
 
 const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
   1: {
@@ -54,7 +84,7 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 4,
     basePrice: 120,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Balcony']
+    amenities: [...BASE_AMENITIES, { en: 'Balcony', el: 'Μπαλκόνι' }]
   },
   2: {
     roomNumber: 2,
@@ -65,7 +95,7 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 4,
     basePrice: 130,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Garden View']
+    amenities: [...BASE_AMENITIES, { en: 'Garden View', el: 'Θέα στον Κήπο' }, { en: 'Pet Friendly', el: 'Κατοικίδια Επιτρέπονται' }]
   },
   3: {
     roomNumber: 3,
@@ -76,18 +106,18 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 3,
     basePrice: 150,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Sea View']
+    amenities: [...BASE_AMENITIES, { en: 'Sea View', el: 'Θέα στη Θάλασσα' }]
   },
   4: {
     roomNumber: 4,
     nameEn: 'Apartment 4 - First Floor',
     nameGr: 'Διαμέρισμα 4 - Πρώτος Όροφος',
     descriptionEn: 'Spacious first-floor apartment with stylish decor and premium comfort.',
-    descriptionGr: 'Ευρύχωρο διαμέρισμα πρώτου ορόφου με κομψή διακόσμηση και premium άνεση.',
+    descriptionGr: 'Ένα εξαιρετικό διαμέρισμα πρώτου ορόφου που συνδυάζει αρμονικά χώρο, αισθητική και θέα στη θάλασσα. Με κρεβάτι king-size ιδανικό για ζευγάρια, διαθέτει  άνετο καναπέ-κρεβάτι. Η ευρεία διαρρύθμιση δημιουργεί αίσθηση ελευθερίας, ενώ τα premium amenities εγγυώνται μια παραμονή που ξεπερνά κάθε προσδοκία.',
     type: 'APARTMENT' as const,
     capacity: 4,
     basePrice: 170,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Balcony']
+    amenities: [...BASE_AMENITIES, { en: 'Balcony', el: 'Μπαλκόνι' }]
   },
   5: {
     roomNumber: 5,
@@ -98,7 +128,7 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 4,
     basePrice: 200,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Living Area']
+    amenities: [...BASE_AMENITIES, { en: 'Living Area', el: 'Χώρος Καθιστικού' }]
   },
   6: {
     roomNumber: 6,
@@ -109,7 +139,7 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 3,
     basePrice: 180,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Panoramic View']
+    amenities: [...BASE_AMENITIES, { en: 'Panoramic View', el: 'Πανοραμική Θέα' }]
   },
   7: {
     roomNumber: 7,
@@ -120,18 +150,18 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 5,
     basePrice: 220,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', '2 Bedrooms']
+    amenities: [...BASE_AMENITIES, { en: '2 Bedrooms', el: '2 Υπνοδωμάτια' }]
   },
   8: {
     roomNumber: 8,
     nameEn: 'Apartment 8 - Second Floor',
     nameGr: 'Διαμέρισμα 8 - Δεύτερος Όροφος',
-    descriptionEn: 'Premium apartment with ocean-facing views and elevated comfort.',
-    descriptionGr: 'Premium διαμέρισμα με θέα στον ωκεανό και ανεlevated άνεση.',
+    descriptionEn: 'Premium apartment with sea views and elevated comfort.',
+    descriptionGr: 'Premium διαμέρισμα με θέα στη θάλασσα και ανώτερη άνεση.',
     type: 'APARTMENT' as const,
     capacity: 4,
     basePrice: 240,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Ocean View']
+    amenities: [...BASE_AMENITIES, { en: 'Sea View', el: 'Θέα στη Θάλασσα' }]
   },
   9: {
     roomNumber: 9,
@@ -142,7 +172,7 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 2,
     basePrice: 260,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', 'Ocean View']
+    amenities: [...BASE_AMENITIES, { en: 'Sea View', el: 'Θέα στη Θάλασσα' }]
   },
   10: {
     roomNumber: 10,
@@ -153,7 +183,7 @@ const INCANTO_ROOM_TEMPLATES: Record<number, IncantoRoomTemplate> = {
     type: 'APARTMENT' as const,
     capacity: 4,
     basePrice: 300,
-    amenities: ['WiFi', 'Free Parking', 'Kitchen', 'Air Conditioning', '2 Bedrooms']
+    amenities: [...BASE_AMENITIES, { en: '2 Bedrooms', el: '2 Υπνοδωμάτια' }]
   },
 };
 
