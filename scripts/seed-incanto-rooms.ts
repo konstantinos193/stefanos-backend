@@ -34,6 +34,7 @@ interface RoomTemplate {
   maxChildren?: number;
   maxInfants?: number;
   basePrice: number;
+  isBookable?: boolean;
   amenities: { en: string; el: string }[];
 }
 
@@ -45,7 +46,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A refined ground-level apartment designed for comfort and effortless elegance. Featuring a spacious layout, modern furnishings, and direct access convenience, this residence offers a calm and private atmosphere ideal for relaxation. Thoughtfully styled with premium details, it combines functionality with understated luxury for a truly comfortable stay.',
     descriptionGr: 'Ένα κομψό διαμέρισμα στο ισόγειο, σχεδιασμένο για άνεση και διακριτική πολυτέλεια. Διαθέτει ευρύχωρη διαρρύθμιση, σύγχρονη επίπλωση και εύκολη πρόσβαση, προσφέροντας μια ήρεμη και ιδιωτική ατμόσφαιρα ιδανική για ξεκούραση. Με προσεγμένες λεπτομέρειες και υψηλή αισθητική, συνδυάζει λειτουργικότητα και ποιότητα για μια ξεχωριστή διαμονή.',
     type: 'APARTMENT', capacity: 4, maxAdults: 2, maxChildren: 2,
-    basePrice: 120,
+    basePrice: 90,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'Free WiFi', el: 'Δωρεάν WiFi' },
@@ -68,7 +69,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A spacious ground-floor apartment crafted for families and groups seeking comfort and privacy. Featuring a fully equipped kitchen, generous living spaces, and a private outdoor access point, this residence blends modern convenience with timeless elegance. Ideal for longer stays, every detail has been carefully considered to deliver a warm and welcoming home away from home.',
     descriptionGr: 'Ένα ευρύχωρο διαμέρισμα ισογείου, ιδανικό για οικογένειες και ομάδες που αναζητούν άνεση και απομόνωση. Διαθέτει πλήρως εξοπλισμένη κουζίνα, άνετους χώρους διαβίωσης και ιδιωτική πρόσβαση στον εξωτερικό χώρο. Συνδυάζει σύγχρονη πρακτικότητα με διαχρονική κομψότητα, προσφέροντας μια ζεστή και φιλόξενη ατμόσφαιρα για κάθε επισκέπτη.',
     type: 'APARTMENT', capacity: 4, maxAdults: 4, maxChildren: 2,
-    basePrice: 120,
+    basePrice: 90,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'Free WiFi', el: 'Δωρεάν WiFi' },
@@ -89,7 +90,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A beautifully appointed first-floor apartment designed for families, with sweeping sea views and refined coastal interiors. Ideal for families seeking tranquillity, it features generous living spaces, elegant furnishings, and a private balcony where the Ionian breeze becomes part of your morning routine. A seamless blend of comfort and natural beauty, thoughtfully arranged for an unforgettable family stay.',
     descriptionGr: 'Ένα υπέροχα διαμορφωμένο διαμέρισμα πρώτου ορόφου σχεδιασμένο για οικογένειες, με εντυπωσιακή θέα στη θάλασσα και κομψά παράκτια interiors. Ιδανικό για οικογένειες που αναζητούν ηρεμία, διαθέτει άνετους χώρους διαβίωσης, κομψή επίπλωση και ιδιωτικό μπαλκόνι όπου η Ιόνια αύρα γίνεται μέρος της καθημερινότητάς σας. Μια αρμονική σύνθεση άνεσης και φυσικής ομορφιάς, προσεκτικά διαμορφωμένη για μια αξέχαστη οικογενειακή διαμονή.',
     type: 'APARTMENT', capacity: 4, maxAdults: 2, maxChildren: 2,
-    basePrice: 180,
+    basePrice: 90,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'King Bed', el: 'Κρεβάτι King' },
@@ -108,7 +109,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A superior first-floor apartment that harmoniously combines space, aesthetics, and sea views. With a king-size bed ideal for couples, it features a comfortable sofa bed. The spacious layout creates a sense of freedom, while premium amenities guarantee a stay that exceeds every expectation.',
     descriptionGr: 'Ένα εξαιρετικό διαμέρισμα πρώτου ορόφου που συνδυάζει αρμονικά χώρο, αισθητική και θέα στη θάλασσα. Με κρεβάτι king-size ιδανικό για ζευγάρια, διαθέτει  άνετο καναπέ-κρεβάτι. Η ευρεία διαρρύθμιση δημιουργεί αίσθηση ελευθερίας, ενώ τα premium amenities εγγυώνται μια παραμονή που ξεπερνά κάθε προσδοκία.',
     type: 'APARTMENT', capacity: 2, maxAdults: 2,
-    basePrice: 210,
+    basePrice: 80,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'King Bed', el: 'Κρεβάτι King' },
@@ -128,7 +129,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A premium first-floor apartment with impressive sea views and supreme comfort in every detail. The king-size bed and carefully curated decor create a sanctuary of sophistication and serenity. Ideal for families and those seeking a more intimate and luxurious experience by the sea.',
     descriptionGr: 'Ένα premium διαμέρισμα πρώτου ορόφου με εντυπωσιακή θέα στην θάλασσα και ανώτατη άνεση σε κάθε λεπτομέρεια. Το king-size κρεβάτι, η προσεγμένη διακόσμηση δημιουργεί ένα καταφύγιο εκλέπτυνσης και ηρεμίας. Ιδανικό για οικογένειες και όσους αναζητούν μια πιο οικεία και πολυτελή εμπειρία δίπλα στη θάλασσα.',
     type: 'APARTMENT', capacity: 4, maxAdults: 4, maxChildren: 2,
-    basePrice: 250,
+    basePrice: 90,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'Free WiFi', el: 'Δωρεάν WiFi' },
@@ -145,7 +146,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A stunning second-floor apartment with extensive panoramic views and sophisticated modern aesthetics. The king-size bed and Smart TV create an environment of refined relaxation. Elevated above the coastline, this apartment offers an inspired and serene view of the Ionian landscape. Designed to accommodate families with up to three children, it features a bunk room and a small bed for a fifth member.',
     descriptionGr: 'Ένα εντυπωσιακό διαμέρισμα δεύτερου ορόφου με εκτεταμένη πανοραμική θέα και εκλεπτυσμένη σύγχρονη αισθητική. Το κρεβάτι king-size και η Smart TV δημιουργούν ένα περιβάλλον εκλεπτυσμένης χαλάρωσης. Υπερυψωμένο πάνω από την ακτή, αυτό το διαμέρισμα προσφέρει μια εμπνευσμένη και γαλήνια θέα στο ιόνιο τοπίο. Σχεδιασμένο για την εξυπηρέτηση οικογενειών με έως και τρία παιδιά, διαθέτει δωμάτιο με κουκέτα και ένα μικρό κρεβάτι για ένα πέμπτο μέλος.',
     type: 'APARTMENT', capacity: 5, maxAdults: 2, maxChildren: 3,
-    basePrice: 240,
+    basePrice: 90,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'King Bed', el: 'Κρεβάτι King' },
@@ -165,7 +166,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'An elegantly appointed second-floor apartment designed for couples seeking a refined and intimate retreat. Featuring a king-size bed, sweeping sea views, and thoughtfully curated furnishings, this residence blends comfort and coastal charm seamlessly. Every detail has been considered to create a serene and romantic atmosphere, offering an unforgettable experience by the Ionian Sea.',
     descriptionGr: 'Ένα κομψά διαμορφωμένο διαμέρισμα δεύτερου ορόφου, σχεδιασμένο για ζευγάρια που αναζητούν έναν εκλεπτυσμένο και οικείο χώρο. Με κρεβάτι king-size, εντυπωσιακή θέα στη θάλασσα και προσεγμένη επίπλωση, συνδυάζει άνεση και παράκτια γοητεία αρμονικά. Κάθε λεπτομέρεια έχει μελετηθεί για να δημιουργήσει μια γαλήνια και ρομαντική ατμόσφαιρα, προσφέροντας μια αξέχαστη εμπειρία δίπλα στο Ιόνιο Πέλαγος.',
     type: 'APARTMENT', capacity: 2, maxAdults: 2,
-    basePrice: 320,
+    basePrice: 80,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'King Bed', el: 'Κρεβάτι King' },
@@ -183,7 +184,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'A premium second-floor apartment with impressive sea views and supreme comfort in every detail. The king-size bed and carefully curated decor create a sanctuary of sophistication and serenity. Ideal for families and those seeking a more intimate and luxurious experience by the sea.',
     descriptionGr: 'Ένα premium διαμέρισμα δεύτερου ορόφου με εντυπωσιακή θέα στην θάλασσα και ανώτατη άνεση σε κάθε λεπτομέρεια. Το king-size κρεβάτι, η προσεγμένη διακόσμηση δημιουργεί ένα καταφύγιο εκλέπτυνσης και ηρεμίας. Ιδανικό για οικογένειες και όσους αναζητούν μια πιο οικεία και πολυτελή εμπειρία δίπλα στη θάλασσα.',
     type: 'APARTMENT', capacity: 4, maxAdults: 4, maxChildren: 2,
-    basePrice: 340,
+    basePrice: 90,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'King Bed', el: 'Κρεβάτι King' },
@@ -202,7 +203,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionEn: 'An incomparably romantic third-floor apartment, created for couples who wish to celebrate life\'s most precious moments. Its romantic decor embraces the beauty of the Ionian horizon, this apartment transforms every evening into an unforgettable memory. The pinnacle of the romantic experience at L\'Incanto.',
     descriptionGr: 'Ένα απαράμιλλα ρομαντικό διαμέρισμα τρίτου ορόφου, δημιουργημένο για ζευγάρια που επιθυμούν να γιορτάσουν τις πιο πολύτιμες στιγμές της ζωής τους. Η ρομαντική διακόσμησή του αγκαλιάζει την ομορφιά του Ιόνιου ορίζοντα, αυτό το διαμέρισμα μετατρέπει κάθε βράδυ σε αξέχαστη ανάμνηση. Η κορύφωση της ρομαντικής εμπειρίας στο L\'Incanto.',
     type: 'APARTMENT', capacity: 2, maxAdults: 2,
-    basePrice: 380,
+    basePrice: 80,
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: 'Private Jacuzzi', el: 'Ιδιωτικό Jacuzzi' },
@@ -225,6 +226,7 @@ const ROOMS: RoomTemplate[] = [
       "Το στολίδι του L'Incanto, αυτό το λαμπρό διαμέρισμα τρίτου ορόφου ορίζει την απόλυτη εμπειρία πολυτέλειας. Με δύο πλήρη υπνοδωμάτια και εκτεταμένη ιδιωτική βεράντα με θέα στο Ιόνιο Πέλαγος, θέτει ένα ασύγκριτο πρότυπο εκλέπτυνσης. Κατάλληλο για τους πιο απαιτητικούς επισκέπτες, προσφέρει έναν ασύγκριτο συνδυασμό χώρου, κομψότητας και εξατομικευμένης φιλοξενίας.",
     type: 'APARTMENT', capacity: 4, maxAdults: 4, maxChildren: 2,
     basePrice: 450,
+    isBookable: false, // Closed for the entire summer
     amenities: [
       { en: 'Sea View', el: 'Θέα Θάλασσας' },
       { en: '2 Bedrooms', el: '2 Υπνοδωμάτια' },
@@ -535,7 +537,7 @@ async function main() {
         capacity: tpl.capacity,
         maxAdults: tpl.maxAdults || tpl.capacity, // Default to total capacity if not specified
         basePrice: tpl.basePrice,
-        isBookable: true,
+        isBookable: tpl.isBookable !== undefined ? tpl.isBookable : true,
         amenities: tpl.amenities,
         images,
         descriptionEn: tpl.descriptionEn,
