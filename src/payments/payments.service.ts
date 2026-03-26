@@ -552,6 +552,89 @@ export class PaymentsService {
     return this.mapToResponseDto(payment);
   }
 
+  async getAll(params: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    method?: string;
+    bookingId?: string;
+    propertyId?: string;
+  }, userId: string): Promise<any> {
+    const page = +( params.page || 1);
+    const limit = +(params.limit || 10);
+    const skip = (page - 1) * limit;
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+    const where: any = {};
+    if (!isAdmin) {
+      where.property = { ownerId: userId };
+    }
+    if (params.status) where.status = params.status;
+    if (params.method) where.method = params.method;
+    if (params.bookingId) where.bookingId = params.bookingId;
+    if (params.propertyId) where.propertyId = params.propertyId;
+
+    const [payments, total] = await Promise.all([
+      this.prisma.payment.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          booking: { select: { id: true, guestName: true, checkIn: true, checkOut: true } },
+          property: { select: { id: true, titleGr: true, titleEn: true } },
+        },
+      }),
+      this.prisma.payment.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      success: true,
+      data: {
+        payments,
+        pagination: { page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 },
+      },
+    };
+  }
+
+  async refundById(paymentId: string, amount: number | undefined, reason: string | undefined, userId: string): Promise<PaymentResponseDto> {
+    return this.refundPayment({ paymentId, amount, reason }, userId);
+  }
+
+  async schedulePayout(paymentId: string, scheduledFor: string, userId: string) {
+    const payment = await this.prisma.payment.findUnique({ where: { id: paymentId }, include: { property: true } });
+    if (!payment) throw new NotFoundException('Payment not found');
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+    const isOwner = payment.property?.ownerId === userId;
+    if (!isAdmin && !isOwner) throw new BadRequestException('Unauthorized');
+
+    const updated = await this.prisma.payment.update({
+      where: { id: paymentId },
+      data: { payoutScheduledFor: new Date(scheduledFor), payoutStatus: 'SCHEDULED' },
+    });
+    return { success: true, data: this.mapToResponseDto(updated) };
+  }
+
+  async markPayoutSent(paymentId: string, userId: string) {
+    const payment = await this.prisma.payment.findUnique({ where: { id: paymentId }, include: { property: true } });
+    if (!payment) throw new NotFoundException('Payment not found');
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+    if (!isAdmin) throw new BadRequestException('Only admins can mark payouts as sent');
+
+    const updated = await this.prisma.payment.update({
+      where: { id: paymentId },
+      data: { payoutStatus: 'PAID', payoutId: `manual_${Date.now()}` },
+    });
+    return { success: true, data: this.mapToResponseDto(updated) };
+  }
+
   async getOwnerPayouts(ownerId: string): Promise<any[]> {
     const payments = await this.prisma.payment.findMany({
       where: {

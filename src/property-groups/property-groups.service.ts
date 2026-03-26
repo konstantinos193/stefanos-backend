@@ -23,25 +23,46 @@ export class PropertyGroupsService {
     });
   }
 
-  async findAll(userId: string) {
-    return this.prisma.propertyGroup.findMany({
-      where: { ownerId: userId },
-      include: {
-        properties: {
-          select: {
-            id: true,
-            titleEn: true,
-            titleGr: true,
-            status: true,
-            basePrice: true,
+  async findAll(userId: string, page = 1, limit = 20) {
+    const pageNum = +page;
+    const limitNum = +limit;
+
+    // Admins see all groups; owners see their own
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+    const where = isAdmin ? {} : { ownerId: userId };
+
+    const [groups, total] = await Promise.all([
+      this.prisma.propertyGroup.findMany({
+        where,
+        include: {
+          properties: {
+            select: { id: true, titleEn: true, titleGr: true, status: true, basePrice: true },
           },
+          _count: { select: { properties: true } },
         },
-        _count: {
-          select: { properties: true },
+        orderBy: { createdAt: 'desc' },
+        skip: (pageNum - 1) * limitNum,
+        take: limitNum,
+      }),
+      this.prisma.propertyGroup.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+    return {
+      success: true,
+      data: {
+        groups,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages,
+          hasNextPage: pageNum < totalPages,
+          hasPrevPage: pageNum > 1,
         },
       },
-      orderBy: { createdAt: 'desc' },
-    });
+    };
   }
 
   async findOne(id: string, userId: string) {

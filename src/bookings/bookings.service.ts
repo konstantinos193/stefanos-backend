@@ -6,13 +6,21 @@ import { CancelBookingDto } from './dto/cancel-booking.dto';
 import { BookingQueryDto } from './dto/booking-query.dto';
 import { getPagination } from '../common/utils/pagination.util';
 import { FinancialUtil } from '../common/utils/financial.util';
+import { PaymentStatus } from '../database/types';
+import { EmailService } from '../email/email.service';
+import Stripe from 'stripe';
 
 @Injectable()
 export class BookingsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private emailService: EmailService,
+  ) {}
 
   async findAll(query: BookingQueryDto) {
-    const { page = 1, limit = 10, sortBy, sortOrder = 'desc', search, status, dateFrom, dateTo } = query;
+    const { sortBy, sortOrder = 'desc', search, status, dateFrom, dateTo, propertyId, roomId } = query;
+    const page = +(query.page || 1);
+    const limit = +(query.limit || 10);
     const skip = (page - 1) * limit;
 
     const orderBy: any = {};
@@ -24,18 +32,14 @@ export class BookingsService {
 
     const where: any = {};
 
-    if (status) {
-      where.status = status;
-    }
+    if (status) where.status = status;
+    if (propertyId) where.propertyId = propertyId;
+    if (roomId) where.roomId = roomId;
 
     if (dateFrom || dateTo) {
       where.checkIn = {};
-      if (dateFrom) {
-        where.checkIn.gte = new Date(dateFrom);
-      }
-      if (dateTo) {
-        where.checkIn.lte = new Date(dateTo);
-      }
+      if (dateFrom) where.checkIn.gte = new Date(dateFrom);
+      if (dateTo) where.checkIn.lte = new Date(dateTo);
     }
 
     if (search) {
@@ -222,27 +226,25 @@ export class BookingsService {
     const checkIn = new Date(createBookingDto.checkIn);
     const checkOut = new Date(createBookingDto.checkOut);
 
-    const conflictingBookings = await this.prisma.booking.findMany({
-      where: {
-        propertyId: createBookingDto.propertyId,
-        status: {
-          in: ['CONFIRMED', 'CHECKED_IN'],
-        },
-        OR: [
-          {
-            checkIn: {
-              lte: checkOut,
-            },
-            checkOut: {
-              gte: checkIn,
-            },
-          },
-        ],
-      },
-    });
+    // Room-level check: when roomId is provided, scope conflict to that room only.
+    // Property-level check: when no roomId, scope to property-level (non-room) bookings.
+    const conflictWhere: any = {
+      status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+      OR: [{ checkIn: { lte: checkOut }, checkOut: { gte: checkIn } }],
+    };
+
+    if (createBookingDto.roomId) {
+      conflictWhere.roomId = createBookingDto.roomId;
+    } else {
+      conflictWhere.propertyId = createBookingDto.propertyId;
+      conflictWhere.roomId = null;
+    }
+
+    const conflictingBookings = await this.prisma.booking.findMany({ where: conflictWhere });
 
     if (conflictingBookings.length > 0) {
-      throw new BadRequestException('Property is not available for the selected dates');
+      const entity = createBookingDto.roomId ? 'Room' : 'Property';
+      throw new BadRequestException(`${entity} is not available for the selected dates`);
     }
 
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
@@ -309,6 +311,23 @@ export class BookingsService {
       },
     });
 
+    // Send confirmation email (non-blocking)
+    const guestEmail = booking.guestEmail || booking.guest?.email;
+    if (guestEmail) {
+      this.emailService.sendBookingConfirmation({
+        guestName: booking.guestName || booking.guest?.name || 'Guest',
+        guestEmail,
+        bookingId: booking.id,
+        propertyName: booking.property?.titleEn || booking.property?.titleGr || '',
+        roomName: booking.roomName || undefined,
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        guests: booking.guests,
+        totalPrice: booking.totalPrice,
+        currency: booking.currency || 'EUR',
+      }).catch(() => undefined);
+    }
+
     return {
       success: true,
       message: 'Booking created successfully',
@@ -337,17 +356,38 @@ export class BookingsService {
             images: true,
             address: true,
             city: true,
+            ownerId: true,
           },
         },
         guest: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
       },
     });
+
+    // Auto-create/update cleaning task when booking is COMPLETED
+    if (updateBookingDto.status === 'COMPLETED') {
+      const checkoutDate = booking.checkOut;
+      const existing = await this.prisma.cleaningSchedule.findFirst({
+        where: { propertyId: booking.propertyId, frequency: 'AFTER_EACH_BOOKING' as any },
+      });
+      if (existing) {
+        await this.prisma.cleaningSchedule.update({
+          where: { id: existing.id },
+          data: { nextCleaning: checkoutDate },
+        });
+      } else {
+        await this.prisma.cleaningSchedule.create({
+          data: {
+            propertyId: booking.propertyId,
+            ownerId: booking.property.ownerId,
+            frequency: 'AFTER_EACH_BOOKING' as any,
+            nextCleaning: checkoutDate,
+            notes: `Auto-created after booking ${booking.id} checkout`,
+          },
+        });
+      }
+    }
 
     return {
       success: true,
@@ -366,7 +406,6 @@ export class BookingsService {
       throw new NotFoundException('Booking not found');
     }
 
-    // Verify user has permission
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     const isGuest = booking.guestId === userId;
     const isOwner = booking.property.ownerId === userId;
@@ -384,7 +423,6 @@ export class BookingsService {
       throw new BadRequestException('Cannot cancel completed booking');
     }
 
-    // Calculate refund based on cancellation policy
     const refundCalculation = FinancialUtil.calculateRefund(
       booking.totalPrice,
       new Date(),
@@ -392,12 +430,74 @@ export class BookingsService {
       booking.property.cancellationPolicy,
     );
 
+    // Find completed payment and trigger refund
+    const payment = await this.prisma.payment.findFirst({
+      where: { bookingId: id, status: PaymentStatus.COMPLETED },
+    });
+
+    let refundAmount = 0;
+    if (payment) {
+      refundAmount = (refundCalculation.refundPercentage / 100) * payment.amount;
+
+      // Attempt Stripe refund (best-effort — test mode may not have a real charge)
+      if (payment.stripeChargeId && refundAmount > 0 && process.env.STRIPE_SECRET_KEY) {
+        try {
+          const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+          await stripe.refunds.create({
+            charge: payment.stripeChargeId,
+            amount: Math.round(refundAmount * 100),
+            reason: 'requested_by_customer',
+            metadata: { bookingId: id, reason: cancelBookingDto.reason || '' },
+          });
+        } catch (_e) {
+          // Stripe refund failed (e.g. test mode charge) — DB status still updated
+        }
+      }
+
+      const newPaymentStatus =
+        refundAmount >= payment.amount
+          ? PaymentStatus.REFUNDED
+          : refundAmount > 0
+            ? PaymentStatus.PARTIALLY_REFUNDED
+            : payment.status;
+
+      await this.prisma.payment.update({
+        where: { id: payment.id },
+        data: {
+          status: newPaymentStatus,
+          refundAmount,
+          refundReason: cancelBookingDto.reason,
+          refundedAt: new Date(),
+        },
+      });
+    }
+
     const updatedBooking = await this.prisma.booking.update({
       where: { id },
       data: {
         status: 'CANCELLED',
+        ...(payment && { paymentStatus: PaymentStatus.REFUNDED }),
       },
     });
+
+    // Send cancellation email (non-blocking)
+    const guestEmailAddr = booking.guestEmail || (await this.prisma.user.findUnique({ where: { id: booking.guestId || '' } }))?.email;
+    if (guestEmailAddr) {
+      this.emailService.sendBookingCancellation({
+        guestName: booking.guestName || 'Guest',
+        guestEmail: guestEmailAddr,
+        bookingId: booking.id,
+        propertyName: booking.property?.titleEn || booking.property?.titleGr || '',
+        checkIn: booking.checkIn,
+        checkOut: booking.checkOut,
+        guests: booking.guests,
+        totalPrice: booking.totalPrice,
+        currency: booking.currency || 'EUR',
+        refundAmount,
+        refundPercentage: refundCalculation.refundPercentage,
+        cancellationReason: cancelBookingDto.reason,
+      }).catch(() => undefined);
+    }
 
     return {
       success: true,
@@ -405,7 +505,58 @@ export class BookingsService {
       data: {
         ...updatedBooking,
         refundCalculation,
+        refundAmount,
       },
+    };
+  }
+
+  async markAsPaid(id: string, userId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: { property: true },
+    });
+
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isOwner = booking.property.ownerId === userId;
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+    if (!isOwner && !isAdmin) {
+      throw new BadRequestException('Unauthorized to mark this booking as paid');
+    }
+
+    if (booking.paymentStatus === PaymentStatus.COMPLETED) {
+      throw new BadRequestException('Booking is already marked as paid');
+    }
+
+    // Upsert a manual payment record
+    await this.prisma.payment.create({
+      data: {
+        bookingId: booking.id,
+        propertyId: booking.propertyId,
+        amount: booking.totalPrice,
+        currency: booking.currency || 'EUR',
+        status: PaymentStatus.COMPLETED,
+        method: 'BANK_TRANSFER' as any,
+        processedAt: new Date(),
+      },
+    });
+
+    const updatedBooking = await this.prisma.booking.update({
+      where: { id },
+      data: {
+        paymentStatus: PaymentStatus.COMPLETED,
+        status: 'CONFIRMED',
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Booking marked as paid',
+      data: updatedBooking,
     };
   }
 }

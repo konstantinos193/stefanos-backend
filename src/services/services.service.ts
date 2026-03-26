@@ -11,7 +11,9 @@ export class ServicesService {
 
   async findAll(query: PaginationDto & { isActive?: string }) {
     const { page = 1, limit = 10, sortBy, sortOrder = 'desc', isActive } = query;
-    const skip = (page - 1) * limit;
+    const pageNum = +page;
+    const limitNum = +limit;
+    const skip = (pageNum - 1) * limitNum;
 
     const orderBy: any = {};
     if (sortBy) {
@@ -30,12 +32,12 @@ export class ServicesService {
         where,
         orderBy,
         skip,
-        take: limit,
+        take: limitNum,
       }),
       this.prisma.service.count({ where }),
     ]);
 
-    const pagination = getPagination(page, limit, total);
+    const pagination = getPagination(pageNum, limitNum, total);
 
     return {
       success: true,

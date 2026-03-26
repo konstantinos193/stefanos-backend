@@ -56,8 +56,10 @@ export class UsersService {
 
     return {
       success: true,
-      data: users,
-      pagination: getPagination(page, limit, total),
+      data: {
+        users,
+        pagination: getPagination(page, limit, total),
+      },
     };
   }
 

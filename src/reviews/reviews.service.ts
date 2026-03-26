@@ -72,25 +72,43 @@ export class ReviewsService {
     return review;
   }
 
-  async findAll(propertyId?: string) {
+  async findAll(propertyId?: string, page = 1, limit = 20) {
+    const pageNum = +page;
+    const limitNum = +limit;
     const where: any = { isPublic: true };
     if (propertyId) {
       where.propertyId = propertyId;
     }
 
-    return this.prisma.review.findMany({
-      where,
-      include: {
-        guest: {
-          select: {
-            id: true,
-            name: true,
-            avatar: true,
-          },
+    const [reviews, total] = await Promise.all([
+      this.prisma.review.findMany({
+        where,
+        include: {
+          guest: { select: { id: true, name: true, avatar: true } },
+          property: { select: { id: true, titleEn: true, titleGr: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip: (pageNum - 1) * limitNum,
+        take: limitNum,
+      }),
+      this.prisma.review.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limitNum);
+    return {
+      success: true,
+      data: {
+        reviews,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages,
+          hasNextPage: pageNum < totalPages,
+          hasPrevPage: pageNum > 1,
         },
       },
-      orderBy: { createdAt: 'desc' },
-    });
+    };
   }
 
   async findOne(id: string) {

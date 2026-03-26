@@ -11,7 +11,9 @@ export class KnowledgeService {
 
   async findAll(query: PaginationDto & { category?: string; tags?: string; published?: string }) {
     const { page = 1, limit = 10, sortBy, sortOrder = 'desc', category, tags, published } = query;
-    const skip = (page - 1) * limit;
+    const pageNum = +page;
+    const limitNum = +limit;
+    const skip = (pageNum - 1) * limitNum;
 
     const orderBy: any = {};
     if (sortBy) {
@@ -41,12 +43,12 @@ export class KnowledgeService {
         where,
         orderBy,
         skip,
-        take: limit,
+        take: limitNum,
       }),
       this.prisma.knowledgeArticle.count({ where }),
     ]);
 
-    const pagination = getPagination(page, limit, total);
+    const pagination = getPagination(pageNum, limitNum, total);
 
     return {
       success: true,

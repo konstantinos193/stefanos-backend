@@ -69,5 +69,12 @@ export class BookingsController {
   ) {
     return this.bookingsService.cancel(id, cancelBookingDto, userId);
   }
+
+  @Post(':id/mark-paid')
+  @ApiOperation({ summary: 'Mark booking as paid (admin/owner only)' })
+  @ApiResponse({ status: 200 })
+  markAsPaid(@Param('id') id: string, @CurrentUser() userId: string) {
+    return this.bookingsService.markAsPaid(id, userId);
+  }
 }
 

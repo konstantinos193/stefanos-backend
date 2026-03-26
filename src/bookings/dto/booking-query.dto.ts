@@ -23,4 +23,14 @@ export class BookingQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   dateTo?: string;
+
+  @ApiPropertyOptional({ description: 'Filter by property ID' })
+  @IsOptional()
+  @IsString()
+  propertyId?: string;
+
+  @ApiPropertyOptional({ description: 'Filter by room ID' })
+  @IsOptional()
+  @IsString()
+  roomId?: string;
 }

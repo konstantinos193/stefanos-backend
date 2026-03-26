@@ -11,6 +11,157 @@ import { CleaningFrequency } from '../../prisma/generated/prisma';
 export class CleaningService {
   constructor(private prisma: PrismaService) {}
 
+  async findAll(
+    params: { page: number; limit: number; propertyId?: string; frequency?: string; search?: string },
+    userId: string,
+  ) {
+    const { page, limit, propertyId, frequency, search } = params;
+    const skip = (page - 1) * limit;
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+    const where: any = {};
+    if (!isAdmin) where.ownerId = userId;
+    if (propertyId) where.propertyId = propertyId;
+    if (frequency) where.frequency = frequency;
+    if (search) {
+      where.property = { OR: [{ titleGr: { contains: search } }, { titleEn: { contains: search } }] };
+    }
+
+    const [schedules, total] = await Promise.all([
+      this.prisma.cleaningSchedule.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { nextCleaning: 'asc' },
+        include: {
+          property: { select: { id: true, titleGr: true, titleEn: true, address: true, city: true, status: true } },
+        },
+      }),
+      this.prisma.cleaningSchedule.count({ where }),
+    ]);
+
+    const now = new Date();
+    const todayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
+    const soonCutoff = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000);
+
+    const schedulesWithStatus = schedules.map((s) => {
+      let computedStatus: string;
+      if (!s.nextCleaning) {
+        computedStatus = 'SCHEDULED';
+      } else if (s.nextCleaning < now) {
+        computedStatus = 'OVERDUE';
+      } else if (s.nextCleaning <= todayEnd) {
+        computedStatus = 'DUE_TODAY';
+      } else if (s.nextCleaning <= soonCutoff) {
+        computedStatus = 'UPCOMING';
+      } else {
+        computedStatus = 'SCHEDULED';
+      }
+      return { ...s, computedStatus };
+    });
+
+    const totalPages = Math.ceil(total / limit);
+    return {
+      success: true,
+      data: {
+        schedules: schedulesWithStatus,
+        pagination: { page, limit, total, totalPages, hasNextPage: page < totalPages, hasPrevPage: page > 1 },
+      },
+    };
+  }
+
+  async findOne(id: string) {
+    const schedule = await this.prisma.cleaningSchedule.findUnique({
+      where: { id },
+      include: {
+        property: { select: { id: true, titleGr: true, titleEn: true, address: true, city: true, status: true } },
+      },
+    });
+    if (!schedule) throw new NotFoundException('Cleaning schedule not found');
+    return { success: true, data: schedule };
+  }
+
+  async updateSchedule(id: string, updateDto: Partial<CreateCleaningScheduleDto>, userId: string) {
+    const schedule = await this.prisma.cleaningSchedule.findUnique({ where: { id } });
+    if (!schedule) throw new NotFoundException('Cleaning schedule not found');
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+    if (!isAdmin && schedule.ownerId !== userId) {
+      throw new ForbiddenException('Unauthorized to update cleaning schedule');
+    }
+
+    const updated = await this.prisma.cleaningSchedule.update({
+      where: { id },
+      data: {
+        ...(updateDto.frequency && { frequency: updateDto.frequency }),
+        ...(updateDto.assignedCleaner !== undefined && { assignedCleaner: updateDto.assignedCleaner }),
+        ...(updateDto.notes !== undefined && { notes: updateDto.notes }),
+        ...(updateDto.nextCleaning && { nextCleaning: new Date(updateDto.nextCleaning) }),
+        ...(updateDto.lastCleaned && { lastCleaned: new Date(updateDto.lastCleaned) }),
+      },
+      include: {
+        property: { select: { id: true, titleGr: true, titleEn: true, address: true, city: true, status: true } },
+      },
+    });
+    return { success: true, data: updated };
+  }
+
+  async removeSchedule(id: string, userId: string) {
+    const schedule = await this.prisma.cleaningSchedule.findUnique({ where: { id } });
+    if (!schedule) throw new NotFoundException('Cleaning schedule not found');
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+    if (!isAdmin && schedule.ownerId !== userId) {
+      throw new ForbiddenException('Unauthorized to delete cleaning schedule');
+    }
+
+    await this.prisma.cleaningSchedule.delete({ where: { id } });
+    return { success: true, message: 'Cleaning schedule deleted successfully' };
+  }
+
+  async getStats(userId: string) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+    const where: any = isAdmin ? {} : { ownerId: userId };
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const todayEnd = new Date(todayStart.getTime() + 86400000);
+    const weekStart = new Date(todayStart.getTime() - 6 * 86400000);
+
+    const [totalSchedules, pendingToday, completedThisWeek, overdue, propertiesWithCleaning] = await Promise.all([
+      this.prisma.cleaningSchedule.count({ where }),
+      this.prisma.cleaningSchedule.count({ where: { ...where, nextCleaning: { gte: todayStart, lt: todayEnd } } }),
+      this.prisma.cleaningSchedule.count({ where: { ...where, lastCleaned: { gte: weekStart, lt: todayEnd } } }),
+      this.prisma.cleaningSchedule.count({ where: { ...where, nextCleaning: { lt: now } } }),
+      this.prisma.cleaningSchedule.groupBy({ by: ['propertyId'], where }).then((r) => r.length),
+    ]);
+
+    const reviews = await this.prisma.review.findMany({
+      where: { cleanlinessRating: { not: null }, ...(isAdmin ? {} : { property: { ownerId: userId } }) },
+      select: { cleanlinessRating: true },
+    });
+    const avgCleanliness = reviews.length > 0
+      ? reviews.reduce((s, r) => s + (r.cleanlinessRating || 0), 0) / reviews.length
+      : null;
+
+    return {
+      success: true,
+      data: {
+        totalSchedules,
+        pendingToday,
+        completedThisWeek,
+        overdue,
+        averageCleanlinessRating: avgCleanliness ? Math.round(avgCleanliness * 100) / 100 : null,
+        propertiesWithCleaning,
+      },
+    };
+  }
+
   async createSchedule(
     createScheduleDto: CreateCleaningScheduleDto,
     userId: string,
@@ -23,7 +174,9 @@ export class CleaningService {
       throw new NotFoundException('Property not found');
     }
 
-    if (property.ownerId !== userId) {
+    const creator = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = creator?.role === 'ADMIN' || creator?.role === 'MANAGER';
+    if (!isAdmin && property.ownerId !== userId) {
       throw new ForbiddenException('Unauthorized to create cleaning schedule');
     }
 
@@ -63,7 +216,9 @@ export class CleaningService {
       throw new NotFoundException('Cleaning schedule not found');
     }
 
-    if (schedule.ownerId !== userId) {
+    const updater = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdminUpdater = updater?.role === 'ADMIN' || updater?.role === 'MANAGER';
+    if (!isAdminUpdater && schedule.ownerId !== userId) {
       throw new ForbiddenException('Unauthorized to update cleaning schedule');
     }
 
@@ -141,7 +296,9 @@ export class CleaningService {
       throw new NotFoundException('Property not found');
     }
 
-    if (property.ownerId !== userId) {
+    const viewer = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdminViewer = viewer?.role === 'ADMIN' || viewer?.role === 'MANAGER';
+    if (!isAdminViewer && property.ownerId !== userId) {
       throw new ForbiddenException('Unauthorized to view cleaning schedules');
     }
 

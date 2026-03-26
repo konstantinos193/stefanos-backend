@@ -9,6 +9,51 @@ import { AnalyticsPeriod } from '../database/types';
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 
+  @Get('dashboard')
+  getDashboardMetrics(
+    @Query('period') period: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.analyticsService.getDashboardMetrics(userId, period || 'MONTHLY', startDate, endDate);
+  }
+
+  @Get('revenue-chart')
+  getRevenueChart(
+    @Query('period') period: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.analyticsService.getRevenueChart(userId, period || 'MONTHLY', startDate, endDate);
+  }
+
+  @Get('booking-trends')
+  getBookingTrends(
+    @Query('period') period: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.analyticsService.getBookingTrends(userId, period || 'MONTHLY', startDate, endDate);
+  }
+
+  @Get('user-distribution')
+  getUserDistribution(@CurrentUser() userId: string) {
+    return this.analyticsService.getUserDistribution(userId);
+  }
+
+  @Get('activity')
+  getActivityData(
+    @Query('period') period: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.analyticsService.getActivityData(userId, period || 'MONTHLY', startDate, endDate);
+  }
+
   @Get('property/:propertyId')
   getPropertyAnalytics(
     @Param('propertyId') propertyId: string,
@@ -34,4 +79,3 @@ export class AnalyticsController {
     return this.analyticsService.getFinancialAnalytics(userId, period);
   }
 }
-

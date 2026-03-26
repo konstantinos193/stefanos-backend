@@ -20,8 +20,12 @@ export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Get()
-  findAll(@Query('propertyId') propertyId?: string) {
-    return this.reviewsService.findAll(propertyId);
+  findAll(
+    @Query('propertyId') propertyId?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.reviewsService.findAll(propertyId, page, limit);
   }
 
   @Get('property/:propertyId')

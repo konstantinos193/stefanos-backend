@@ -2,8 +2,10 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Body,
   Param,
+  Query,
   UseGuards,
   Req,
   HttpCode,
@@ -23,6 +25,19 @@ import { Public } from '../common/decorators/public.decorator';
 @UseGuards(JwtAuthGuard)
 export class PaymentsController {
   constructor(private readonly paymentsService: PaymentsService) {}
+
+  @Get()
+  async getAllPayments(
+    @Query('page') page: string,
+    @Query('limit') limit: string,
+    @Query('status') status: string,
+    @Query('method') method: string,
+    @Query('bookingId') bookingId: string,
+    @Query('propertyId') propertyId: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.paymentsService.getAll({ page: +page || 1, limit: +limit || 10, status, method, bookingId, propertyId }, userId);
+  }
 
   @Post('public/checkout-session')
   @Public()
@@ -68,6 +83,16 @@ export class PaymentsController {
     return this.paymentsService.refundPayment(refundPaymentDto, userId);
   }
 
+  @Post(':id/refund')
+  @HttpCode(HttpStatus.OK)
+  async refundPaymentById(
+    @Param('id') id: string,
+    @Body() body: { amount?: number; reason?: string },
+    @CurrentUser() userId: string,
+  ): Promise<PaymentResponseDto> {
+    return this.paymentsService.refundById(id, body.amount, body.reason, userId);
+  }
+
   @Get(':id')
   async getPayment(
     @Param('id') id: string,
@@ -79,6 +104,23 @@ export class PaymentsController {
   @Get('owner/payouts')
   async getOwnerPayouts(@CurrentUser() userId: string): Promise<any[]> {
     return this.paymentsService.getOwnerPayouts(userId);
+  }
+
+  @Patch(':id/schedule-payout')
+  async schedulePayout(
+    @Param('id') id: string,
+    @Body() body: { scheduledFor: string },
+    @CurrentUser() userId: string,
+  ) {
+    return this.paymentsService.schedulePayout(id, body.scheduledFor, userId);
+  }
+
+  @Patch(':id/mark-payout-sent')
+  async markPayoutSent(
+    @Param('id') id: string,
+    @CurrentUser() userId: string,
+  ) {
+    return this.paymentsService.markPayoutSent(id, userId);
   }
 
   @Post('webhook')

@@ -46,7 +46,7 @@ const ROOMS: RoomTemplate[] = [
     descriptionGr: 'Ένα κομψό διαμέρισμα στο ισόγειο, σχεδιασμένο για άνεση και διακριτική πολυτέλεια. Διαθέτει ευρύχωρη διαρρύθμιση, σύγχρονη επίπλωση και εύκολη πρόσβαση, προσφέροντας μια ήρεμη και ιδιωτική ατμόσφαιρα ιδανική για ξεκούραση. Με προσεγμένες λεπτομέρειες και υψηλή αισθητική, συνδυάζει λειτουργικότητα και ποιότητα για μια ξεχωριστή διαμονή.',
     type: 'APARTMENT', capacity: 4, maxAdults: 4,
     basePrice: 120,
-    amenities: ['Sea View', 'Free WiFi', 'Free Private Parking', 'Free Air Conditioning', 'Satellite TV Channels', 'Fully Equipped Kitchen', 'Fully Equipped Bathroom', 'Laundry', 'Free Laundry Service', 'Private Balcony or Ground Access'],
+    amenities: ['Sea View', 'Free WiFi', 'Free Private Parking', 'Free Air Conditioning', 'Satellite TV Channels', 'Fully Equipped Kitchen', 'Fully Equipped Bathroom', 'Laundry', 'Free Laundry Service', 'Private Balcony or Ground Access', 'Pet Friendly'],
   },
   {
     roomNumber: 2,
@@ -56,15 +56,15 @@ const ROOMS: RoomTemplate[] = [
     descriptionGr: 'Ένα ευρύχωρο διαμέρισμα ισογείου, ιδανικό για οικογένειες και ομάδες που αναζητούν άνεση και απομόνωση. Διαθέτει πλήρως εξοπλισμένη κουζίνα, άνετους χώρους διαβίωσης και ιδιωτική πρόσβαση στον εξωτερικό χώρο. Συνδυάζει σύγχρονη πρακτικότητα με διαχρονική κομψότητα, προσφέροντας μια ζεστή και φιλόξενη ατμόσφαιρα για κάθε επισκέπτη.',
     type: 'APARTMENT', capacity: 4, maxAdults: 4,
     basePrice: 120,
-    amenities: ['Sea View', 'Free WiFi', 'Free Private Parking', 'Free Air Conditioning', 'Satellite TV Channels', 'Fully Equipped Kitchen', 'Fully Equipped Bathroom', 'Laundry', 'Balcony or Ground Access', 'Dining Area', 'Living Room with Sofa Bed'],
+    amenities: ['Sea View', 'Free WiFi', 'Free Private Parking', 'Free Air Conditioning', 'Satellite TV Channels', 'Fully Equipped Kitchen', 'Fully Equipped Bathroom', 'Laundry', 'Balcony or Ground Access', 'Dining Area'],
   },
   {
     roomNumber: 3,
     nameEn: 'Apartment 03 – First Floor',
     nameGr: 'Διαμέρισμα 03 – Πρώτος Όροφος',
-    descriptionEn: 'A beautifully appointed first-floor apartment with sweeping sea views and refined coastal interiors. Designed for couples seeking tranquillity, it features a luxurious king-size bed, elegant furnishings, and a private balcony where the Ionian breeze becomes part of your morning routine. A seamless blend of comfort and natural beauty.',
-    descriptionGr: 'Ένα υπέροχα διαμορφωμένο διαμέρισμα πρώτου ορόφου με εντυπωσιακή θέα στη θάλασσα και κομψά παράκτια interiors. Σχεδιασμένο για ζευγάρια που αναζητούν ηρεμία, διαθέτει πολυτελές κρεβάτι king-size, κομψή επίπλωση και ιδιωτικό μπαλκόνι όπου η Ιόνια αύρα γίνεται μέρος της καθημερινότητάς σας. Μια αρμονική σύνθεση άνεσης και φυσικής ομορφιάς.',
-    type: 'APARTMENT', capacity: 2, maxAdults: 2,
+    descriptionEn: 'A beautifully appointed first-floor apartment designed for families, with sweeping sea views and refined coastal interiors. Ideal for families seeking tranquillity, it features generous living spaces, elegant furnishings, and a private balcony where the Ionian breeze becomes part of your morning routine. A seamless blend of comfort and natural beauty, thoughtfully arranged for an unforgettable family stay.',
+    descriptionGr: 'Ένα υπέροχα διαμορφωμένο διαμέρισμα πρώτου ορόφου σχεδιασμένο για οικογένειες, με εντυπωσιακή θέα στη θάλασσα και κομψά παράκτια interiors. Ιδανικό για οικογένειες που αναζητούν ηρεμία, διαθέτει άνετους χώρους διαβίωσης, κομψή επίπλωση και ιδιωτικό μπαλκόνι όπου η Ιόνια αύρα γίνεται μέρος της καθημερινότητάς σας. Μια αρμονική σύνθεση άνεσης και φυσικής ομορφιάς, προσεκτικά διαμορφωμένη για μια αξέχαστη οικογενειακή διαμονή.',
+    type: 'APARTMENT', capacity: 4, maxAdults: 4,
     basePrice: 180,
     amenities: ['Sea View', 'King Bed', 'Smart TV', 'Free WiFi', 'Free Air Conditioning', 'Balcony'],
   },
@@ -72,9 +72,9 @@ const ROOMS: RoomTemplate[] = [
     roomNumber: 4,
     nameEn: 'Apartment 04 – First Floor',
     nameGr: 'Διαμέρισμα 04 – Πρώτος Όροφος',
-    descriptionEn: 'A superior first-floor apartment that effortlessly combines space, style, and sea views. With a king-size bed, a comfortable sofa bed, and a well-stocked mini bar, this residence caters to small groups and couples alike. Its thoughtfully designed layout creates a sense of openness, while premium amenities ensure a stay that exceeds expectations.',
-    descriptionGr: 'Ένα εξαιρετικό διαμέρισμα πρώτου ορόφου που συνδυάζει αρμονικά χώρο, αισθητική και θέα στη θάλασσα. Με κρεβάτι king-size, άνετο καναπέ-κρεβάτι και mini bar, εξυπηρετεί μικρές παρέες και ζευγάρια. Η ευρεία διαρρύθμιση δημιουργεί αίσθηση ελευθερίας, ενώ τα premium amenities εγγυώνται μια παραμονή που ξεπερνά κάθε προσδοκία.',
-    type: 'APARTMENT', capacity: 4, maxAdults: 4,
+    descriptionEn: 'A superior first-floor apartment that effortlessly combines space, style, and sea views. With a king-size bed, a comfortable sofa bed, and a well-stocked mini bar, this residence caters to couples seeking comfort and elegance. Its thoughtfully designed layout creates a sense of openness, while premium amenities ensure a stay that exceeds expectations.',
+    descriptionGr: 'Ένα εξαιρετικό διαμέρισμα πρώτου ορόφου που συνδυάζει αρμονικά χώρο, αισθητική και θέα στη θάλασσα. Με κρεβάτι king-size, άνετο καναπέ-κρεβάτι και mini bar, εξυπηρετεί ζευγάρια που αναζητούν άνεση και κομψότητα. Η ευρεία διαρρύθμιση δημιουργεί αίσθηση ελευθερίας, ενώ τα premium amenities εγγυώνται μια παραμονή που ξεπερνά κάθε προσδοκία.',
+    type: 'APARTMENT', capacity: 2, maxAdults: 2,
     basePrice: 210,
     amenities: ['Sea View', 'King Bed', 'Sofa Bed', 'Mini Bar', 'Free WiFi', 'Free Air Conditioning', 'Balcony'],
   },
@@ -82,11 +82,11 @@ const ROOMS: RoomTemplate[] = [
     roomNumber: 5,
     nameEn: 'Apartment 05 – First Floor',
     nameGr: 'Διαμέρισμα 05 – Πρώτος Όροφος',
-    descriptionEn: 'An executive first-floor apartment offering panoramic sea and landscape views from every angle. Featuring a private jacuzzi, a separate lounge area, and premium furnishings, this residence sets the standard for elevated living at L\'Incanto. Ideal for those who demand both style and substance, it delivers an unforgettable experience of luxury by the Ionian Sea.',
-    descriptionGr: 'Ένα executive διαμέρισμα πρώτου ορόφου με πανοραμική θέα στη θάλασσα και τον ορίζοντα. Διαθέτει ιδιωτικό jacuzzi, χωριστό χώρο καθιστικού και premium επίπλωση, θέτοντας το πρότυπο για ανώτερη διαβίωση στο L\'Incanto. Ιδανικό για όσους αναζητούν στυλ και ουσία, προσφέρει μια αξέχαστη εμπειρία πολυτέλειας στο Ιόνιο Πέλαγος.',
+    descriptionEn: "An executive first-floor apartment offering panoramic sea and landscape views from every angle. Featuring premium furnishings and a refined aesthetic, this residence provides an elevated living experience at L'Incanto. Ideal for those who demand both style and substance, it delivers a memorable experience of luxury by the Ionian Sea.",
+    descriptionGr: "Ένα executive διαμέρισμα πρώτου ορόφου με πανοραμική θέα στη θάλασσα και τον ορίζοντα. Διαθέτει premium επίπλωση και εκλεπτυσμένη αισθητική, προσφέροντας μια ανώτερη εμπειρία διαβίωσης στο L'Incanto. Ιδανικό για όσους αναζητούν στυλ και ουσία, προσφέρει μια αξέχαστη εμπειρία πολυτέλειας στο Ιόνιο Πέλαγος.",
     type: 'APARTMENT', capacity: 4, maxAdults: 4,
     basePrice: 250,
-    amenities: ['Sea View', 'Jacuzzi', 'Living Area', 'Free WiFi', 'Free Air Conditioning', 'Balcony'],
+    amenities: ['Sea View', 'Free WiFi', 'Free Air Conditioning', 'Balcony'],
   },
   {
     roomNumber: 6,
@@ -102,11 +102,11 @@ const ROOMS: RoomTemplate[] = [
     roomNumber: 7,
     nameEn: 'Apartment 07 – Second Floor',
     nameGr: 'Διαμέρισμα 07 – Δεύτερος Όροφος',
-    descriptionEn: 'A thoughtfully designed family apartment on the second floor, featuring two separate bedrooms, a fully equipped kitchenette, and a dedicated children\'s area. With sea views and generous living spaces, this residence is the perfect retreat for families who want to enjoy the beauty of the Ionian coast together without sacrificing comfort or privacy.',
-    descriptionGr: 'Ένα προσεκτικά σχεδιασμένο οικογενειακό διαμέρισμα δεύτερου ορόφου, με δύο ξεχωριστά υπνοδωμάτια, πλήρως εξοπλισμένο kitchenette και παιδικό χώρο. Με θέα στη θάλασσα και άνετους χώρους διαβίωσης, αποτελεί το ιδανικό καταφύγιο για οικογένειες που θέλουν να απολαύσουν μαζί την ομορφιά της Ιόνιας ακτής χωρίς να θυσιάσουν άνεση ή ιδιωτικότητα.',
-    type: 'APARTMENT', capacity: 4, maxAdults: 4,
+    descriptionEn: 'An elegantly appointed second-floor apartment designed for couples seeking a refined and intimate retreat. Featuring a king-size bed, sweeping sea views, and thoughtfully curated furnishings, this residence blends comfort and coastal charm seamlessly. Every detail has been considered to create a serene and romantic atmosphere, offering an unforgettable experience by the Ionian Sea.',
+    descriptionGr: 'Ένα κομψά διαμορφωμένο διαμέρισμα δεύτερου ορόφου, σχεδιασμένο για ζευγάρια που αναζητούν έναν εκλεπτυσμένο και οικείο χώρο. Με κρεβάτι king-size, εντυπωσιακή θέα στη θάλασσα και προσεγμένη επίπλωση, συνδυάζει άνεση και παράκτια γοητεία αρμονικά. Κάθε λεπτομέρεια έχει μελετηθεί για να δημιουργήσει μια γαλήνια και ρομαντική ατμόσφαιρα, προσφέροντας μια αξέχαστη εμπειρία δίπλα στο Ιόνιο Πέλαγος.',
+    type: 'APARTMENT', capacity: 2, maxAdults: 2,
     basePrice: 320,
-    amenities: ['Sea View', '2 Bedrooms', 'Kitchenette', 'Free WiFi', 'Free Air Conditioning', 'Balcony'],
+    amenities: ['Sea View', 'King Bed', 'Free WiFi', 'Free Air Conditioning', 'Balcony'],
   },
   {
     roomNumber: 8,
@@ -132,11 +132,13 @@ const ROOMS: RoomTemplate[] = [
     roomNumber: 10,
     nameEn: 'Apartment 10 – Third Floor',
     nameGr: 'Διαμέρισμα 10 – Τρίτος Όροφος',
-    descriptionEn: 'The crown jewel of L\'Incanto, this prestigious third-floor apartment defines the ultimate luxury experience. With two full bedrooms, a sweeping private terrace overlooking the Ionian Sea, and exclusive butler service, this residence sets an unrivalled standard of sophistication. Reserved for the most discerning guests, it offers an incomparable blend of space, elegance, and personalised hospitality.',
-    descriptionGr: 'Το στολίδι του L\'Incanto, αυτό το λαμπρό διαμέρισμα τρίτου ορόφου ορίζει την απόλυτη εμπειρία πολυτέλειας. Με δύο πλήρη υπνοδωμάτια, εκτεταμένη ιδιωτική βεράντα με θέα στο Ιόνιο Πέλαγος και αποκλειστική υπηρεσία butler, θέτει ένα ασύγκριτο πρότυπο εκλέπτυνσης. Κατάλληλο για τους πιο απαιτητικούς επισκέπτες, προσφέρει έναν ασύγκριτο συνδυασμό χώρου, κομψότητας και εξατομικευμένης φιλοξενίας.',
+    descriptionEn:
+      "The crown jewel of L'Incanto, this prestigious third-floor apartment defines the ultimate luxury experience. With two full bedrooms and a sweeping private terrace overlooking the Ionian Sea, this residence sets an unrivalled standard of sophistication. Reserved for the most discerning guests, it offers an incomparable blend of space, elegance, and personalised hospitality.",
+    descriptionGr:
+      "Το στολίδι του L'Incanto, αυτό το λαμπρό διαμέρισμα τρίτου ορόφου ορίζει την απόλυτη εμπειρία πολυτέλειας. Με δύο πλήρη υπνοδωμάτια και εκτεταμένη ιδιωτική βεράντα με θέα στο Ιόνιο Πέλαγος, θέτει ένα ασύγκριτο πρότυπο εκλέπτυνσης. Κατάλληλο για τους πιο απαιτητικούς επισκέπτες, προσφέρει έναν ασύγκριτο συνδυασμό χώρου, κομψότητας και εξατομικευμένης φιλοξενίας.",
     type: 'APARTMENT', capacity: 4, maxAdults: 4,
     basePrice: 450,
-    amenities: ['Sea View', '2 Bedrooms', 'Private Terrace', 'Butler Service', 'Free WiFi', 'Free Air Conditioning'],
+    amenities: ['Sea View', '2 Bedrooms', 'Private Terrace', 'Free WiFi', 'Free Air Conditioning'],
   },
 ];
 
@@ -272,7 +274,7 @@ function getRoom7SpecificImages(): string[] {
     '/7. second floor No7/MTS_1203-HDR-Edit-Edit.jpg',
     '/7. second floor No7/MTS_1663-HDR-Edit.jpg',
     '/7. second floor No7/MTS_1671-Edit.jpg',
-    '/7. second floor No7/NZ6_4696-2.jpg',
+    // NZ6_4696-2.jpg removed (photo 6 – does not belong to this apartment)
     '/7. second floor No7/NZ6_4790-Edit-2.jpg',
     '/7. second floor No7/NZ6_4807-Edit.jpg',
     '/7. second floor No7/NZ6_4811.jpg',
@@ -334,10 +336,11 @@ function getRoom9SpecificImages(): string[] {
 
 function getRoom10SpecificImages(): string[] {
   return [
+    // Photo 4 set as main (first)
+    '/10. third floor No10/MTS_1586-HDR-Edit-2.jpg',
     '/10. third floor No10/MTS_1545-HDR-Edit-2.jpg',
     '/10. third floor No10/MTS_1563-Edit.jpg',
-    '/10. third floor No10/MTS_1579-HDR-Edit.jpg',
-    '/10. third floor No10/MTS_1586-HDR-Edit-2.jpg',
+    // MTS_1579-HDR-Edit.jpg removed (photo 3 – duplicate/redundant)
     '/10. third floor No10/MTS_1598-HDR-Edit-Edit.jpg',
     '/10. third floor No10/MTS_1609-HDR-Edit-2.jpg',
     '/10. third floor No10/MTS_1613-Edit.jpg',

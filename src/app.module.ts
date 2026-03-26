@@ -28,6 +28,7 @@ import { MessagesModule } from './messages/messages.module';
 import { ReportsModule } from './reports/reports.module';
 import { AppController } from './app.controller';
 import { AuditModule } from './audit/audit.module';
+import { EmailModule } from './email/email.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuditInterceptor } from './common/interceptors/audit.interceptor';
 
@@ -64,6 +65,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     MessagesModule,
     ReportsModule,
     AuditModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [
