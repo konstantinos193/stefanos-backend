@@ -212,7 +212,11 @@ function createDefaultTemplate(roomNumber: number): IncantoRoomTemplate {
     type: 'BEDROOM',
     capacity: 2,
     basePrice: 150,
-    amenities: ['Free WiFi', 'Air Conditioning', 'Smart TV'],
+    amenities: [
+      { en: 'Free WiFi', el: 'Δωρεάν WiFi' },
+      { en: 'Air Conditioning', el: 'Κλιματισμός' },
+      { en: 'Smart TV', el: 'Smart TV' },
+    ],
   };
 }
 

@@ -248,10 +248,46 @@ export class BookingsService {
     }
 
     const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
-    
+
+    // When a room is specified, use room pricing rules for price calculation
+    let effectivePricePerNight = property.basePrice;
+    if (createBookingDto.roomId) {
+      const room = await this.prisma.room.findUnique({
+        where: { id: createBookingDto.roomId },
+        include: {
+          availabilityRules: {
+            where: {
+              startDate: { lte: checkOut },
+              endDate: { gte: checkIn },
+              isAvailable: true,
+            },
+            orderBy: { startDate: 'asc' },
+          },
+        },
+      });
+
+      if (room) {
+        let subtotal = 0;
+        const current = new Date(checkIn);
+        current.setHours(0, 0, 0, 0);
+        const end = new Date(checkOut);
+        end.setHours(0, 0, 0, 0);
+
+        while (current < end) {
+          const rule = room.availabilityRules.find(
+            (r) => new Date(r.startDate) <= current && new Date(r.endDate) > current,
+          );
+          subtotal += rule?.priceOverride ?? room.basePrice;
+          current.setDate(current.getDate() + 1);
+        }
+
+        effectivePricePerNight = nights > 0 ? subtotal / nights : room.basePrice;
+      }
+    }
+
     // Calculate price breakdown using FinancialUtil (stay-only payment model)
     const priceBreakdown = FinancialUtil.calculateTotalPrice(
-      property.basePrice,
+      effectivePricePerNight,
       nights,
       createBookingDto.guests,
       property.cleaningFee || 0,
@@ -311,22 +347,7 @@ export class BookingsService {
       },
     });
 
-    // Send confirmation email (non-blocking)
-    const guestEmail = booking.guestEmail || booking.guest?.email;
-    if (guestEmail) {
-      this.emailService.sendBookingConfirmation({
-        guestName: booking.guestName || booking.guest?.name || 'Guest',
-        guestEmail,
-        bookingId: booking.id,
-        propertyName: booking.property?.titleEn || booking.property?.titleGr || '',
-        roomName: booking.roomName || undefined,
-        checkIn: booking.checkIn,
-        checkOut: booking.checkOut,
-        guests: booking.guests,
-        totalPrice: booking.totalPrice,
-        currency: booking.currency || 'EUR',
-      }).catch(() => undefined);
-    }
+    // Confirmation email is sent after payment is confirmed (in PaymentsService)
 
     return {
       success: true,

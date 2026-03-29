@@ -7,6 +7,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
+import { CreatePricingRuleDto, UpdatePricingRuleDto } from './dto/create-pricing-rule.dto';
 
 @Injectable()
 export class RoomsService {
@@ -102,9 +103,9 @@ export class RoomsService {
   }
 
   async findAllPublic() {
-    // Return all bookable rooms with property info for public display
+    // Return all rooms (including non-bookable) so they appear in the listing
+    // Non-bookable rooms (e.g. apartment 10) show as "not available to book"
     return this.prisma.room.findMany({
-      where: { isBookable: true },
       include: {
         property: {
           select: {
@@ -121,11 +122,33 @@ export class RoomsService {
     });
   }
 
-  async findAvailablePublic(checkIn: string, checkOut: string, guests?: number) {
+  async findAvailablePublic(checkIn: string, checkOut: string, guests?: number, adults?: number, children?: number) {
     const { startDate, endDate } = this.parseSearchDates(checkIn, checkOut);
 
     const roomWhere: any = { isBookable: true };
-    if (guests !== undefined) {
+
+    if (adults !== undefined && Number.isFinite(adults)) {
+      const childrenCount = (children !== undefined && Number.isFinite(children)) ? Math.floor(children) : 0;
+      roomWhere.AND = roomWhere.AND || [];
+
+      // Filter by adults: if maxAdults is set use it, otherwise fall back to total capacity
+      roomWhere.AND.push({
+        OR: [
+          { maxAdults: { gte: Math.floor(adults) } },
+          { maxAdults: null, capacity: { gte: Math.floor(adults) + childrenCount } },
+        ],
+      });
+
+      // Filter by children: if maxChildren is set it must accommodate them
+      if (childrenCount > 0) {
+        roomWhere.AND.push({
+          OR: [
+            { maxChildren: { gte: childrenCount } },
+            { maxChildren: null },
+          ],
+        });
+      }
+    } else if (guests !== undefined) {
       if (!Number.isFinite(guests) || guests < 1) {
         throw new BadRequestException('Guests must be a positive number');
       }
@@ -150,8 +173,9 @@ export class RoomsService {
     });
 
     const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
+    const roomIds = rooms.map((r) => r.id);
 
-    const [blockedRecords, conflictingBookings] = await Promise.all([
+    const [blockedRecords, conflictingBookings, closedRules] = await Promise.all([
       this.prisma.propertyAvailability.findMany({
         where: {
           propertyId: { in: propertyIds },
@@ -162,26 +186,39 @@ export class RoomsService {
       }),
       this.prisma.booking.findMany({
         where: {
-          propertyId: { in: propertyIds },
+          roomId: { in: roomIds },
           status: { in: ['CONFIRMED', 'CHECKED_IN'] },
           checkIn: { lte: endDate },
           checkOut: { gte: startDate },
         },
-        select: { propertyId: true },
+        select: { roomId: true },
+      }),
+      this.prisma.roomAvailabilityRule.findMany({
+        where: {
+          roomId: { in: roomIds },
+          isAvailable: false,
+          startDate: { lte: endDate },
+          endDate: { gte: startDate },
+        },
+        select: { roomId: true },
       }),
     ]);
 
     const blockedPropertyIds = new Set(blockedRecords.map((r) => r.propertyId));
-    const bookedPropertyIds = new Set(conflictingBookings.map((b) => b.propertyId));
+    const bookedRoomIds = new Set(conflictingBookings.map((b) => b.roomId).filter(Boolean));
+    const closedRoomIds = new Set(closedRules.map((r) => r.roomId));
 
     return rooms.filter(
-      (room) => !blockedPropertyIds.has(room.propertyId) && !bookedPropertyIds.has(room.propertyId),
+      (room) =>
+        !blockedPropertyIds.has(room.propertyId) &&
+        !bookedRoomIds.has(room.id) &&
+        !closedRoomIds.has(room.id),
     );
   }
 
   async findOnePublic(id: string) {
     const room = await this.prisma.room.findUnique({
-      where: { id, isBookable: true },
+      where: { id }, // Remove isBookable filter to show all rooms
       include: {
         property: {
           select: {
@@ -197,6 +234,9 @@ export class RoomsService {
               },
             },
           },
+        },
+        availabilityRules: {
+          orderBy: { startDate: 'asc' },
         },
       },
     });
@@ -290,6 +330,102 @@ export class RoomsService {
     }
 
     return this.calculatePropertyAvailability(room.propertyId, startDate, endDate);
+  }
+
+  // Pricing Rules CRUD
+  async getPricingRules(roomId: string) {
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
+    if (!room) throw new NotFoundException('Room not found');
+
+    const rules = await this.prisma.roomAvailabilityRule.findMany({
+      where: { roomId },
+      orderBy: { startDate: 'asc' },
+    });
+    return { success: true, data: rules };
+  }
+
+  async createPricingRule(roomId: string, dto: CreatePricingRuleDto) {
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
+    if (!room) throw new NotFoundException('Room not found');
+
+    const rule = await this.prisma.roomAvailabilityRule.create({
+      data: {
+        roomId,
+        startDate: new Date(dto.startDate),
+        endDate: new Date(dto.endDate),
+        priceOverride: dto.priceOverride ?? null,
+        isAvailable: dto.isAvailable ?? true,
+        reason: dto.reason ?? null,
+        minStayOverride: dto.minStayOverride ?? null,
+      },
+    });
+    return { success: true, data: rule };
+  }
+
+  async updatePricingRule(roomId: string, ruleId: string, dto: UpdatePricingRuleDto) {
+    const rule = await this.prisma.roomAvailabilityRule.findFirst({
+      where: { id: ruleId, roomId },
+    });
+    if (!rule) throw new NotFoundException('Pricing rule not found');
+
+    const updated = await this.prisma.roomAvailabilityRule.update({
+      where: { id: ruleId },
+      data: {
+        ...(dto.startDate !== undefined && { startDate: new Date(dto.startDate) }),
+        ...(dto.endDate !== undefined && { endDate: new Date(dto.endDate) }),
+        ...(dto.priceOverride !== undefined && { priceOverride: dto.priceOverride }),
+        ...(dto.isAvailable !== undefined && { isAvailable: dto.isAvailable }),
+        ...(dto.reason !== undefined && { reason: dto.reason }),
+        ...(dto.minStayOverride !== undefined && { minStayOverride: dto.minStayOverride }),
+      },
+    });
+    return { success: true, data: updated };
+  }
+
+  async deletePricingRule(roomId: string, ruleId: string) {
+    const rule = await this.prisma.roomAvailabilityRule.findFirst({
+      where: { id: ruleId, roomId },
+    });
+    if (!rule) throw new NotFoundException('Pricing rule not found');
+
+    await this.prisma.roomAvailabilityRule.delete({ where: { id: ruleId } });
+    return { success: true };
+  }
+
+  async calculateRoomNightlySubtotal(roomId: string, checkIn: Date, checkOut: Date): Promise<{ subtotal: number; nights: number }> {
+    const room = await this.prisma.room.findUnique({
+      where: { id: roomId },
+      include: {
+        availabilityRules: {
+          where: {
+            startDate: { lte: checkOut },
+            endDate: { gte: checkIn },
+            isAvailable: true,
+          },
+          orderBy: { startDate: 'asc' },
+        },
+      },
+    });
+
+    if (!room) throw new NotFoundException('Room not found');
+
+    let subtotal = 0;
+    let nights = 0;
+    const current = new Date(checkIn);
+    current.setHours(0, 0, 0, 0);
+    const end = new Date(checkOut);
+    end.setHours(0, 0, 0, 0);
+
+    while (current < end) {
+      const rule = room.availabilityRules.find(
+        (r) => new Date(r.startDate) <= current && new Date(r.endDate) > current,
+      );
+      subtotal += rule?.priceOverride ?? room.basePrice;
+      nights++;
+      current.setDate(current.getDate() + 1);
+    }
+
+    return { subtotal, nights };
   }
 
   private parseSearchDates(checkIn: string, checkOut: string) {

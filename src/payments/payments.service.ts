@@ -7,6 +7,7 @@ import { CreatePublicCheckoutSessionDto } from './dto/create-public-checkout-ses
 import Stripe from 'stripe';
 import { PaymentStatus, PaymentMethod } from '../database/types';
 import { BookingsService } from '../bookings/bookings.service';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class PaymentsService {
@@ -15,6 +16,7 @@ export class PaymentsService {
   constructor(
     private prisma: PrismaService,
     private bookingsService: BookingsService,
+    private emailService: EmailService,
   ) {
     // Stripe will use the account's default API version
     // or you can specify: apiVersion: '2024-11-20.acacia' as const
@@ -209,6 +211,17 @@ export class PaymentsService {
       const paymentIntent = await this.stripe.paymentIntents.retrieve(paymentIntentId);
 
       if (paymentIntent.status === 'succeeded') {
+        // Fetch Stripe receipt URL from the charge
+        let stripeReceiptUrl: string | undefined;
+        if (paymentIntent.latest_charge) {
+          try {
+            const charge = await this.stripe.charges.retrieve(paymentIntent.latest_charge as string);
+            stripeReceiptUrl = charge.receipt_url ?? undefined;
+          } catch {
+            // receipt URL is optional — don't block the flow
+          }
+        }
+
         // Update payment status
         const updatedPayment = await this.prisma.payment.update({
           where: { id: payment.id },
@@ -220,13 +233,35 @@ export class PaymentsService {
         });
 
         // Update booking status
-        await this.prisma.booking.update({
+        const confirmedBooking = await this.prisma.booking.update({
           where: { id: payment.bookingId },
           data: {
             paymentStatus: PaymentStatus.COMPLETED,
             status: 'CONFIRMED',
           },
+          include: {
+            property: { select: { titleEn: true, titleGr: true } },
+          },
         });
+
+        // Send confirmation email now that payment is confirmed
+        const guestEmail = confirmedBooking.guestEmail;
+        if (guestEmail) {
+          this.emailService.sendBookingConfirmation({
+            guestName: confirmedBooking.guestName || 'Guest',
+            guestEmail,
+            bookingId: confirmedBooking.id,
+            propertyName: confirmedBooking.property?.titleEn || confirmedBooking.property?.titleGr || '',
+            roomName: confirmedBooking.roomName || undefined,
+            checkIn: confirmedBooking.checkIn,
+            checkOut: confirmedBooking.checkOut,
+            guests: confirmedBooking.guests,
+            totalPrice: confirmedBooking.totalPrice,
+            currency: confirmedBooking.currency || 'EUR',
+            stripePaymentIntentId: paymentIntent.id,
+            stripeReceiptUrl,
+          }).catch(() => undefined);
+        }
 
         // Calculate owner revenue (after platform fees)
         const property = await this.prisma.property.findUnique({
