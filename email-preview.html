@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>L'Incanto — Email Preview</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #060810; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: #e5e7eb; }
+
+    /* Tab nav */
+    .tab-nav {
+      position: sticky; top: 0; z-index: 10;
+      background: #0d1117; border-bottom: 1px solid rgba(245,158,11,0.2);
+      display: flex; overflow-x: auto; padding: 0 24px; gap: 4px;
+    }
+    .tab-btn {
+      background: none; border: none; cursor: pointer; color: #6b7280;
+      font-size: 13px; font-family: inherit; padding: 16px 18px;
+      border-bottom: 2px solid transparent; white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tab-btn:hover { color: #d1d5db; }
+    .tab-btn.active { color: #f59e0b; border-bottom-color: #f59e0b; }
+
+    /* Panels */
+    .tab-panel { display: none; padding: 40px 24px; }
+    .tab-panel.active { display: block; }
+
+    /* Side by side */
+    .lang-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 1340px; margin: 0 auto;
+    }
+    .lang-label {
+      text-align: center; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #6b7280; margin-bottom: 14px;
+    }
+    .lang-label span { color: #f59e0b; }
+
+    /* Email wrapper */
+    .email-wrapper {
+      background: #0d1117; border-radius: 16px; overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.15), 0 24px 48px rgba(0,0,0,0.6);
+    }
+
+    /* Logo bar */
+    .logo-bar {
+      background: #111827; padding: 22px 40px;
+      border-bottom: 1px solid rgba(245,158,11,0.25);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-bar img { height: 40px; width: auto; display: block; }
+    .logo-tagline { font-size: 9px; letter-spacing: 0.2em; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-top: 3px; padding-left: 2px; }
+    .logo-location { color: rgba(255,255,255,0.3); font-size: 12px; letter-spacing: 0.05em; }
+    .logo-fallback { display: none; color: #f59e0b; font-size: 18px; font-weight: 700; letter-spacing: 0.05em; }
+
+    /* Header band */
+    .header-band { padding: 36px 40px; text-align: center; }
+    .header-band .eyebrow { color: rgba(245,158,11,0.75); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 10px; }
+    .header-band h1 { color: #f9fafb; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .header-band .subline { color: rgba(255,255,255,0.45); font-size: 13px; }
+    .checkmark-circle {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(245,158,11,0.12); border: 2px solid rgba(245,158,11,0.35);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 22px;
+    }
+
+    /* Body */
+    .email-body { background: #111827; padding: 36px 40px; }
+    .greeting { color: #9ca3af; font-size: 15px; margin-bottom: 16px; }
+    .greeting strong { color: #e5e7eb; }
+    .intro { color: #9ca3af; font-size: 14px; line-height: 1.75; margin-bottom: 24px; }
+    .gold { color: #f59e0b; }
+
+    /* Details table */
+    .details-card { background: #1f2937; border-radius: 10px; overflow: hidden; margin: 20px 0; }
+    .details-table { width: 100%; border-collapse: collapse; }
+    .details-table tr td { padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
+    .details-table tr:last-child td { border-bottom: none; }
+    .details-table .label { color: #6b7280; }
+    .details-table .value { color: #e5e7eb; text-align: right; font-weight: 500; }
+    .details-table .value.highlight { color: #f59e0b; font-size: 16px; font-weight: 700; }
+    .details-divider { border-bottom: 1px solid rgba(245,158,11,0.2); padding: 12px 24px; }
+
+    /* Info card */
+    .info-card { background: #0f172a; border-radius: 10px; padding: 16px 24px; margin: 8px 0 16px; border: 1px solid rgba(245,158,11,0.2); }
+    .info-card .times { color: #9ca3af; font-size: 13px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .info-card .times strong { color: #e5e7eb; }
+    .info-card .receipt { padding-top: 10px; }
+    .info-card .receipt a { color: #f59e0b; font-size: 13px; text-decoration: none; border-bottom: 1px solid rgba(245,158,11,0.3); }
+
+    /* Arrival strip */
+    .arrival-strip { background: #1f2937; border-radius: 10px; padding: 16px 24px; margin: 8px 0 24px; border-left: 3px solid rgba(245,158,11,0.5); }
+    .arrival-strip .alabel { color: #6b7280; font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+    .arrival-strip p { color: #9ca3af; font-size: 13px; line-height: 1.7; }
+    .arrival-strip strong { color: #e5e7eb; }
+
+    /* Message block */
+    .message-block { background: #1f2937; border-radius: 10px; padding: 20px 24px; margin: 4px 0 24px; }
+    .message-block .mlabel { color: #6b7280; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+    .message-block p { color: #d1d5db; font-size: 14px; line-height: 1.75; border-left: 2px solid rgba(245,158,11,0.4); padding-left: 14px; }
+    .message-block.italic p { color: #9ca3af; font-style: italic; border-color: rgba(245,158,11,0.3); }
+
+    /* Footer */
+    .email-foot { color: #4b5563; font-size: 12px; margin-top: 16px; }
+    .email-foot a { color: #f59e0b; text-decoration: none; }
+    .footer-bar {
+      background: #0d1117; padding: 20px 40px;
+      border-top: 1px solid rgba(245,158,11,0.12);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-bar .footer-left { color: #4b5563; font-size: 12px; line-height: 1.6; }
+    .footer-bar .footer-left strong { color: #6b7280; }
+    .footer-bar .footer-left a { color: #f59e0b; text-decoration: none; }
+    .footer-bar .footer-right { color: #374151; font-size: 11px; }
+
+    /* Header gradient variants */
+    .hdr-green  { background: linear-gradient(135deg,#1c2a1a 0%,#14261a 100%); }
+    .hdr-dark   { background: #1a1218; }
+    .hdr-olive  { background: linear-gradient(135deg,#1a1f12 0%,#161b0e 100%); }
+    .hdr-indigo { background: linear-gradient(135deg,#1a1a2e 0%,#16162a 100%); }
+
+    @media (max-width: 900px) {
+      .lang-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('confirm')">1 · Booking Confirmation</button>
+  <button class="tab-btn" onclick="showTab('cancel')">2 · Booking Cancellation</button>
+  <button class="tab-btn" onclick="showTab('reminder')">3 · Check-in Reminder</button>
+  <button class="tab-btn" onclick="showTab('inq-admin')">4 · Inquiry (Admin)</button>
+  <button class="tab-btn" onclick="showTab('inq-guest')">5 · Inquiry (Guest)</button>
+</nav>
+
+<!-- Shared logo snippet (reused via JS) -->
+<template id="logo-tpl">
+  <div class="logo-bar">
+    <div>
+      <img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+      <div class="logo-fallback">L'INCANTO</div>
+      <div class="logo-tagline">by SM Holdings</div>
+    </div>
+    <div class="logo-location">Preveza, Greece</div>
+  </div>
+</template>
+
+<template id="footer-tpl">
+  <div class="footer-bar">
+    <div class="footer-left">
+      <strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br>
+      <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a>
+      &nbsp;·&nbsp;
+      <a href="https://licanto.vercel.app">licanto.vercel.app</a>
+    </div>
+    <div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div>
+  </div>
+</template>
+
+<!-- ══════════════════════════════════════════════
+     1. BOOKING CONFIRMATION
+══════════════════════════════════════════════ -->
+<div id="tab-confirm" class="tab-panel active">
+  <div class="lang-grid">
+
+    <!-- EN -->
+    <div>
+      <div class="lang-label"><span>EN</span> — English</div>
+      <div class="email-wrapper">
+        <div class="logo-bar">
+          <div>
+            <img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="logo-fallback">L'INCANTO</div>
+            <div class="logo-tagline">by SM Holdings</div>
+          </div>
+          <div class="logo-location">Preveza, Greece</div>
+        </div>
+        <div class="header-band hdr-green">
+          <div class="checkmark-circle">✓</div>
+          <h1>Booking Confirmed</h1>
+          <div class="subline">Ref #A1B2C3D4</div>
+        </div>
+        <div class="email-body">
+          <p class="greeting">Dear <strong>George Papadopoulos</strong>,</p>
+          <p class="intro">Your booking is confirmed. We look forward to welcoming you to <span class="gold">L'Incanto</span>.</p>
+          <div class="details-card">
+            <div class="details-divider"></div>
+            <table class="details-table">
+              <tr><td class="label">Property</td><td class="value">L'Incanto — Studio No. 5</td></tr>
+              <tr><td class="label">Check-in</td><td class="value">Friday, 18 July 2025</td></tr>
+              <tr><td class="label">Check-out</td><td class="value">Sunday, 27 July 2025</td></tr>
+              <tr><td class="label">Duration</td><td class="value">9 nights</td></tr>
+              <tr><td class="label">Guests</td><td class="value">2</td></tr>
+              <tr><td class="label">Total</td><td class="value highlight">EUR 1,350.00</td></tr>
+            </table>
+          </div>
+          <div class="info-card">
+            <div class="times">Arrival: <strong>3:00 PM – 11:00 PM</strong> &nbsp;·&nbsp; Departure: <strong>by 11:00 AM</strong></div>
+            <div class="receipt"><a href="#">View official receipt →</a></div>
+          </div>
+          <p class="email-foot">Questions? <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar">
+          <div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="https://licanto.vercel.app">licanto.vercel.app</a></div>
+          <div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EL -->
+    <div>
+      <div class="lang-label"><span>EL</span> — Ελληνικά</div>
+      <div class="email-wrapper">
+        <div class="logo-bar">
+          <div>
+            <img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="logo-fallback">L'INCANTO</div>
+            <div class="logo-tagline">by SM Holdings</div>
+          </div>
+          <div class="logo-location">Preveza, Greece</div>
+        </div>
+        <div class="header-band hdr-green">
+          <div class="checkmark-circle">✓</div>
+          <h1>Κράτηση Επιβεβαιώθηκε</h1>
+          <div class="subline">Ref #A1B2C3D4</div>
+        </div>
+        <div class="email-body">
+          <p class="greeting">Αγαπητέ/ή <strong>Γιώργος Παπαδόπουλος</strong>,</p>
+          <p class="intro">Η κράτησή σας επιβεβαιώθηκε. Ανυπομονούμε να σας υποδεχτούμε στο <span class="gold">L'Incanto</span>.</p>
+          <div class="details-card">
+            <div class="details-divider"></div>
+            <table class="details-table">
+              <tr><td class="label">Κατάλυμα</td><td class="value">L'Incanto — Studio No. 5</td></tr>
+              <tr><td class="label">Check-in</td><td class="value">Παρασκευή, 18 Ιουλίου 2025</td></tr>
+              <tr><td class="label">Check-out</td><td class="value">Κυριακή, 27 Ιουλίου 2025</td></tr>
+              <tr><td class="label">Διάρκεια</td><td class="value">9 βράδια</td></tr>
+              <tr><td class="label">Επισκέπτες</td><td class="value">2</td></tr>
+              <tr><td class="label">Σύνολο</td><td class="value highlight">EUR 1,350.00</td></tr>
+            </table>
+          </div>
+          <div class="info-card">
+            <div class="times">Ώρα άφιξης: <strong>15:00 – 23:00</strong> &nbsp;·&nbsp; Αναχώρηση: <strong>έως 11:00</strong></div>
+            <div class="receipt"><a href="#">Προβολή επίσημης απόδειξης →</a></div>
+          </div>
+          <p class="email-foot">Ερωτήσεις; <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar">
+          <div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="https://licanto.vercel.app">licanto.vercel.app</a></div>
+          <div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     2. BOOKING CANCELLATION
+══════════════════════════════════════════════ -->
+<div id="tab-cancel" class="tab-panel">
+  <div class="lang-grid">
+
+    <div>
+      <div class="lang-label"><span>EN</span> — English</div>
+      <div class="email-wrapper">
+        <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+        <div class="header-band hdr-dark"><h1>Booking Cancelled</h1><div class="subline">Ref #A1B2C3D4</div></div>
+        <div class="email-body">
+          <p class="greeting">Dear <strong>George Papadopoulos</strong>,</p>
+          <p class="intro">Your booking has been cancelled. <span style="color:#6b7280;">Reason: Guest request</span></p>
+          <div class="details-card">
+            <div class="details-divider"></div>
+            <table class="details-table">
+              <tr><td class="label">Property</td><td class="value">L'Incanto — Studio No. 5</td></tr>
+              <tr><td class="label">Check-in</td><td class="value">Friday, 18 July 2025</td></tr>
+              <tr><td class="label">Check-out</td><td class="value">Sunday, 27 July 2025</td></tr>
+              <tr><td class="label">Original amount</td><td class="value">EUR 1,350.00</td></tr>
+              <tr><td class="label">Refund</td><td class="value" style="color:#34d399;">EUR 1,012.50 (75%)</td></tr>
+            </table>
+          </div>
+          <p style="color:#9ca3af;font-size:13px;margin:4px 0 0;">The refund will appear on your account within <strong style="color:#e5e7eb;">5–10 business days</strong>.</p>
+          <p class="email-foot" style="margin-top:28px;">Contact us: <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="lang-label"><span>EL</span> — Ελληνικά</div>
+      <div class="email-wrapper">
+        <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+        <div class="header-band hdr-dark"><h1>Ακύρωση Κράτησης</h1><div class="subline">Ref #A1B2C3D4</div></div>
+        <div class="email-body">
+          <p class="greeting">Αγαπητέ/ή <strong>Γιώργος Παπαδόπουλος</strong>,</p>
+          <p class="intro">Η κράτησή σας ακυρώθηκε. <span style="color:#6b7280;">Λόγος: Αίτημα πελάτη</span></p>
+          <div class="details-card">
+            <div class="details-divider"></div>
+            <table class="details-table">
+              <tr><td class="label">Κατάλυμα</td><td class="value">L'Incanto — Studio No. 5</td></tr>
+              <tr><td class="label">Check-in</td><td class="value">Παρασκευή, 18 Ιουλίου 2025</td></tr>
+              <tr><td class="label">Check-out</td><td class="value">Κυριακή, 27 Ιουλίου 2025</td></tr>
+              <tr><td class="label">Αρχικό ποσό</td><td class="value">EUR 1,350.00</td></tr>
+              <tr><td class="label">Επιστροφή χρημάτων</td><td class="value" style="color:#34d399;">EUR 1,012.50 (75%)</td></tr>
+            </table>
+          </div>
+          <p style="color:#9ca3af;font-size:13px;margin:4px 0 0;">Η επιστροφή θα εμφανιστεί στον λογαριασμό σας εντός <strong style="color:#e5e7eb;">5–10 εργάσιμων ημερών</strong>.</p>
+          <p class="email-foot" style="margin-top:28px;">Επικοινωνία: <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     3. CHECK-IN REMINDER
+══════════════════════════════════════════════ -->
+<div id="tab-reminder" class="tab-panel">
+  <div class="lang-grid">
+
+    <div>
+      <div class="lang-label"><span>EN</span> — English</div>
+      <div class="email-wrapper">
+        <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+        <div class="header-band hdr-olive">
+          <div class="eyebrow">Arrival reminder</div>
+          <h1>Check-in tomorrow!</h1>
+          <div class="subline">Friday, 18 July 2025</div>
+        </div>
+        <div class="email-body">
+          <p class="greeting">Dear <strong>George Papadopoulos</strong>,</p>
+          <p class="intro">Reminder: tomorrow is your arrival day at <span class="gold">L'Incanto</span>. We can't wait to see you!</p>
+          <div class="details-card">
+            <div class="details-divider"></div>
+            <table class="details-table">
+              <tr><td class="label">Property</td><td class="value">L'Incanto — Studio No. 5</td></tr>
+              <tr><td class="label">Check-in</td><td class="value highlight">Friday, 18 July 2025</td></tr>
+              <tr><td class="label">Check-out</td><td class="value">Sunday, 27 July 2025</td></tr>
+              <tr><td class="label">Guests</td><td class="value">2</td></tr>
+            </table>
+          </div>
+          <div class="arrival-strip">
+            <div class="alabel">Arrival info</div>
+            <p>Check-in: <strong>3:00 PM – 11:00 PM</strong><br>Check-out: <strong>by 11:00 AM</strong></p>
+          </div>
+          <p class="email-foot">Need help? <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="lang-label"><span>EL</span> — Ελληνικά</div>
+      <div class="email-wrapper">
+        <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+        <div class="header-band hdr-olive">
+          <div class="eyebrow">Υπενθύμιση άφιξης</div>
+          <h1>Check-in αύριο!</h1>
+          <div class="subline">Παρασκευή, 18 Ιουλίου 2025</div>
+        </div>
+        <div class="email-body">
+          <p class="greeting">Αγαπητέ/ή <strong>Γιώργος Παπαδόπουλος</strong>,</p>
+          <p class="intro">Σας υπενθυμίζουμε ότι αύριο είναι η ημέρα άφιξής σας στο <span class="gold">L'Incanto</span>. Σας περιμένουμε!</p>
+          <div class="details-card">
+            <div class="details-divider"></div>
+            <table class="details-table">
+              <tr><td class="label">Κατάλυμα</td><td class="value">L'Incanto — Studio No. 5</td></tr>
+              <tr><td class="label">Check-in</td><td class="value highlight">Παρασκευή, 18 Ιουλίου 2025</td></tr>
+              <tr><td class="label">Check-out</td><td class="value">Κυριακή, 27 Ιουλίου 2025</td></tr>
+              <tr><td class="label">Επισκέπτες</td><td class="value">2</td></tr>
+            </table>
+          </div>
+          <div class="arrival-strip">
+            <div class="alabel">Πληροφορίες άφιξης</div>
+            <p>Ώρα check-in: <strong>15:00 – 23:00</strong><br>Ώρα check-out: <strong>έως 11:00</strong></p>
+          </div>
+          <p class="email-foot">Χρειάζεστε βοήθεια; <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     4. INQUIRY — ADMIN (always EN)
+══════════════════════════════════════════════ -->
+<div id="tab-inq-admin" class="tab-panel">
+  <div style="max-width:660px;margin:0 auto;">
+    <div class="lang-label">Admin notification — always <span>EN</span></div>
+    <div class="email-wrapper">
+      <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+      <div class="header-band hdr-indigo">
+        <div class="eyebrow">New inquiry</div>
+        <h1>Inquiry #F3K9L2M1</h1>
+        <div class="subline">L'Incanto Apartments</div>
+      </div>
+      <div class="email-body">
+        <div class="details-card">
+          <div class="details-divider"></div>
+          <table class="details-table">
+            <tr><td class="label">From</td><td class="value">Maria Nikolaou</td></tr>
+            <tr><td class="label">Email</td><td class="value" style="color:#f59e0b;">maria@example.com</td></tr>
+            <tr><td class="label">Property</td><td class="value">L'Incanto Apartments</td></tr>
+          </table>
+        </div>
+        <div class="message-block">
+          <div class="mlabel">Message</div>
+          <p>Hello, I would like to ask about availability for Studio No. 3 from August 10–17, 2025. Is early check-in possible? Thank you.</p>
+        </div>
+        <p class="email-foot">Reply directly: <a href="mailto:maria@example.com">maria@example.com</a></p>
+      </div>
+      <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     5. INQUIRY — GUEST
+══════════════════════════════════════════════ -->
+<div id="tab-inq-guest" class="tab-panel">
+  <div class="lang-grid">
+
+    <div>
+      <div class="lang-label"><span>EN</span> — English</div>
+      <div class="email-wrapper">
+        <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+        <div class="header-band hdr-indigo">
+          <div class="eyebrow">We received your message</div>
+          <h1>We'll be in touch soon</h1>
+          <div class="subline">L'Incanto Apartments</div>
+        </div>
+        <div class="email-body">
+          <p class="greeting">Dear <strong>Maria Nikolaou</strong>,</p>
+          <p class="intro">We received your inquiry and will get back to you as soon as possible.</p>
+          <div class="message-block italic">
+            <div class="mlabel">Your message</div>
+            <p>"Hello, I would like to ask about availability for Studio No. 3 from August 10–17, 2025..."</p>
+          </div>
+          <p class="email-foot">Contact us: <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="lang-label"><span>EL</span> — Ελληνικά</div>
+      <div class="email-wrapper">
+        <div class="logo-bar"><div><img src="https://licanto.vercel.app/incanto-logo.png" alt="L'Incanto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><div class="logo-fallback">L'INCANTO</div><div class="logo-tagline">by SM Holdings</div></div><div class="logo-location">Preveza, Greece</div></div>
+        <div class="header-band hdr-indigo">
+          <div class="eyebrow">Λάβαμε το μήνυμά σας</div>
+          <h1>Θα επικοινωνήσουμε σύντομα</h1>
+          <div class="subline">L'Incanto Apartments</div>
+        </div>
+        <div class="email-body">
+          <p class="greeting">Αγαπητέ/ή <strong>Μαρία Νικολάου</strong>,</p>
+          <p class="intro">Λάβαμε το αίτημά σας και θα επικοινωνήσουμε μαζί σας το συντομότερο δυνατό.</p>
+          <div class="message-block italic">
+            <div class="mlabel">Το μήνυμά σας</div>
+            <p>"Καλημέρα, θα ήθελα να ρωτήσω για τη διαθεσιμότητα του Studio No. 3 για το διάστημα 10–17 Αυγούστου..."</p>
+          </div>
+          <p class="email-foot">Άμεση επικοινωνία: <a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a></p>
+        </div>
+        <div class="footer-bar"><div class="footer-left"><strong>L'Incanto Apartments</strong> &nbsp;·&nbsp; Preveza, Greece<br><a href="mailto:lincantobook@gmail.com">lincantobook@gmail.com</a> &nbsp;·&nbsp; <a href="#">licanto.vercel.app</a></div><div class="footer-right">&copy; <script>document.write(new Date().getFullYear())</script> adinfinity. All rights reserved.</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function showTab(id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>

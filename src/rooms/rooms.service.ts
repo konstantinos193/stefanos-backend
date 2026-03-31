@@ -105,7 +105,8 @@ export class RoomsService {
   async findAllPublic() {
     // Return all rooms (including non-bookable) so they appear in the listing
     // Non-bookable rooms (e.g. apartment 10) show as "not available to book"
-    return this.prisma.room.findMany({
+    // Rooms with inactive properties are automatically marked as non-bookable
+    const rooms = await this.prisma.room.findMany({
       include: {
         property: {
           select: {
@@ -115,11 +116,18 @@ export class RoomsService {
             address: true,
             city: true,
             images: true,
+            status: true, // Include property status to check if it's active
           },
         },
       },
       orderBy: { name: 'asc' },
     });
+
+    // Automatically mark rooms as non-bookable if their property is inactive
+    return rooms.map(room => ({
+      ...room,
+      isBookable: room.isBookable && room.property.status === 'ACTIVE',
+    }));
   }
 
   async findAvailablePublic(checkIn: string, checkOut: string, guests?: number, adults?: number, children?: number) {
@@ -166,14 +174,18 @@ export class RoomsService {
             address: true,
             city: true,
             images: true,
+            status: true, // Include property status to check if it's active
           },
         },
       },
       orderBy: { name: 'asc' },
     });
 
-    const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
-    const roomIds = rooms.map((r) => r.id);
+    // Filter out rooms from inactive properties
+    const activePropertyRooms = rooms.filter(room => room.property.status === 'ACTIVE');
+
+    const propertyIds = [...new Set(activePropertyRooms.map((r) => r.propertyId))];
+    const roomIds = activePropertyRooms.map((r) => r.id);
 
     const [blockedRecords, conflictingBookings, closedRules] = await Promise.all([
       this.prisma.propertyAvailability.findMany({
@@ -208,7 +220,7 @@ export class RoomsService {
     const bookedRoomIds = new Set(conflictingBookings.map((b) => b.roomId).filter(Boolean));
     const closedRoomIds = new Set(closedRules.map((r) => r.roomId));
 
-    return rooms.filter(
+    return activePropertyRooms.filter(
       (room) =>
         !blockedPropertyIds.has(room.propertyId) &&
         !bookedRoomIds.has(room.id) &&
@@ -228,6 +240,7 @@ export class RoomsService {
             address: true,
             city: true,
             images: true,
+            status: true, // Include property status to check if it's active
             amenities: {
               include: {
                 amenity: true,
@@ -245,7 +258,11 @@ export class RoomsService {
       throw new NotFoundException('Room not found or not available');
     }
 
-    return room;
+    // Automatically mark room as non-bookable if property is inactive
+    return {
+      ...room,
+      isBookable: room.isBookable && room.property.status === 'ACTIVE',
+    };
   }
 
   async findOne(id: string, userId?: string) {

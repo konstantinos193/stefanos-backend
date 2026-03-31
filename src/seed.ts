@@ -528,9 +528,9 @@ async function main() {
       smokingAllowed: false,
       partyAllowed: false,
       images: [
-        'http://licanto.vercel.app/images/apartment1.jpg',
-        'http://licanto.vercel.app/images/apartment2.jpg',
-        'http://licanto.vercel.app/images/apartment3.jpg'
+        '/incanto-logo.png',
+        '/incanto-logo.png',
+        '/incanto-logo.png'
       ],
       ownerId: owners[0].id,
       amenityIds: [0, 1, 10, 5] // wifi (0), free parking (1), free tv channels (10), free air conditioning (5)
