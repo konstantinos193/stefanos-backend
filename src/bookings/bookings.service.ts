@@ -290,9 +290,9 @@ export class BookingsService {
       effectivePricePerNight,
       nights,
       createBookingDto.guests,
-      property.cleaningFee || 0,
-      property.serviceFeePercentage || 10,
-      property.taxRate || 24,
+      0, // No cleaning fee
+      0, // No service fee
+      0, // No tax
       0, // discounts
       property.currency || 'EUR',
     );
@@ -300,7 +300,7 @@ export class BookingsService {
     // Calculate owner revenue (after platform fees)
     const { ownerRevenue, platformFee } = FinancialUtil.calculateOwnerRevenue(
       priceBreakdown.totalPrice,
-      property.serviceFeePercentage || 10,
+      0, // No service fee
     );
 
     const booking = await this.prisma.booking.create({

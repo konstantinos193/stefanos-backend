@@ -28,14 +28,14 @@ export class FinancialUtil {
     nights: number,
     guests: number,
     cleaningFee: number = 0,
-    serviceFeePercentage: number = 10,
-    taxRate: number = 24, // Greece VAT
+    serviceFeePercentage: number = 0, // No service fee
+    taxRate: number = 0, // No tax
     discounts: number = 0,
     currency: string = 'EUR',
   ): PriceBreakdown {
     const subtotal = basePrice * nights;
-    const serviceFee = subtotal * (serviceFeePercentage / 100);
-    const taxes = (subtotal + cleaningFee + serviceFee) * (taxRate / 100);
+    const serviceFee = 0; // No service fee
+    const taxes = 0; // No tax
     const totalPrice = subtotal + cleaningFee + serviceFee + taxes - discounts;
 
     return {
@@ -105,9 +105,9 @@ export class FinancialUtil {
    */
   static calculateOwnerRevenue(
     totalPrice: number,
-    serviceFeePercentage: number = 10,
+    serviceFeePercentage: number = 0, // No service fee
   ): { ownerRevenue: number; platformFee: number } {
-    const platformFee = totalPrice * (serviceFeePercentage / 100);
+    const platformFee = 0; // No platform fee
     const ownerRevenue = totalPrice - platformFee;
 
     return {

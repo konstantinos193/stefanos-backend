@@ -270,7 +270,7 @@ export class PaymentsService {
             serviceFeePercentage: true,
           },
         });
-        const platformFee = payment.amount * (property?.serviceFeePercentage || 10) / 100;
+        const platformFee = 0; // No platform fee
         const ownerRevenue = payment.amount - platformFee;
 
         await this.prisma.booking.update({
@@ -505,7 +505,7 @@ export class PaymentsService {
       return;
     }
 
-    const platformFee = payment.amount * (booking.property?.serviceFeePercentage || 10) / 100;
+    const platformFee = 0; // No platform fee
     const ownerRevenue = payment.amount - platformFee;
 
     await this.prisma.payment.update({

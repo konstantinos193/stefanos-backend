@@ -26,6 +26,7 @@ import { InquiriesModule } from './inquiries/inquiries.module';
 import { MaintenanceModule } from './maintenance/maintenance.module';
 import { MessagesModule } from './messages/messages.module';
 import { ReportsModule } from './reports/reports.module';
+import { PricingModule } from './pricing/pricing.module';
 import { AppController } from './app.controller';
 import { AuditModule } from './audit/audit.module';
 import { EmailModule } from './email/email.module';
@@ -63,6 +64,7 @@ import { AuditInterceptor } from './common/interceptors/audit.interceptor';
     InquiriesModule,
     MaintenanceModule,
     MessagesModule,
+    PricingModule,
     ReportsModule,
     AuditModule,
     EmailModule,
