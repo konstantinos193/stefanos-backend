@@ -409,6 +409,105 @@ export class RoomsService {
     return { success: true };
   }
 
+  async getAvailabilityCalendar(roomId: string, year: number, month: number) {
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
+    if (!room) throw new NotFoundException('Room not found');
+
+    // month is 0-indexed from frontend (JS convention)
+    const startDate = new Date(Date.UTC(year, month, 1));
+    const endDate = new Date(Date.UTC(year, month + 1, 1));
+
+    const [rules, bookings] = await Promise.all([
+      this.prisma.roomAvailabilityRule.findMany({
+        where: {
+          roomId,
+          startDate: { lt: endDate },
+          endDate: { gt: startDate },
+          isAvailable: false,
+        },
+      }),
+      this.prisma.booking.findMany({
+        where: {
+          roomId,
+          status: { notIn: ['CANCELLED'] },
+          checkIn: { lt: endDate },
+          checkOut: { gt: startDate },
+        },
+        select: { id: true, checkIn: true, checkOut: true, guestName: true },
+      }),
+    ]);
+
+    const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    const days: {
+      date: string;
+      isAvailable: boolean;
+      reason?: string;
+      bookingId?: string;
+      guestName?: string;
+    }[] = [];
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dayUtc = new Date(Date.UTC(year, month, d));
+      const dateStr = dayUtc.toISOString().slice(0, 10);
+
+      const blockedRule = rules.find(
+        (r) => new Date(r.startDate) <= dayUtc && new Date(r.endDate) > dayUtc,
+      );
+
+      const booking = bookings.find(
+        (b) => new Date(b.checkIn) <= dayUtc && new Date(b.checkOut) > dayUtc,
+      );
+
+      days.push({
+        date: dateStr,
+        isAvailable: !blockedRule,
+        ...(blockedRule?.reason ? { reason: blockedRule.reason } : {}),
+        ...(booking ? { bookingId: booking.id, guestName: booking.guestName } : {}),
+      });
+    }
+
+    return { success: true, data: days };
+  }
+
+  async updateAvailability(
+    roomId: string,
+    dto: { isAvailable: boolean; startDate: string; endDate: string; reason?: string },
+  ) {
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
+    if (!room) throw new NotFoundException('Room not found');
+
+    const start = new Date(dto.startDate);
+    const end = new Date(dto.endDate);
+    // endDate from frontend is inclusive (single day: startDate === endDate),
+    // but our rule endDate is exclusive — advance by 1 day.
+    end.setUTCDate(end.getUTCDate() + 1);
+
+    if (dto.isAvailable) {
+      // Remove any blocking rules that overlap this range
+      await this.prisma.roomAvailabilityRule.deleteMany({
+        where: {
+          roomId,
+          isAvailable: false,
+          startDate: { lt: end },
+          endDate: { gt: start },
+        },
+      });
+    } else {
+      // Block this range
+      await this.prisma.roomAvailabilityRule.create({
+        data: {
+          roomId,
+          startDate: start,
+          endDate: end,
+          isAvailable: false,
+          reason: dto.reason ?? null,
+        },
+      });
+    }
+
+    return { success: true };
+  }
+
   async calculateRoomNightlySubtotal(roomId: string, checkIn: Date, checkOut: Date): Promise<{ subtotal: number; nights: number }> {
     const room = await this.prisma.room.findUnique({
       where: { id: roomId },

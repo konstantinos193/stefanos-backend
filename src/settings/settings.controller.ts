@@ -39,6 +39,22 @@ export class SettingsController {
     return { success: true, data: links };
   }
 
+  @Get('taxes')
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  async getTaxSettings() {
+    const taxes = await this.settingsService.getTaxSettings();
+    return { success: true, data: taxes };
+  }
+
+  @Patch('taxes')
+  @Roles(UserRole.ADMIN, UserRole.MANAGER)
+  async updateTaxSettings(
+    @Body() data: { vatRate?: number; municipalFee?: number; environmentalTax?: number; isActive?: boolean },
+  ) {
+    const taxes = await this.settingsService.updateTaxSettings(data);
+    return { success: true, data: taxes };
+  }
+
   @Get(':key')
   @Roles(UserRole.ADMIN, UserRole.MANAGER)
   async findOne(@Param('key') key: string) {

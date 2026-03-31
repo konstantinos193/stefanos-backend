@@ -397,6 +397,10 @@ async function main() {
     where: { email: 'Stefadmin@stefanos.com' }
   });
 
+  const existingLincanto = await prisma.user.findUnique({
+    where: { email: 'lincantobook@gmail.com' }
+  });
+
   // Create or update admin user (preserve password if exists)
   const adminPassword = await hashPassword('admin123');
   const admin = existingAdmin 
@@ -446,6 +450,30 @@ async function main() {
           role: 'ADMIN',
           isActive: true,
           avatar: 'https://ui-avatars.com/api/?name=Stefadmin&background=3b82f6&color=fff'
+        }
+      });
+
+  // Create or update Lincanto admin user
+  const lincantoPassword = await hashPassword('admin1');
+  const lincanto = existingLincanto
+    ? await prisma.user.update({
+        where: { email: 'lincantobook@gmail.com' },
+        data: {
+          name: 'Lincanto Admin',
+          role: 'ADMIN',
+          isActive: true,
+          avatar: 'https://ui-avatars.com/api/?name=Lincanto+Admin&background=f59e0b&color=fff'
+          // Don't update password to preserve login credentials
+        }
+      })
+    : await prisma.user.create({
+        data: {
+          email: 'lincantobook@gmail.com',
+          name: 'Lincanto Admin',
+          password: lincantoPassword,
+          role: 'ADMIN',
+          isActive: true,
+          avatar: 'https://ui-avatars.com/api/?name=Lincanto+Admin&background=f59e0b&color=fff'
         }
       });
 

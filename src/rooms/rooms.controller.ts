@@ -159,6 +159,27 @@ export class RoomsController {
     );
   }
 
+  @Get(':id/availability-calendar')
+  @Roles('PROPERTY_OWNER', 'ADMIN', 'MANAGER')
+  @UseGuards(RolesGuard)
+  getAvailabilityCalendar(
+    @Param('id') id: string,
+    @Query('year') year: string,
+    @Query('month') month: string,
+  ) {
+    return this.roomsService.getAvailabilityCalendar(id, Number(year), Number(month));
+  }
+
+  @Patch(':id/availability')
+  @Roles('PROPERTY_OWNER', 'ADMIN', 'MANAGER')
+  @UseGuards(RolesGuard)
+  updateAvailability(
+    @Param('id') id: string,
+    @Body() body: { isAvailable: boolean; startDate: string; endDate: string; reason?: string },
+  ) {
+    return this.roomsService.updateAvailability(id, body);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUserWithRole() user?: any) {
     return this.roomsService.findOne(id, user?.userId || user?.id);
