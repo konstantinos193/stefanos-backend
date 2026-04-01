@@ -66,8 +66,10 @@ model Property {
   id          String        @id @default(uuid())
   titleGr     String
   titleEn     String
+  titleIt     String?
   descriptionGr String?
   descriptionEn String?
+  descriptionIt String?
   type        PropertyType
   status      PropertyStatus @default(ACTIVE)
   
@@ -173,6 +175,7 @@ model Amenity {
   id          String   @id @default(uuid())
   nameGr      String
   nameEn      String
+  nameIt      String?
   icon        String?
   category    String
   createdAt   DateTime @default(now())
@@ -530,6 +533,7 @@ model Room {
   name        String
   nameGr      String?
   nameEn      String?
+  nameIt      String?
   type        RoomType
   capacity    Int
   maxAdults   Int?    // Optional field for adult capacity breakdown
@@ -541,6 +545,7 @@ model Room {
   images      Json? // Array of room images
   descriptionGr String?
   descriptionEn String?
+  descriptionIt String?
 
   // Relations
   property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
