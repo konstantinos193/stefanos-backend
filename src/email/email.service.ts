@@ -22,6 +22,18 @@ export interface BookingEmailData {
   cancellationReason?: string;
 }
 
+export interface BookingRescheduleEmailData {
+  guestName: string;
+  guestEmail: string;
+  bookingId: string;
+  propertyName: string;
+  originalDates: { checkIn: Date; checkOut: Date };
+  newDates: { checkIn: Date; checkOut: Date };
+  totalPrice: number;
+  reason?: string;
+  lang?: EmailLang;
+}
+
 export interface InquiryEmailData {
   guestName: string;
   guestEmail: string;
@@ -79,6 +91,12 @@ const T = {
     subjectReminder:   (hotel: string) => `Reminder: Check-in tomorrow — ${hotel}`,
     subjectInqAdmin:   (ref: string, name: string) => `New Inquiry #${ref} from ${name}`,
     subjectInqGuest:   (hotel: string) => `We received your message — ${hotel}`,
+    // Reschedule
+    subjectReschedule: (ref: string, hotel: string) => `Booking Rescheduled #${ref} — ${hotel}`,
+    rescheduleTitle: 'Booking Rescheduled',
+    rescheduleIntro: (reason?: string) => `Your booking has been rescheduled.${reason ? ` <span style="color:#6b7280;">Reason: ${reason}</span>` : ''}`,
+    originalDates: 'Original dates',
+    newDates: 'New dates',
   },
   el: {
     dear:              (name: string) => `Αγαπητέ/ή <strong style="color:#e5e7eb;">${name}</strong>,`,
@@ -126,6 +144,12 @@ const T = {
     subjectReminder:   (hotel: string) => `Υπενθύμιση: Check-in αύριο — ${hotel}`,
     subjectInqAdmin:   (ref: string, name: string) => `Νέο Inquiry #${ref} από ${name}`,
     subjectInqGuest:   (hotel: string) => `Λάβαμε το μήνυμά σας — ${hotel}`,
+    // Reschedule
+    subjectReschedule: (ref: string, hotel: string) => `Αλλαγή Κράτησης #${ref} — ${hotel}`,
+    rescheduleTitle: 'Αλλαγή Κράτησης',
+    rescheduleIntro: (reason?: string) => `Η κράτησή σας έχει αλλάξει.${reason ? ` <span style="color:#6b7280;">Λόγος: ${reason}</span>` : ''}`,
+    originalDates: 'Αρχικές ημερομηνίες',
+    newDates: 'Νέες ημερομηνίες',
   },
 } as const;
 
@@ -455,6 +479,38 @@ export class EmailService {
       data.guestEmail,
       t.subjectInqGuest(HOTEL),
       layout(lang, 'linear-gradient(135deg,#1a1a2e 0%,#16162a 100%)', header, body),
+    );
+  }
+
+  // ─── 6. Booking Reschedule ───────────────────────────────────────────────────
+  async sendBookingRescheduleNotification(data: BookingRescheduleEmailData): Promise<void> {
+    const lang = data.lang ?? 'en';
+    const t = T[lang];
+    const ref = data.bookingId.slice(-8).toUpperCase();
+
+    const header = `
+      <h1 style="color:#f9fafb;margin:0 0 8px;font-size:22px;font-weight:700;">${t.rescheduleTitle}</h1>
+      <p style="color:rgba(255,255,255,0.5);margin:0;font-size:13px;letter-spacing:0.06em;text-transform:uppercase;">Ref #${ref}</p>
+    `;
+
+    const body = `
+      <p style="color:#9ca3af;font-size:15px;margin:0 0 24px;">${t.dear(data.guestName)}</p>
+      <p style="color:#9ca3af;font-size:14px;margin:0 0 8px;line-height:1.7;">${t.rescheduleIntro(data.reason)}</p>
+      ${detailsTable([
+        { label: t.property, value: data.propertyName },
+        { label: t.originalDates, value: `${this.formatDate(data.originalDates.checkIn, lang)} - ${this.formatDate(data.originalDates.checkOut, lang)}` },
+        { label: t.newDates, value: `${this.formatDate(data.newDates.checkIn, lang)} - ${this.formatDate(data.newDates.checkOut, lang)}` },
+        { label: t.total, value: `EUR ${data.totalPrice.toFixed(2)}`, highlight: true },
+      ])}
+      <p style="color:#4b5563;font-size:12px;margin:28px 0 0;">
+        ${t.questions} <a href="mailto:${EMAIL}">${EMAIL}</a>
+      </p>
+    `;
+
+    await this.send(
+      data.guestEmail,
+      t.subjectReschedule(ref, HOTEL),
+      layout(lang, '#1a2912', header, body),
     );
   }
 }

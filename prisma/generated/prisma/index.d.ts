@@ -5591,8 +5591,10 @@ export namespace Prisma {
     id: string | null
     titleGr: string | null
     titleEn: string | null
+    titleIt: string | null
     descriptionGr: string | null
     descriptionEn: string | null
+    descriptionIt: string | null
     type: $Enums.PropertyType | null
     status: $Enums.PropertyStatus | null
     address: string | null
@@ -5634,8 +5636,10 @@ export namespace Prisma {
     id: string | null
     titleGr: string | null
     titleEn: string | null
+    titleIt: string | null
     descriptionGr: string | null
     descriptionEn: string | null
+    descriptionIt: string | null
     type: $Enums.PropertyType | null
     status: $Enums.PropertyStatus | null
     address: string | null
@@ -5677,8 +5681,10 @@ export namespace Prisma {
     id: number
     titleGr: number
     titleEn: number
+    titleIt: number
     descriptionGr: number
     descriptionEn: number
+    descriptionIt: number
     type: number
     status: number
     address: number
@@ -5760,8 +5766,10 @@ export namespace Prisma {
     id?: true
     titleGr?: true
     titleEn?: true
+    titleIt?: true
     descriptionGr?: true
     descriptionEn?: true
+    descriptionIt?: true
     type?: true
     status?: true
     address?: true
@@ -5803,8 +5811,10 @@ export namespace Prisma {
     id?: true
     titleGr?: true
     titleEn?: true
+    titleIt?: true
     descriptionGr?: true
     descriptionEn?: true
+    descriptionIt?: true
     type?: true
     status?: true
     address?: true
@@ -5846,8 +5856,10 @@ export namespace Prisma {
     id?: true
     titleGr?: true
     titleEn?: true
+    titleIt?: true
     descriptionGr?: true
     descriptionEn?: true
+    descriptionIt?: true
     type?: true
     status?: true
     address?: true
@@ -5978,8 +5990,10 @@ export namespace Prisma {
     id: string
     titleGr: string
     titleEn: string
+    titleIt: string | null
     descriptionGr: string | null
     descriptionEn: string | null
+    descriptionIt: string | null
     type: $Enums.PropertyType
     status: $Enums.PropertyStatus
     address: string
@@ -6042,8 +6056,10 @@ export namespace Prisma {
     id?: boolean
     titleGr?: boolean
     titleEn?: boolean
+    titleIt?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     type?: boolean
     status?: boolean
     address?: boolean
@@ -6101,8 +6117,10 @@ export namespace Prisma {
     id?: boolean
     titleGr?: boolean
     titleEn?: boolean
+    titleIt?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     type?: boolean
     status?: boolean
     address?: boolean
@@ -6148,8 +6166,10 @@ export namespace Prisma {
     id?: boolean
     titleGr?: boolean
     titleEn?: boolean
+    titleIt?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     type?: boolean
     status?: boolean
     address?: boolean
@@ -6195,8 +6215,10 @@ export namespace Prisma {
     id?: boolean
     titleGr?: boolean
     titleEn?: boolean
+    titleIt?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     type?: boolean
     status?: boolean
     address?: boolean
@@ -6236,7 +6258,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titleGr" | "titleEn" | "descriptionGr" | "descriptionEn" | "type" | "status" | "address" | "city" | "country" | "latitude" | "longitude" | "postalCode" | "maxGuests" | "bedrooms" | "bathrooms" | "area" | "basePrice" | "currency" | "cleaningFee" | "serviceFeePercentage" | "taxes" | "taxRate" | "minStay" | "maxStay" | "advanceBooking" | "checkInTime" | "checkOutTime" | "cancellationPolicy" | "houseRules" | "petFriendly" | "smokingAllowed" | "partyAllowed" | "hasDynamicRooms" | "averageCleanlinessRating" | "lastCleaningDate" | "propertyGroupId" | "images" | "videos" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["property"]>
+  export type PropertyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "titleGr" | "titleEn" | "titleIt" | "descriptionGr" | "descriptionEn" | "descriptionIt" | "type" | "status" | "address" | "city" | "country" | "latitude" | "longitude" | "postalCode" | "maxGuests" | "bedrooms" | "bathrooms" | "area" | "basePrice" | "currency" | "cleaningFee" | "serviceFeePercentage" | "taxes" | "taxRate" | "minStay" | "maxStay" | "advanceBooking" | "checkInTime" | "checkOutTime" | "cancellationPolicy" | "houseRules" | "petFriendly" | "smokingAllowed" | "partyAllowed" | "hasDynamicRooms" | "averageCleanlinessRating" | "lastCleaningDate" | "propertyGroupId" | "images" | "videos" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["property"]>
   export type PropertyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     owner?: boolean | UserDefaultArgs<ExtArgs>
     bookings?: boolean | Property$bookingsArgs<ExtArgs>
@@ -6283,8 +6305,10 @@ export namespace Prisma {
       id: string
       titleGr: string
       titleEn: string
+      titleIt: string | null
       descriptionGr: string | null
       descriptionEn: string | null
+      descriptionIt: string | null
       type: $Enums.PropertyType
       status: $Enums.PropertyStatus
       address: string
@@ -6761,8 +6785,10 @@ export namespace Prisma {
     readonly id: FieldRef<"Property", 'String'>
     readonly titleGr: FieldRef<"Property", 'String'>
     readonly titleEn: FieldRef<"Property", 'String'>
+    readonly titleIt: FieldRef<"Property", 'String'>
     readonly descriptionGr: FieldRef<"Property", 'String'>
     readonly descriptionEn: FieldRef<"Property", 'String'>
+    readonly descriptionIt: FieldRef<"Property", 'String'>
     readonly type: FieldRef<"Property", 'PropertyType'>
     readonly status: FieldRef<"Property", 'PropertyStatus'>
     readonly address: FieldRef<"Property", 'String'>
@@ -7514,6 +7540,7 @@ export namespace Prisma {
     id: string | null
     nameGr: string | null
     nameEn: string | null
+    nameIt: string | null
     icon: string | null
     category: string | null
     createdAt: Date | null
@@ -7523,6 +7550,7 @@ export namespace Prisma {
     id: string | null
     nameGr: string | null
     nameEn: string | null
+    nameIt: string | null
     icon: string | null
     category: string | null
     createdAt: Date | null
@@ -7532,6 +7560,7 @@ export namespace Prisma {
     id: number
     nameGr: number
     nameEn: number
+    nameIt: number
     icon: number
     category: number
     createdAt: number
@@ -7543,6 +7572,7 @@ export namespace Prisma {
     id?: true
     nameGr?: true
     nameEn?: true
+    nameIt?: true
     icon?: true
     category?: true
     createdAt?: true
@@ -7552,6 +7582,7 @@ export namespace Prisma {
     id?: true
     nameGr?: true
     nameEn?: true
+    nameIt?: true
     icon?: true
     category?: true
     createdAt?: true
@@ -7561,6 +7592,7 @@ export namespace Prisma {
     id?: true
     nameGr?: true
     nameEn?: true
+    nameIt?: true
     icon?: true
     category?: true
     createdAt?: true
@@ -7643,6 +7675,7 @@ export namespace Prisma {
     id: string
     nameGr: string
     nameEn: string
+    nameIt: string | null
     icon: string | null
     category: string
     createdAt: Date
@@ -7669,6 +7702,7 @@ export namespace Prisma {
     id?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     icon?: boolean
     category?: boolean
     createdAt?: boolean
@@ -7680,6 +7714,7 @@ export namespace Prisma {
     id?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     icon?: boolean
     category?: boolean
     createdAt?: boolean
@@ -7689,6 +7724,7 @@ export namespace Prisma {
     id?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     icon?: boolean
     category?: boolean
     createdAt?: boolean
@@ -7698,12 +7734,13 @@ export namespace Prisma {
     id?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     icon?: boolean
     category?: boolean
     createdAt?: boolean
   }
 
-  export type AmenityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nameGr" | "nameEn" | "icon" | "category" | "createdAt", ExtArgs["result"]["amenity"]>
+  export type AmenityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nameGr" | "nameEn" | "nameIt" | "icon" | "category" | "createdAt", ExtArgs["result"]["amenity"]>
   export type AmenityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     properties?: boolean | Amenity$propertiesArgs<ExtArgs>
     _count?: boolean | AmenityCountOutputTypeDefaultArgs<ExtArgs>
@@ -7720,6 +7757,7 @@ export namespace Prisma {
       id: string
       nameGr: string
       nameEn: string
+      nameIt: string | null
       icon: string | null
       category: string
       createdAt: Date
@@ -8150,6 +8188,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Amenity", 'String'>
     readonly nameGr: FieldRef<"Amenity", 'String'>
     readonly nameEn: FieldRef<"Amenity", 'String'>
+    readonly nameIt: FieldRef<"Amenity", 'String'>
     readonly icon: FieldRef<"Amenity", 'String'>
     readonly category: FieldRef<"Amenity", 'String'>
     readonly createdAt: FieldRef<"Amenity", 'DateTime'>
@@ -21717,6 +21756,7 @@ export namespace Prisma {
     name: string | null
     nameGr: string | null
     nameEn: string | null
+    nameIt: string | null
     type: $Enums.RoomType | null
     capacity: number | null
     maxAdults: number | null
@@ -21726,6 +21766,7 @@ export namespace Prisma {
     isBookable: boolean | null
     descriptionGr: string | null
     descriptionEn: string | null
+    descriptionIt: string | null
     ownerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -21737,6 +21778,7 @@ export namespace Prisma {
     name: string | null
     nameGr: string | null
     nameEn: string | null
+    nameIt: string | null
     type: $Enums.RoomType | null
     capacity: number | null
     maxAdults: number | null
@@ -21746,6 +21788,7 @@ export namespace Prisma {
     isBookable: boolean | null
     descriptionGr: string | null
     descriptionEn: string | null
+    descriptionIt: string | null
     ownerId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -21757,6 +21800,7 @@ export namespace Prisma {
     name: number
     nameGr: number
     nameEn: number
+    nameIt: number
     type: number
     capacity: number
     maxAdults: number
@@ -21768,6 +21812,7 @@ export namespace Prisma {
     images: number
     descriptionGr: number
     descriptionEn: number
+    descriptionIt: number
     ownerId: number
     createdAt: number
     updatedAt: number
@@ -21797,6 +21842,7 @@ export namespace Prisma {
     name?: true
     nameGr?: true
     nameEn?: true
+    nameIt?: true
     type?: true
     capacity?: true
     maxAdults?: true
@@ -21806,6 +21852,7 @@ export namespace Prisma {
     isBookable?: true
     descriptionGr?: true
     descriptionEn?: true
+    descriptionIt?: true
     ownerId?: true
     createdAt?: true
     updatedAt?: true
@@ -21817,6 +21864,7 @@ export namespace Prisma {
     name?: true
     nameGr?: true
     nameEn?: true
+    nameIt?: true
     type?: true
     capacity?: true
     maxAdults?: true
@@ -21826,6 +21874,7 @@ export namespace Prisma {
     isBookable?: true
     descriptionGr?: true
     descriptionEn?: true
+    descriptionIt?: true
     ownerId?: true
     createdAt?: true
     updatedAt?: true
@@ -21837,6 +21886,7 @@ export namespace Prisma {
     name?: true
     nameGr?: true
     nameEn?: true
+    nameIt?: true
     type?: true
     capacity?: true
     maxAdults?: true
@@ -21848,6 +21898,7 @@ export namespace Prisma {
     images?: true
     descriptionGr?: true
     descriptionEn?: true
+    descriptionIt?: true
     ownerId?: true
     createdAt?: true
     updatedAt?: true
@@ -21946,6 +21997,7 @@ export namespace Prisma {
     name: string
     nameGr: string | null
     nameEn: string | null
+    nameIt: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults: number | null
@@ -21957,6 +22009,7 @@ export namespace Prisma {
     images: JsonValue | null
     descriptionGr: string | null
     descriptionEn: string | null
+    descriptionIt: string | null
     ownerId: string
     createdAt: Date
     updatedAt: Date
@@ -21987,6 +22040,7 @@ export namespace Prisma {
     name?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
@@ -21998,6 +22052,7 @@ export namespace Prisma {
     images?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     ownerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22014,6 +22069,7 @@ export namespace Prisma {
     name?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
@@ -22025,6 +22081,7 @@ export namespace Prisma {
     images?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     ownerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22038,6 +22095,7 @@ export namespace Prisma {
     name?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
@@ -22049,6 +22107,7 @@ export namespace Prisma {
     images?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     ownerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -22062,6 +22121,7 @@ export namespace Prisma {
     name?: boolean
     nameGr?: boolean
     nameEn?: boolean
+    nameIt?: boolean
     type?: boolean
     capacity?: boolean
     maxAdults?: boolean
@@ -22073,12 +22133,13 @@ export namespace Prisma {
     images?: boolean
     descriptionGr?: boolean
     descriptionEn?: boolean
+    descriptionIt?: boolean
     ownerId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "nameGr" | "nameEn" | "type" | "capacity" | "maxAdults" | "maxChildren" | "maxInfants" | "basePrice" | "isBookable" | "amenities" | "images" | "descriptionGr" | "descriptionEn" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
+  export type RoomOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "propertyId" | "name" | "nameGr" | "nameEn" | "nameIt" | "type" | "capacity" | "maxAdults" | "maxChildren" | "maxInfants" | "basePrice" | "isBookable" | "amenities" | "images" | "descriptionGr" | "descriptionEn" | "descriptionIt" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["room"]>
   export type RoomInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     property?: boolean | PropertyDefaultArgs<ExtArgs>
     owner?: boolean | UserDefaultArgs<ExtArgs>
@@ -22109,6 +22170,7 @@ export namespace Prisma {
       name: string
       nameGr: string | null
       nameEn: string | null
+      nameIt: string | null
       type: $Enums.RoomType
       capacity: number
       maxAdults: number | null
@@ -22120,6 +22182,7 @@ export namespace Prisma {
       images: Prisma.JsonValue | null
       descriptionGr: string | null
       descriptionEn: string | null
+      descriptionIt: string | null
       ownerId: string
       createdAt: Date
       updatedAt: Date
@@ -22555,6 +22618,7 @@ export namespace Prisma {
     readonly name: FieldRef<"Room", 'String'>
     readonly nameGr: FieldRef<"Room", 'String'>
     readonly nameEn: FieldRef<"Room", 'String'>
+    readonly nameIt: FieldRef<"Room", 'String'>
     readonly type: FieldRef<"Room", 'RoomType'>
     readonly capacity: FieldRef<"Room", 'Int'>
     readonly maxAdults: FieldRef<"Room", 'Int'>
@@ -22566,6 +22630,7 @@ export namespace Prisma {
     readonly images: FieldRef<"Room", 'Json'>
     readonly descriptionGr: FieldRef<"Room", 'String'>
     readonly descriptionEn: FieldRef<"Room", 'String'>
+    readonly descriptionIt: FieldRef<"Room", 'String'>
     readonly ownerId: FieldRef<"Room", 'String'>
     readonly createdAt: FieldRef<"Room", 'DateTime'>
     readonly updatedAt: FieldRef<"Room", 'DateTime'>
@@ -37111,8 +37176,10 @@ export namespace Prisma {
     id: 'id',
     titleGr: 'titleGr',
     titleEn: 'titleEn',
+    titleIt: 'titleIt',
     descriptionGr: 'descriptionGr',
     descriptionEn: 'descriptionEn',
+    descriptionIt: 'descriptionIt',
     type: 'type',
     status: 'status',
     address: 'address',
@@ -37159,6 +37226,7 @@ export namespace Prisma {
     id: 'id',
     nameGr: 'nameGr',
     nameEn: 'nameEn',
+    nameIt: 'nameIt',
     icon: 'icon',
     category: 'category',
     createdAt: 'createdAt'
@@ -37384,6 +37452,7 @@ export namespace Prisma {
     name: 'name',
     nameGr: 'nameGr',
     nameEn: 'nameEn',
+    nameIt: 'nameIt',
     type: 'type',
     capacity: 'capacity',
     maxAdults: 'maxAdults',
@@ -37395,6 +37464,7 @@ export namespace Prisma {
     images: 'images',
     descriptionGr: 'descriptionGr',
     descriptionEn: 'descriptionEn',
+    descriptionIt: 'descriptionIt',
     ownerId: 'ownerId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -38028,8 +38098,10 @@ export namespace Prisma {
     id?: StringFilter<"Property"> | string
     titleGr?: StringFilter<"Property"> | string
     titleEn?: StringFilter<"Property"> | string
+    titleIt?: StringNullableFilter<"Property"> | string | null
     descriptionGr?: StringNullableFilter<"Property"> | string | null
     descriptionEn?: StringNullableFilter<"Property"> | string | null
+    descriptionIt?: StringNullableFilter<"Property"> | string | null
     type?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
     status?: EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
     address?: StringFilter<"Property"> | string
@@ -38086,8 +38158,10 @@ export namespace Prisma {
     id?: SortOrder
     titleGr?: SortOrder
     titleEn?: SortOrder
+    titleIt?: SortOrderInput | SortOrder
     descriptionGr?: SortOrderInput | SortOrder
     descriptionEn?: SortOrderInput | SortOrder
+    descriptionIt?: SortOrderInput | SortOrder
     type?: SortOrder
     status?: SortOrder
     address?: SortOrder
@@ -38147,8 +38221,10 @@ export namespace Prisma {
     NOT?: PropertyWhereInput | PropertyWhereInput[]
     titleGr?: StringFilter<"Property"> | string
     titleEn?: StringFilter<"Property"> | string
+    titleIt?: StringNullableFilter<"Property"> | string | null
     descriptionGr?: StringNullableFilter<"Property"> | string | null
     descriptionEn?: StringNullableFilter<"Property"> | string | null
+    descriptionIt?: StringNullableFilter<"Property"> | string | null
     type?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
     status?: EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
     address?: StringFilter<"Property"> | string
@@ -38205,8 +38281,10 @@ export namespace Prisma {
     id?: SortOrder
     titleGr?: SortOrder
     titleEn?: SortOrder
+    titleIt?: SortOrderInput | SortOrder
     descriptionGr?: SortOrderInput | SortOrder
     descriptionEn?: SortOrderInput | SortOrder
+    descriptionIt?: SortOrderInput | SortOrder
     type?: SortOrder
     status?: SortOrder
     address?: SortOrder
@@ -38258,8 +38336,10 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Property"> | string
     titleGr?: StringWithAggregatesFilter<"Property"> | string
     titleEn?: StringWithAggregatesFilter<"Property"> | string
+    titleIt?: StringNullableWithAggregatesFilter<"Property"> | string | null
     descriptionGr?: StringNullableWithAggregatesFilter<"Property"> | string | null
     descriptionEn?: StringNullableWithAggregatesFilter<"Property"> | string | null
+    descriptionIt?: StringNullableWithAggregatesFilter<"Property"> | string | null
     type?: EnumPropertyTypeWithAggregatesFilter<"Property"> | $Enums.PropertyType
     status?: EnumPropertyStatusWithAggregatesFilter<"Property"> | $Enums.PropertyStatus
     address?: StringWithAggregatesFilter<"Property"> | string
@@ -38306,6 +38386,7 @@ export namespace Prisma {
     id?: StringFilter<"Amenity"> | string
     nameGr?: StringFilter<"Amenity"> | string
     nameEn?: StringFilter<"Amenity"> | string
+    nameIt?: StringNullableFilter<"Amenity"> | string | null
     icon?: StringNullableFilter<"Amenity"> | string | null
     category?: StringFilter<"Amenity"> | string
     createdAt?: DateTimeFilter<"Amenity"> | Date | string
@@ -38316,6 +38397,7 @@ export namespace Prisma {
     id?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrderInput | SortOrder
     icon?: SortOrderInput | SortOrder
     category?: SortOrder
     createdAt?: SortOrder
@@ -38329,6 +38411,7 @@ export namespace Prisma {
     NOT?: AmenityWhereInput | AmenityWhereInput[]
     nameGr?: StringFilter<"Amenity"> | string
     nameEn?: StringFilter<"Amenity"> | string
+    nameIt?: StringNullableFilter<"Amenity"> | string | null
     icon?: StringNullableFilter<"Amenity"> | string | null
     category?: StringFilter<"Amenity"> | string
     createdAt?: DateTimeFilter<"Amenity"> | Date | string
@@ -38339,6 +38422,7 @@ export namespace Prisma {
     id?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrderInput | SortOrder
     icon?: SortOrderInput | SortOrder
     category?: SortOrder
     createdAt?: SortOrder
@@ -38354,6 +38438,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"Amenity"> | string
     nameGr?: StringWithAggregatesFilter<"Amenity"> | string
     nameEn?: StringWithAggregatesFilter<"Amenity"> | string
+    nameIt?: StringNullableWithAggregatesFilter<"Amenity"> | string | null
     icon?: StringNullableWithAggregatesFilter<"Amenity"> | string | null
     category?: StringWithAggregatesFilter<"Amenity"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Amenity"> | Date | string
@@ -39462,6 +39547,7 @@ export namespace Prisma {
     name?: StringFilter<"Room"> | string
     nameGr?: StringNullableFilter<"Room"> | string | null
     nameEn?: StringNullableFilter<"Room"> | string | null
+    nameIt?: StringNullableFilter<"Room"> | string | null
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
     maxAdults?: IntNullableFilter<"Room"> | number | null
@@ -39473,6 +39559,7 @@ export namespace Prisma {
     images?: JsonNullableFilter<"Room">
     descriptionGr?: StringNullableFilter<"Room"> | string | null
     descriptionEn?: StringNullableFilter<"Room"> | string | null
+    descriptionIt?: StringNullableFilter<"Room"> | string | null
     ownerId?: StringFilter<"Room"> | string
     createdAt?: DateTimeFilter<"Room"> | Date | string
     updatedAt?: DateTimeFilter<"Room"> | Date | string
@@ -39488,6 +39575,7 @@ export namespace Prisma {
     name?: SortOrder
     nameGr?: SortOrderInput | SortOrder
     nameEn?: SortOrderInput | SortOrder
+    nameIt?: SortOrderInput | SortOrder
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrderInput | SortOrder
@@ -39499,6 +39587,7 @@ export namespace Prisma {
     images?: SortOrderInput | SortOrder
     descriptionGr?: SortOrderInput | SortOrder
     descriptionEn?: SortOrderInput | SortOrder
+    descriptionIt?: SortOrderInput | SortOrder
     ownerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -39517,6 +39606,7 @@ export namespace Prisma {
     name?: StringFilter<"Room"> | string
     nameGr?: StringNullableFilter<"Room"> | string | null
     nameEn?: StringNullableFilter<"Room"> | string | null
+    nameIt?: StringNullableFilter<"Room"> | string | null
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
     maxAdults?: IntNullableFilter<"Room"> | number | null
@@ -39528,6 +39618,7 @@ export namespace Prisma {
     images?: JsonNullableFilter<"Room">
     descriptionGr?: StringNullableFilter<"Room"> | string | null
     descriptionEn?: StringNullableFilter<"Room"> | string | null
+    descriptionIt?: StringNullableFilter<"Room"> | string | null
     ownerId?: StringFilter<"Room"> | string
     createdAt?: DateTimeFilter<"Room"> | Date | string
     updatedAt?: DateTimeFilter<"Room"> | Date | string
@@ -39543,6 +39634,7 @@ export namespace Prisma {
     name?: SortOrder
     nameGr?: SortOrderInput | SortOrder
     nameEn?: SortOrderInput | SortOrder
+    nameIt?: SortOrderInput | SortOrder
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrderInput | SortOrder
@@ -39554,6 +39646,7 @@ export namespace Prisma {
     images?: SortOrderInput | SortOrder
     descriptionGr?: SortOrderInput | SortOrder
     descriptionEn?: SortOrderInput | SortOrder
+    descriptionIt?: SortOrderInput | SortOrder
     ownerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -39573,6 +39666,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Room"> | string
     nameGr?: StringNullableWithAggregatesFilter<"Room"> | string | null
     nameEn?: StringNullableWithAggregatesFilter<"Room"> | string | null
+    nameIt?: StringNullableWithAggregatesFilter<"Room"> | string | null
     type?: EnumRoomTypeWithAggregatesFilter<"Room"> | $Enums.RoomType
     capacity?: IntWithAggregatesFilter<"Room"> | number
     maxAdults?: IntNullableWithAggregatesFilter<"Room"> | number | null
@@ -39584,6 +39678,7 @@ export namespace Prisma {
     images?: JsonNullableWithAggregatesFilter<"Room">
     descriptionGr?: StringNullableWithAggregatesFilter<"Room"> | string | null
     descriptionEn?: StringNullableWithAggregatesFilter<"Room"> | string | null
+    descriptionIt?: StringNullableWithAggregatesFilter<"Room"> | string | null
     ownerId?: StringWithAggregatesFilter<"Room"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Room"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Room"> | Date | string
@@ -40879,8 +40974,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -40935,8 +41032,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -40991,8 +41090,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -41047,8 +41148,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -41103,8 +41206,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -41148,8 +41253,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -41191,8 +41298,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -41236,6 +41345,7 @@ export namespace Prisma {
     id?: string
     nameGr: string
     nameEn: string
+    nameIt?: string | null
     icon?: string | null
     category: string
     createdAt?: Date | string
@@ -41246,6 +41356,7 @@ export namespace Prisma {
     id?: string
     nameGr: string
     nameEn: string
+    nameIt?: string | null
     icon?: string | null
     category: string
     createdAt?: Date | string
@@ -41256,6 +41367,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nameGr?: StringFieldUpdateOperationsInput | string
     nameEn?: StringFieldUpdateOperationsInput | string
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41266,6 +41378,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nameGr?: StringFieldUpdateOperationsInput | string
     nameEn?: StringFieldUpdateOperationsInput | string
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41276,6 +41389,7 @@ export namespace Prisma {
     id?: string
     nameGr: string
     nameEn: string
+    nameIt?: string | null
     icon?: string | null
     category: string
     createdAt?: Date | string
@@ -41285,6 +41399,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nameGr?: StringFieldUpdateOperationsInput | string
     nameEn?: StringFieldUpdateOperationsInput | string
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41294,6 +41409,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nameGr?: StringFieldUpdateOperationsInput | string
     nameEn?: StringFieldUpdateOperationsInput | string
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42551,6 +42667,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -42562,6 +42679,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     property: PropertyCreateNestedOneWithoutRoomsInput
@@ -42576,6 +42694,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -42587,6 +42706,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42599,6 +42719,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -42610,6 +42731,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     property?: PropertyUpdateOneRequiredWithoutRoomsNestedInput
@@ -42624,6 +42746,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -42635,6 +42758,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42648,6 +42772,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -42659,6 +42784,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -42669,6 +42795,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -42680,6 +42807,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42690,6 +42818,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -42701,6 +42830,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -44427,8 +44557,10 @@ export namespace Prisma {
     id?: SortOrder
     titleGr?: SortOrder
     titleEn?: SortOrder
+    titleIt?: SortOrder
     descriptionGr?: SortOrder
     descriptionEn?: SortOrder
+    descriptionIt?: SortOrder
     type?: SortOrder
     status?: SortOrder
     address?: SortOrder
@@ -44490,8 +44622,10 @@ export namespace Prisma {
     id?: SortOrder
     titleGr?: SortOrder
     titleEn?: SortOrder
+    titleIt?: SortOrder
     descriptionGr?: SortOrder
     descriptionEn?: SortOrder
+    descriptionIt?: SortOrder
     type?: SortOrder
     status?: SortOrder
     address?: SortOrder
@@ -44533,8 +44667,10 @@ export namespace Prisma {
     id?: SortOrder
     titleGr?: SortOrder
     titleEn?: SortOrder
+    titleIt?: SortOrder
     descriptionGr?: SortOrder
     descriptionEn?: SortOrder
+    descriptionIt?: SortOrder
     type?: SortOrder
     status?: SortOrder
     address?: SortOrder
@@ -44702,6 +44838,7 @@ export namespace Prisma {
     id?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrder
     icon?: SortOrder
     category?: SortOrder
     createdAt?: SortOrder
@@ -44711,6 +44848,7 @@ export namespace Prisma {
     id?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrder
     icon?: SortOrder
     category?: SortOrder
     createdAt?: SortOrder
@@ -44720,6 +44858,7 @@ export namespace Prisma {
     id?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrder
     icon?: SortOrder
     category?: SortOrder
     createdAt?: SortOrder
@@ -45549,6 +45688,7 @@ export namespace Prisma {
     name?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrder
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrder
@@ -45560,6 +45700,7 @@ export namespace Prisma {
     images?: SortOrder
     descriptionGr?: SortOrder
     descriptionEn?: SortOrder
+    descriptionIt?: SortOrder
     ownerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -45579,6 +45720,7 @@ export namespace Prisma {
     name?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrder
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrder
@@ -45588,6 +45730,7 @@ export namespace Prisma {
     isBookable?: SortOrder
     descriptionGr?: SortOrder
     descriptionEn?: SortOrder
+    descriptionIt?: SortOrder
     ownerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -45599,6 +45742,7 @@ export namespace Prisma {
     name?: SortOrder
     nameGr?: SortOrder
     nameEn?: SortOrder
+    nameIt?: SortOrder
     type?: SortOrder
     capacity?: SortOrder
     maxAdults?: SortOrder
@@ -45608,6 +45752,7 @@ export namespace Prisma {
     isBookable?: SortOrder
     descriptionGr?: SortOrder
     descriptionEn?: SortOrder
+    descriptionIt?: SortOrder
     ownerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -48909,8 +49054,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -48964,8 +49111,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -49283,6 +49432,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -49294,6 +49444,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     property: PropertyCreateNestedOneWithoutRoomsInput
@@ -49307,6 +49458,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -49318,6 +49470,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     roomContent?: RoomContentUncheckedCreateNestedOneWithoutRoomInput
@@ -49432,8 +49585,10 @@ export namespace Prisma {
     id?: StringFilter<"Property"> | string
     titleGr?: StringFilter<"Property"> | string
     titleEn?: StringFilter<"Property"> | string
+    titleIt?: StringNullableFilter<"Property"> | string | null
     descriptionGr?: StringNullableFilter<"Property"> | string | null
     descriptionEn?: StringNullableFilter<"Property"> | string | null
+    descriptionIt?: StringNullableFilter<"Property"> | string | null
     type?: EnumPropertyTypeFilter<"Property"> | $Enums.PropertyType
     status?: EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
     address?: StringFilter<"Property"> | string
@@ -49713,6 +49868,7 @@ export namespace Prisma {
     name?: StringFilter<"Room"> | string
     nameGr?: StringNullableFilter<"Room"> | string | null
     nameEn?: StringNullableFilter<"Room"> | string | null
+    nameIt?: StringNullableFilter<"Room"> | string | null
     type?: EnumRoomTypeFilter<"Room"> | $Enums.RoomType
     capacity?: IntFilter<"Room"> | number
     maxAdults?: IntNullableFilter<"Room"> | number | null
@@ -49724,6 +49880,7 @@ export namespace Prisma {
     images?: JsonNullableFilter<"Room">
     descriptionGr?: StringNullableFilter<"Room"> | string | null
     descriptionEn?: StringNullableFilter<"Room"> | string | null
+    descriptionIt?: StringNullableFilter<"Room"> | string | null
     ownerId?: StringFilter<"Room"> | string
     createdAt?: DateTimeFilter<"Room"> | Date | string
     updatedAt?: DateTimeFilter<"Room"> | Date | string
@@ -50087,6 +50244,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -50098,6 +50256,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     owner: UserCreateNestedOneWithoutRoomsInput
@@ -50110,6 +50269,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -50121,6 +50281,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -50808,8 +50969,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -50863,8 +51026,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -50923,6 +51088,7 @@ export namespace Prisma {
     id?: string
     nameGr: string
     nameEn: string
+    nameIt?: string | null
     icon?: string | null
     category: string
     createdAt?: Date | string
@@ -50932,6 +51098,7 @@ export namespace Prisma {
     id?: string
     nameGr: string
     nameEn: string
+    nameIt?: string | null
     icon?: string | null
     category: string
     createdAt?: Date | string
@@ -50957,8 +51124,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -51012,8 +51181,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -51078,6 +51249,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nameGr?: StringFieldUpdateOperationsInput | string
     nameEn?: StringFieldUpdateOperationsInput | string
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51087,6 +51259,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     nameGr?: StringFieldUpdateOperationsInput | string
     nameEn?: StringFieldUpdateOperationsInput | string
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
     category?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -51096,8 +51269,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -51151,8 +51326,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -51447,8 +51624,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -51502,8 +51681,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -51694,8 +51875,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -51749,8 +51932,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -51820,8 +52005,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -51875,8 +52062,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -51930,8 +52119,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -51985,8 +52176,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -52208,8 +52401,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -52263,8 +52458,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -52482,8 +52679,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -52537,8 +52736,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -52693,8 +52894,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -52748,8 +52951,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -53435,8 +53640,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -53490,8 +53697,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -53652,8 +53861,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -53707,8 +53918,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -53762,8 +53975,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -53817,8 +54032,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -54027,8 +54244,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -54082,8 +54301,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -54354,8 +54575,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -54409,8 +54632,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -54562,8 +54787,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -54617,8 +54844,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -54755,8 +54984,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -54810,8 +55041,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -54938,8 +55171,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -54993,8 +55228,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -55064,8 +55301,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -55119,8 +55358,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -55174,8 +55415,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -55229,8 +55472,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -55300,8 +55545,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -55355,8 +55602,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -55815,6 +56064,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -55826,6 +56076,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     property: PropertyCreateNestedOneWithoutRoomsInput
@@ -55839,6 +56090,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -55850,6 +56102,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55877,6 +56130,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55888,6 +56142,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     property?: PropertyUpdateOneRequiredWithoutRoomsNestedInput
@@ -55901,6 +56156,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55912,6 +56168,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -55923,6 +56180,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -55934,6 +56192,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     property: PropertyCreateNestedOneWithoutRoomsInput
@@ -55947,6 +56206,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -55958,6 +56218,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -55985,6 +56246,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -55996,6 +56258,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     property?: PropertyUpdateOneRequiredWithoutRoomsNestedInput
@@ -56009,6 +56272,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -56020,6 +56284,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -56030,8 +56295,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -56085,8 +56352,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -56223,8 +56492,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -56278,8 +56549,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -56406,8 +56679,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -56547,6 +56822,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -56558,6 +56834,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -56595,8 +56872,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -56650,8 +56929,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -56705,8 +56986,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -57045,6 +57328,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57056,6 +57340,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     property?: PropertyUpdateOneRequiredWithoutRoomsNestedInput
@@ -57069,6 +57354,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57080,6 +57366,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     roomContent?: RoomContentUncheckedUpdateOneWithoutRoomNestedInput
@@ -57092,6 +57379,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57103,6 +57391,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -57281,6 +57570,7 @@ export namespace Prisma {
     name: string
     nameGr?: string | null
     nameEn?: string | null
+    nameIt?: string | null
     type: $Enums.RoomType
     capacity: number
     maxAdults?: number | null
@@ -57292,6 +57582,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     ownerId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -57641,6 +57932,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57652,6 +57944,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     owner?: UserUpdateOneRequiredWithoutRoomsNestedInput
@@ -57664,6 +57957,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57675,6 +57969,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -57687,6 +57982,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     nameGr?: NullableStringFieldUpdateOperationsInput | string | null
     nameEn?: NullableStringFieldUpdateOperationsInput | string | null
+    nameIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumRoomTypeFieldUpdateOperationsInput | $Enums.RoomType
     capacity?: IntFieldUpdateOperationsInput | number
     maxAdults?: NullableIntFieldUpdateOperationsInput | number | null
@@ -57698,6 +57994,7 @@ export namespace Prisma {
     images?: NullableJsonNullValueInput | InputJsonValue
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     ownerId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -58274,8 +58571,10 @@ export namespace Prisma {
     id?: string
     titleGr: string
     titleEn: string
+    titleIt?: string | null
     descriptionGr?: string | null
     descriptionEn?: string | null
+    descriptionIt?: string | null
     type: $Enums.PropertyType
     status?: $Enums.PropertyStatus
     address: string
@@ -58318,8 +58617,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -58373,8 +58674,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string
@@ -58428,8 +58731,10 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     titleGr?: StringFieldUpdateOperationsInput | string
     titleEn?: StringFieldUpdateOperationsInput | string
+    titleIt?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionGr?: NullableStringFieldUpdateOperationsInput | string | null
     descriptionEn?: NullableStringFieldUpdateOperationsInput | string | null
+    descriptionIt?: NullableStringFieldUpdateOperationsInput | string | null
     type?: EnumPropertyTypeFieldUpdateOperationsInput | $Enums.PropertyType
     status?: EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
     address?: StringFieldUpdateOperationsInput | string

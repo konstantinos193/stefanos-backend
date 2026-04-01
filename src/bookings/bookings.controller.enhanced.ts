@@ -5,6 +5,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
 import { BookingQueryDto } from './dto/booking-query.dto';
+import { RescheduleBookingDto } from './dto/reschedule-booking.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { Public } from '../common/decorators/public.decorator';
@@ -59,6 +60,13 @@ export class BookingsController {
     return this.bookingsService.update(id, updateBookingDto);
   }
 
+  @Patch(':id/reschedule')
+  @ApiOperation({ summary: 'Reschedule booking to different room/date' })
+  @ApiResponse({ status: 200 })
+  reschedule(@Param('id') id: string, @Body() rescheduleDto: RescheduleBookingDto, @CurrentUser() userId: string) {
+    return this.bookingsService.reschedule(id, rescheduleDto, userId);
+  }
+
   @Post(':id/cancel')
   @ApiOperation({ summary: 'Cancel booking' })
   @ApiResponse({ status: 200 })
@@ -84,4 +92,3 @@ export class BookingsController {
     return this.bookingsService.remove(id, userId);
   }
 }
-

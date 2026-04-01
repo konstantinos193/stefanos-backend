@@ -79,8 +79,31 @@ async function seedAdminUser() {
       console.log(`   Password: ${password}`);
     }
 
+    // Always upsert lincantobook@gmail.com with correct password
+    const lincantoEmail = 'lincantobook@gmail.com';
+    const lincantoPassword = await hashPassword('admin1');
+    await prisma.user.upsert({
+      where: { email: lincantoEmail },
+      create: {
+        email: lincantoEmail,
+        name: 'Lincanto Admin',
+        password: lincantoPassword,
+        role: 'ADMIN',
+        isActive: true,
+        emailVerified: true,
+        preferredCurrency: 'EUR',
+        preferredLanguage: 'en',
+      },
+      update: {
+        password: lincantoPassword,
+        role: 'ADMIN',
+        isActive: true,
+      },
+    });
+    console.log(`✅ Upserted ${lincantoEmail} with password admin1`);
+
     console.log('\n🎉 Admin user seeding completed successfully!');
-    
+
   } catch (error: any) {
     console.error('❌ Error seeding admin user:', error.message);
     throw error;

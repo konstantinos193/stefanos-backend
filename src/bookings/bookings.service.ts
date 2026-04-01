@@ -4,6 +4,7 @@ import { CreateBookingDto } from './dto/create-booking.dto';
 import { UpdateBookingDto } from './dto/update-booking.dto';
 import { CancelBookingDto } from './dto/cancel-booking.dto';
 import { BookingQueryDto } from './dto/booking-query.dto';
+import { RescheduleBookingDto } from './dto/reschedule-booking.dto';
 import { getPagination } from '../common/utils/pagination.util';
 import { FinancialUtil } from '../common/utils/financial.util';
 import { PaymentStatus } from '../database/types';
@@ -578,6 +579,126 @@ export class BookingsService {
       success: true,
       message: 'Booking marked as paid',
       data: updatedBooking,
+    };
+  }
+
+  async remove(id: string, userId: string) {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: { property: true },
+    });
+
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isAdmin = user?.role === 'ADMIN';
+
+    if (!isAdmin) {
+      throw new BadRequestException('Only admins can delete bookings');
+    }
+
+    await this.prisma.booking.delete({
+      where: { id },
+    });
+
+    return {
+      success: true,
+      message: 'Booking deleted successfully',
+    };
+  }
+
+  async reschedule(id: string, rescheduleDto: RescheduleBookingDto, userId: string): Promise<any> {
+    const booking = await this.prisma.booking.findUnique({
+      where: { id },
+      include: { property: true }
+    });
+
+    if (!booking) {
+      throw new NotFoundException('Booking not found');
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const isOwner = booking.property.ownerId === userId;
+    const isAdmin = user?.role === 'ADMIN' || user?.role === 'MANAGER';
+
+    if (!isOwner && !isAdmin) {
+      throw new BadRequestException('Unauthorized to reschedule this booking');
+    }
+
+    const newCheckIn = new Date(rescheduleDto.newCheckIn);
+    const newCheckOut = rescheduleDto.newCheckOut ? new Date(rescheduleDto.newCheckOut) : booking.checkOut;
+
+    // Validate dates
+    if (newCheckIn >= newCheckOut) {
+      throw new BadRequestException('Check-out must be after check-in');
+    }
+
+    if (newCheckIn < new Date()) {
+      throw new BadRequestException('Cannot reschedule to past dates');
+    }
+
+    // Check availability for new dates
+    const conflictWhere: any = {
+      id: { not: booking.id }, // Exclude current booking
+      status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+      OR: [{ checkIn: { lte: newCheckOut }, checkOut: { gte: newCheckIn } }],
+    };
+
+    if (rescheduleDto.roomId) {
+      conflictWhere.roomId = rescheduleDto.roomId;
+    } else {
+      conflictWhere.roomId = booking.roomId;
+      conflictWhere.propertyId = booking.propertyId;
+    }
+
+    const conflictingBookings = await this.prisma.booking.findMany({ where: conflictWhere });
+
+    if (conflictingBookings.length > 0) {
+      throw new BadRequestException('Selected dates are not available');
+    }
+
+    // Calculate new pricing if dates changed
+    let newTotalPrice = booking.totalPrice;
+    if (newCheckIn.getTime() !== booking.checkIn.getTime() || newCheckOut.getTime() !== booking.checkOut.getTime()) {
+      const originalNights = Math.ceil((booking.checkOut.getTime() - booking.checkIn.getTime()) / (1000 * 60 * 60 * 24));
+      const newNights = Math.ceil((newCheckOut.getTime() - newCheckIn.getTime()) / (1000 * 60 * 60 * 24));
+      
+      if (originalNights !== newNights) {
+        const pricePerNight = booking.totalPrice / originalNights;
+        newTotalPrice = pricePerNight * newNights;
+      }
+    }
+
+    // Update booking
+    const updatedBooking = await this.prisma.booking.update({
+      where: { id },
+      data: {
+        checkIn: newCheckIn,
+        checkOut: newCheckOut,
+        totalPrice: newTotalPrice,
+        basePrice: newTotalPrice,
+        roomId: rescheduleDto.roomId || booking.roomId,
+        ...(rescheduleDto.roomId && {
+          roomName: (await this.prisma.room.findUnique({ where: { id: rescheduleDto.roomId } }))?.name
+        })
+      },
+      include: {
+        property: {
+          select: {
+            id: true,
+            titleGr: true,
+            titleEn: true,
+          },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: 'Booking rescheduled successfully',
+      data: updatedBooking
     };
   }
 }
