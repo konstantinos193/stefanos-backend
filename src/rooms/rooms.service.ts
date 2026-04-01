@@ -109,7 +109,28 @@ export class RoomsService {
     // Non-bookable rooms (e.g. apartment 10) show as "not available to book"
     // Rooms with inactive properties are automatically marked as non-bookable
     const rooms = await this.prisma.room.findMany({
-      include: {
+      select: {
+        id: true,
+        propertyId: true,
+        name: true,
+        nameGr: true,
+        nameEn: true,
+        nameIt: true,
+        type: true,
+        capacity: true,
+        maxAdults: true,
+        maxChildren: true,
+        maxInfants: true,
+        basePrice: true,
+        isBookable: true,
+        amenities: true,
+        images: true,
+        descriptionGr: true,
+        descriptionEn: true,
+        descriptionIt: true,
+        ownerId: true,
+        createdAt: true,
+        updatedAt: true,
         property: {
           select: {
             id: true,
@@ -120,6 +141,20 @@ export class RoomsService {
             city: true,
             images: true,
             status: true, // Include property status to check if it's active
+            amenities: {
+              include: {
+                amenity: {
+                  select: {
+                    id: true,
+                    nameGr: true,
+                    nameEn: true,
+                    nameIt: true,
+                    icon: true,
+                    category: true,
+                  },
+                },
+              },
+            },
           },
         },
       },
