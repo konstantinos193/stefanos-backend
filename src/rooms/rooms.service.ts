@@ -82,6 +82,17 @@ export class RoomsService {
     };
   }
 
+  async getMinPrice(): Promise<{ minPrice: number | null }> {
+    const result = await this.prisma.room.aggregate({
+      where: {
+        isBookable: true,
+        property: { status: 'ACTIVE' },
+      },
+      _min: { basePrice: true },
+    });
+    return { minPrice: result._min.basePrice };
+  }
+
   async findAllBookable() {
     const rooms = await this.prisma.room.findMany({
       where: { isBookable: true },

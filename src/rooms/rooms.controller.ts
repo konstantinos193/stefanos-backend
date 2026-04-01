@@ -63,6 +63,12 @@ export class RoomsController {
   }
 
   @Public()
+  @Get('public/min-price')
+  getMinPrice() {
+    return this.roomsService.getMinPrice();
+  }
+
+  @Public()
   @Get('public/:id')
   findOnePublic(@Param('id') id: string) {
     return this.roomsService.findOnePublic(id);
