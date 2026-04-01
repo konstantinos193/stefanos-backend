@@ -200,8 +200,8 @@ export class RoomsService {
         where: {
           roomId: { in: roomIds },
           status: { in: ['CONFIRMED', 'CHECKED_IN'] },
-          checkIn: { lte: endDate },
-          checkOut: { gte: startDate },
+          checkIn: { lt: endDate },
+          checkOut: { gt: startDate },
         },
         select: { roomId: true },
       }),
@@ -220,12 +220,50 @@ export class RoomsService {
     const bookedRoomIds = new Set(conflictingBookings.map((b) => b.roomId).filter(Boolean));
     const closedRoomIds = new Set(closedRules.map((r) => r.roomId));
 
-    return activePropertyRooms.filter(
+    const availableRooms = activePropertyRooms.filter(
       (room) =>
         !blockedPropertyIds.has(room.propertyId) &&
         !bookedRoomIds.has(room.id) &&
         !closedRoomIds.has(room.id),
     );
+
+    // Fetch price override rules for available rooms in the date range
+    const availableRoomIds = availableRooms.map((r) => r.id);
+    const priceRules = await this.prisma.roomAvailabilityRule.findMany({
+      where: {
+        roomId: { in: availableRoomIds },
+        isAvailable: true,
+        priceOverride: { not: null },
+        startDate: { lte: endDate },
+        endDate: { gte: startDate },
+      },
+      select: { roomId: true, startDate: true, endDate: true, priceOverride: true },
+    });
+
+    const nights = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+    return availableRooms.map((room) => {
+      const roomRules = priceRules.filter((r) => r.roomId === room.id);
+      if (roomRules.length === 0 || nights === 0) {
+        return { ...room, effectivePrice: room.basePrice };
+      }
+
+      let subtotal = 0;
+      const current = new Date(startDate);
+      current.setHours(0, 0, 0, 0);
+      const end = new Date(endDate);
+      end.setHours(0, 0, 0, 0);
+
+      while (current < end) {
+        const rule = roomRules.find(
+          (r) => new Date(r.startDate) <= current && new Date(r.endDate) > current,
+        );
+        subtotal += rule?.priceOverride ?? room.basePrice;
+        current.setDate(current.getDate() + 1);
+      }
+
+      return { ...room, effectivePrice: Math.round((subtotal / nights) * 100) / 100 };
+    });
   }
 
   async findOnePublic(id: string) {
@@ -600,21 +638,21 @@ export class RoomsService {
       select: { propertyId: true, checkIn: true, checkOut: true },
     });
 
-    // Fetch availability records for these properties in one query
-    const availabilityRecords = await this.prisma.propertyAvailability.findMany({
+    // Fetch explicitly blocked dates (available: false) for these properties
+    const blockedRecords = await this.prisma.propertyAvailability.findMany({
       where: {
         propertyId: { in: propertyIds },
         date: { gte: startDate, lte: endDate },
-        available: true,
+        available: false,
       },
       select: { propertyId: true, date: true },
     });
 
-    // Build a set of propertyId+date for availability
-    const availabilitySet = new Set<string>();
-    for (const rec of availabilityRecords) {
+    // Build a set of propertyId+date that are explicitly blocked
+    const blockedSet = new Set<string>();
+    for (const rec of blockedRecords) {
       const dateStr = new Date(rec.date).toISOString().split('T')[0];
-      availabilitySet.add(`${rec.propertyId}:${dateStr}`);
+      blockedSet.add(`${rec.propertyId}:${dateStr}`);
     }
 
     // Build per-property booking ranges for quick lookup
@@ -641,13 +679,13 @@ export class RoomsService {
       let availableCount = 0;
 
       for (const room of rooms) {
-        const hasAvailability = availabilitySet.has(`${room.propertyId}:${dayStr}`);
+        const isBlocked = blockedSet.has(`${room.propertyId}:${dayStr}`);
         const roomBookings = propertyBookings.get(room.propertyId) || [];
         const hasConflict = roomBookings.some(
-          (b) => b.checkIn <= nextDay && b.checkOut >= currentDate,
+          (b) => b.checkIn < nextDay && b.checkOut > currentDate,
         );
 
-        if (hasAvailability && !hasConflict) {
+        if (!isBlocked && !hasConflict) {
           availableCount++;
         }
       }
@@ -853,7 +891,7 @@ export class RoomsService {
   }
 
   private async calculatePropertyAvailability(propertyId: string, startDate: Date, endDate: Date) {
-    const [availability, bookings] = await Promise.all([
+    const [blockedRecords, bookings] = await Promise.all([
       this.prisma.propertyAvailability.findMany({
         where: {
           propertyId,
@@ -861,7 +899,7 @@ export class RoomsService {
             gte: startDate,
             lte: endDate,
           },
-          available: true,
+          available: false,
         },
       }),
       this.prisma.booking.findMany({
@@ -872,8 +910,8 @@ export class RoomsService {
           },
           OR: [
             {
-              checkIn: { lte: endDate },
-              checkOut: { gte: startDate },
+              checkIn: { lt: endDate },
+              checkOut: { gt: startDate },
             },
           ],
         },
@@ -881,8 +919,8 @@ export class RoomsService {
     ]);
 
     return {
-      available: availability.length > 0 && bookings.length === 0,
-      availability,
+      available: blockedRecords.length === 0 && bookings.length === 0,
+      availability: blockedRecords,
       conflictingBookings: bookings.length,
     };
   }
