@@ -286,7 +286,16 @@ export class RoomsService {
             status: true, // Include property status to check if it's active
             amenities: {
               include: {
-                amenity: true,
+                amenity: {
+                  select: {
+                    id: true,
+                    nameGr: true,
+                    nameEn: true,
+                    nameIt: true,
+                    icon: true,
+                    category: true,
+                  },
+                },
               },
             },
           },
