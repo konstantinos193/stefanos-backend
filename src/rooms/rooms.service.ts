@@ -687,15 +687,16 @@ export class RoomsService {
     // Get unique property IDs
     const propertyIds = [...new Set(rooms.map((r) => r.propertyId))];
 
-    // Fetch all overlapping bookings for these properties in one query
+    // Fetch all overlapping bookings for these rooms in one query
+    const roomIds = rooms.map((r) => r.id);
     const bookings = await this.prisma.booking.findMany({
       where: {
-        propertyId: { in: propertyIds },
+        roomId: { in: roomIds },
         status: { in: ['CONFIRMED', 'CHECKED_IN', 'PENDING'] },
         checkIn: { lte: endDate },
         checkOut: { gte: startDate },
       },
-      select: { propertyId: true, checkIn: true, checkOut: true },
+      select: { roomId: true, checkIn: true, checkOut: true },
     });
 
     // Fetch explicitly blocked dates (available: false) for these properties
@@ -715,13 +716,13 @@ export class RoomsService {
       blockedSet.add(`${rec.propertyId}:${dateStr}`);
     }
 
-    // Build per-property booking ranges for quick lookup
-    const propertyBookings = new Map<string, Array<{ checkIn: Date; checkOut: Date }>>();
+    // Build per-room booking ranges for quick lookup
+    const roomBookingsMap = new Map<string, Array<{ checkIn: Date; checkOut: Date }>>();
     for (const b of bookings) {
-      if (!propertyBookings.has(b.propertyId)) {
-        propertyBookings.set(b.propertyId, []);
+      if (!roomBookingsMap.has(b.roomId)) {
+        roomBookingsMap.set(b.roomId, []);
       }
-      propertyBookings.get(b.propertyId)!.push({
+      roomBookingsMap.get(b.roomId)!.push({
         checkIn: new Date(b.checkIn),
         checkOut: new Date(b.checkOut),
       });
@@ -740,7 +741,7 @@ export class RoomsService {
 
       for (const room of rooms) {
         const isBlocked = blockedSet.has(`${room.propertyId}:${dayStr}`);
-        const roomBookings = propertyBookings.get(room.propertyId) || [];
+        const roomBookings = roomBookingsMap.get(room.id) || [];
         const hasConflict = roomBookings.some(
           (b) => b.checkIn < nextDay && b.checkOut > currentDate,
         );
