@@ -249,7 +249,7 @@ export class RoomsService {
       this.prisma.booking.findMany({
         where: {
           roomId: { in: roomIds },
-          status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+          status: { in: ['CONFIRMED', 'CHECKED_IN', 'PENDING'] },
           checkIn: { lt: endDate },
           checkOut: { gt: startDate },
         },
@@ -691,7 +691,7 @@ export class RoomsService {
     const bookings = await this.prisma.booking.findMany({
       where: {
         propertyId: { in: propertyIds },
-        status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+        status: { in: ['CONFIRMED', 'CHECKED_IN', 'PENDING'] },
         checkIn: { lte: endDate },
         checkOut: { gte: startDate },
       },
@@ -967,7 +967,7 @@ export class RoomsService {
         where: {
           propertyId,
           status: {
-            in: ['CONFIRMED', 'CHECKED_IN'],
+            in: ['CONFIRMED', 'CHECKED_IN', 'PENDING'],
           },
           OR: [
             {
