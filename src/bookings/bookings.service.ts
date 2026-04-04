@@ -230,7 +230,7 @@ export class BookingsService {
     // Room-level check: when roomId is provided, scope conflict to that room only.
     // Property-level check: when no roomId, scope to property-level (non-room) bookings.
     const conflictWhere: any = {
-      status: { in: ['CONFIRMED', 'CHECKED_IN'] },
+      status: { in: ['CONFIRMED', 'CHECKED_IN', 'PENDING'] },
       OR: [{ checkIn: { lte: checkOut }, checkOut: { gte: checkIn } }],
     };
 
