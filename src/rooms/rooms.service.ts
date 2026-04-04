@@ -712,7 +712,8 @@ export class RoomsService {
     // Build a set of propertyId+date that are explicitly blocked
     const blockedSet = new Set<string>();
     for (const rec of blockedRecords) {
-      const dateStr = new Date(rec.date).toISOString().split('T')[0];
+      const d = new Date(rec.date);
+      const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       blockedSet.add(`${rec.propertyId}:${dateStr}`);
     }
 
@@ -733,7 +734,7 @@ export class RoomsService {
     const currentDate = new Date(startDate);
 
     while (currentDate <= endDate) {
-      const dayStr = currentDate.toISOString().split('T')[0];
+      const dayStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
       const nextDay = new Date(currentDate);
       nextDay.setDate(nextDay.getDate() + 1);
 
