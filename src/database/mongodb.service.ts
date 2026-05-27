@@ -69,7 +69,7 @@ export class MongoDBService implements OnModuleInit, OnModuleDestroy {
         this.logger.error('To fix:');
         this.logger.error('1. Get your connection string from MongoDB Atlas Dashboard');
         this.logger.error('2. Replace any placeholder values with your actual cluster name');
-        this.logger.error('3. Format: mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/database');
+        this.logger.error('3. Format: mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>');
       } else {
         this.logger.error('Please check:');
         this.logger.error('1. DATABASE_URL in .env file');

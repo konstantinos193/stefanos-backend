@@ -1242,7 +1242,7 @@ main()
         console.error('      → Try from a different network (mobile hotspot)');
         console.error('   4. Connection string format issue');
         console.error('      → Ensure it starts with mongodb+srv://');
-        console.error('      → Format: mongodb+srv://username:password@cluster.mongodb.net/database?retryWrites=true&w=majority');
+        console.error('      → Format: mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>?retryWrites=true&w=majority');
         console.error('\n   Quick fixes to try:');
         console.error('   1. Check MongoDB Atlas dashboard - is your cluster running?');
         console.error('   2. In MongoDB Atlas → Network Access, add your current IP or 0.0.0.0/0');

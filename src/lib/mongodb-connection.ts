@@ -27,7 +27,7 @@ export function normalizeMongoConnectionString(connectionString: string): string
         'Get your connection string from MongoDB Atlas Dashboard:\n' +
         '1. Go to MongoDB Atlas → Clusters → Connect\n' +
         '2. Choose "Connect your application"\n' +
-        '3. Copy the connection string (should look like: mongodb+srv://user:pass@cluster0.xxxxx.mongodb.net/db)\n' +
+        '3. Copy the connection string (should look like: mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/<db>)\n' +
         '4. Replace <password> with your actual password\n' +
         '5. Update DATABASE_URL in your .env file'
       );
@@ -39,7 +39,7 @@ export function normalizeMongoConnectionString(connectionString: string): string
       throw new Error(
         'DATABASE_URL contains placeholder credentials.\n' +
         'Please replace <username> and <password> with your actual MongoDB Atlas credentials.\n' +
-        'Format: mongodb+srv://YOUR_USERNAME:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/database'
+        'Format: mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>'
       );
     }
   } catch (error: any) {
@@ -143,7 +143,7 @@ export function validateConnectionString(connectionString: string): {
   // Check if it's a MongoDB connection string
   if (!connectionString.startsWith('mongodb://') && !connectionString.startsWith('mongodb+srv://')) {
     issues.push('DATABASE_URL does not appear to be a MongoDB connection string');
-    suggestions.push('Use format: mongodb+srv://username:password@cluster.mongodb.net/database');
+    suggestions.push('Use format: mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<database>');
     return { isValid: false, issues, suggestions };
   }
 
@@ -155,8 +155,8 @@ export function validateConnectionString(connectionString: string): {
     const dbName = pathname.split('/')[1]?.split('?')[0];
     if (!dbName || dbName.trim() === '') {
       issues.push('Database name is missing from connection string');
-      suggestions.push('Add database name after the host: mongodb+srv://user:pass@cluster.mongodb.net/your_database_name');
-      suggestions.push('Example: mongodb+srv://user:pass@cluster.mongodb.net/real_estate_db');
+      suggestions.push('Add database name after the host: mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/<database>');
+      suggestions.push('Example: mongodb+srv://<user>:<pass>@<cluster>.mongodb.net/real_estate_db');
     }
   } catch (error) {
     // URL parsing failed, but we'll let other validations catch it
