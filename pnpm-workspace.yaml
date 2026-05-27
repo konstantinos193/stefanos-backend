@@ -1,4 +1,13 @@
+allowBuilds:
+  '@nestjs/core': true
+  '@prisma/engines': true
+  '@scarf/scarf': true
+  esbuild: true
+  prisma: true
+  unrs-resolver: true
 ignoredBuiltDependencies:
   - '@nestjs/core'
   - '@prisma/engines'
   - prisma
+minimumReleaseAgeExclude:
+  - stripe@22.2.0
