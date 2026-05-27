@@ -29,7 +29,7 @@ jobs:
             pnpm build
 
             echo ">>> Restarting PM2..."
-            pm2 restart stefanos-backend --update-env
+            pm2 reload stefanos-backend --update-env
             pm2 save
 
             echo ">>> Deploy complete."
