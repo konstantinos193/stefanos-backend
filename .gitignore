@@ -36,3 +36,9 @@ coverage/
 *.db
 *.db-journal
 
+# Generated reports
+reports/
+
+# Build info
+*.tsbuildinfo
+

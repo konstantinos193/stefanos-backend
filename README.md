@@ -24,7 +24,7 @@
 
 A backend API for the SM Holdings hospitality and real estate platform, currently powering the **Incanto Hotel** in Preveza, Greece. It manages rooms, bookings, users, payments, content, media, cleaning schedules, external booking imports, audit logs, and all the other things that keep you awake at 3 AM wondering why the production database just decided to take a vacation.
 
-Built with NestJS because we wanted the verbosity of Java with the runtime errors of JavaScript. The best of both worlds, really. Ships with 21 modules, because modular architecture means modular suffering.
+Built with NestJS because we wanted the verbosity of Java with the runtime errors of JavaScript. The best of both worlds, really. Ships with 29 modules, because modular architecture means modular suffering.
 
 ---
 
@@ -34,7 +34,7 @@ Because listing dependencies is the closest thing we have to a personality.
 
 | Layer | Technology | Version | Purpose |
 |---|---|---|---|
-| **Runtime** | Node.js | 18+ | Executing our regrets |
+| **Runtime** | Node.js | 20+ | Executing our regrets |
 | **Framework** | NestJS | 11.1.24 | Enterprise-grade decorators |
 | **Language** | TypeScript | 6.0.3 | Pretending JavaScript has types |
 | **ORM** | Prisma + LibSQL adapter | 7.8.0 | Making SQL feel like a distant memory |
@@ -74,6 +74,10 @@ Because listing dependencies is the closest thing we have to a personality.
 - **Notifications** -- Booking confirmations, cancellations, payments, maintenance, reviews, messages, system updates. So users know exactly when something has gone wrong.
 - **Messaging** -- Communication between guests and hosts tied to bookings. Text, images, files, system messages. Therapy not included.
 - **Audit Logging** -- Every action tracked with before/after changes, IP addresses, and user agents. Big Brother, but for property management.
+- **Inquiries** -- Pre-booking contact form submissions with status tracking and assignment. Leads, managed.
+- **Pricing** -- Dynamic seasonal pricing rules, occupancy-based adjustments, and per-room overrides. Revenue management, manually.
+- **Reports** -- Structured reporting layer on top of analytics data. For when the dashboard is not enough and someone wants a spreadsheet.
+- **Email** -- Centralized email delivery module wrapping Nodemailer. Transactional emails, templated, sent once and forgotten.
 - **Settings** -- Key-value configuration store with typed values and groups. For when environment variables are not enough.
 - **Admin Panel** -- God mode. Dashboard stats, system-wide management.
 
@@ -101,7 +105,7 @@ cd stefanos-backend
 pnpm install
 
 # Copy the environment template.
-cp env.example .env
+cp .env.example .env
 
 # Fill in the .env file with real values.
 # If you commit your secrets to git, that is on you.
@@ -182,6 +186,7 @@ src/
 
   admin/                     # God mode
   analytics/                 # Graphs that go up and to the right (hopefully)
+  audit/                     # AuditInterceptor and audit event persistence
   auth/                      # Keeping unauthorized users out (authorized ones too, sometimes)
     dto/                     # Data Transfer Objects. Bureaucracy for your data.
     strategies/              # Passport strategies. JWT, local, existential.
@@ -199,15 +204,22 @@ src/
   content/                   # CMS pages, sections, SEO
   database/                  # Database module, MongoDB service, helpers, types
   editions/                  # Dynamic content editions
+  email/                     # Centralized Nodemailer wrapper used by other modules
   external-bookings/         # Third-party booking imports (Booking.com, Airbnb, etc.)
+  inquiries/                 # Pre-booking contact submissions and lead tracking
   knowledge/                 # Knowledge articles
   lib/                       # Core libraries: DB connections, retries, validations
   logs/                      # Audit log module
+  maintenance/               # Maintenance requests with priority and status tracking
   media/                     # Media library management
+  messages/                  # Guest-host messaging tied to bookings
+  notifications/             # Booking, payment, maintenance, and system notifications
   payments/                  # Stripe integration and payment processing
+  pricing/                   # Seasonal pricing rules and per-room rate overrides
   prisma/                    # Prisma service wrapper
   properties/                # Property CRUD and management
   property-groups/           # Subholding / property group management
+  reports/                   # Structured reporting on top of analytics data
   reviews/                   # Review system with multi-dimensional ratings
   rooms/                     # Dynamic room management (public search, occupancy, availability)
   routes/                    # Legacy Express route handlers (auth, bookings, etc.)
@@ -217,15 +229,18 @@ src/
   users/                     # User CRUD and profile management
 
 prisma/
-  schema.prisma              # The single source of truth. 880 lines. Guard it with your life.
+  schema.prisma              # The single source of truth. Guard it with your life.
   generated/                 # Prisma client output. Do not touch.
 
 scripts/
   init-db.js                 # Database initialization. Run once. Pray twice.
   migrate-db.js              # Schema migrations. For when the schema evolves faster than your sanity.
-  clear-bookings.ts          # Nuclear option for the bookings table.
-  seed-incanto-rooms.ts      # Seeds Incanto hotel rooms. The hotel that started it all.
+  seed-admin.ts              # Seeds the admin user. For when you locked yourself out.
+  seed-incanto-rooms.ts      # Seeds Incanto hotel room definitions.
   refresh-availability.ts    # Refreshes room availability data. Because stale dates help nobody.
+  clear-bookings.ts          # Nuclear option for the bookings table.
+  reset-database.ts          # Nuclear option for the entire database.
+  vps-setup.sh               # VPS provisioning script for the auto-deploy target.
 ```
 
 ---
@@ -260,7 +275,7 @@ The full list lives in `package.json`. Here are the highlights, or lowlights, de
 
 ## Environment Variables
 
-See `env.example` for the full template. If that file does not exist, someone has made a grave mistake.
+See `.env.example` for the full template. If that file does not exist, someone has made a grave mistake.
 
 Key variables include:
 
@@ -285,7 +300,7 @@ Key variables include:
 
 ## API Documentation
 
-Swagger UI is available at `/docs` when the server is running. It documents every endpoint across all 21 modules. Nobody reads it, but it is there, silently judging your API calls.
+Swagger UI is available at `/docs` when the server is running. It documents every endpoint across all 29 modules. Nobody reads it, but it is there, silently judging your API calls.
 
 The API uses the global prefix `/api`, so all endpoints are at `http://localhost:3001/api/*`.
 
@@ -307,8 +322,15 @@ Key endpoint groups:
 - `/api/knowledge` -- Knowledge articles
 - `/api/services` -- Service offerings
 - `/api/analytics` -- Property analytics
+- `/api/reports` -- Structured reports
+- `/api/pricing` -- Seasonal pricing rules and rate overrides
+- `/api/inquiries` -- Pre-booking contact submissions
+- `/api/maintenance` -- Maintenance requests
+- `/api/messages` -- Guest-host messaging
+- `/api/notifications` -- User notifications
+- `/api/audit` -- Audit event log
 - `/api/settings` -- Configuration management
-- `/api/logs` -- Audit logs
+- `/api/logs` -- System logs
 - `/api/upload` -- File uploads
 - `/api/admin` -- Admin operations
 
